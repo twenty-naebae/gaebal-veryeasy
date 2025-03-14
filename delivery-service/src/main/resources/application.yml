@@ -1,0 +1,53 @@
+server:
+  port: ${SERVER_PORT}
+
+spring:
+  application:
+    name: delivery
+
+  # MariaDB
+  datasource:
+    url: jdbc:mariadb://${DB_PORT}/deliveryapp
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: ${REDIS_PORT}
+      username: default
+      password: systempass
+
+  # Kafka
+  kafka:
+    bootstrap-servers: localhost:${KAFKA_PORT}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    show-sql: true
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER}
+
+
+# zipkin
+management:
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans"
+  tracing:
+    sampling:
+      probability: 1.0

@@ -1,0 +1,37 @@
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: hub-mariadb
+    restart: always
+    environment:
+      MYSQL_DATABASE: gaebal-easy
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    networks:
+      - gaebal-network
+
+  backend:
+    image: hub-backend
+    depends_on:
+      - mariadb
+      - redis
+      - kafka
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_USERNAME: gaebaleasy
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      EUREKA_SERVER: http://eureka-server:19090/eureka
+    ports:
+      - "${SERVER_PORT}:8080"
+    networks:
+      - gaebal-network
+
+networks:
+  gaebal-network:
