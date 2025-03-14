@@ -1,0 +1,12 @@
+rootProject.name = 'gaebal-easy'
+
+include 'delivery-service'
+include 'eureka-service'
+include 'gateway-service'
+include 'hub-service'
+include 'order-service'
+include 'product-service'
+include 'slack-service'
+include 'store-service'
+include 'user-service'
+include 'common'
