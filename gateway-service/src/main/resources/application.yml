@@ -1,11 +1,13 @@
 server:
-  port: 19091
+  port: ${SERVER_PORT}
 
 spring:
   main:
     web-application-type: reactive
   application:
     name: gateway-service
+  config:
+    import: optional:file:.env[.properties]
   cloud:
     gateway:
       routes:
@@ -24,9 +26,20 @@ spring:
       discovery:
         locator:
           enabled: true  # 서비스 디스커버리를 통해 동적으로 라우트를 생성하도록 설정
-
+  jwt:
+    secret: ${JWT_SECRET}
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:19090/eureka/
+      defaultZone: ${EUREKA_SERVER}
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_URL}
+  tracing:
+    sampling:
+      probability: 1.0
