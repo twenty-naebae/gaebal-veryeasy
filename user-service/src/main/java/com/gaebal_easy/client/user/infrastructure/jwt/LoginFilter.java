@@ -8,7 +8,8 @@ import com.gaebal_easy.client.user.domain.entity.RefreshToken;
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
 import com.gaebal_easy.client.user.presentation.dtos.LoginRequest;
-import gaebal_easy.common.global.exception.userService.RequiredArgumentException;
+import gaebal_easy.common.global.exception.Code;
+import gaebal_easy.common.global.exception.RequiredArgumentException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.Cookie;
@@ -62,7 +63,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //json에 없는 필드가 들어왔을 때 400 에러를 반환
         catch (UnrecognizedPropertyException e) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            throw new RequiredArgumentException("아이디, 비밀번호를 모두 입력해주세요");
+            throw new RequiredArgumentException(Code.USER_REQUIRED_ARGUMENT_EXCEPTION,"아이디, 비밀번호를 모두 입력해주세요");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
