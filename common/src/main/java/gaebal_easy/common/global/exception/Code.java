@@ -19,7 +19,7 @@ public enum Code {
     /**
      * Gate-way 1000번대
      */
-    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, 10000, "잘못된 입력값이 존재합니다.");
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, 10000, "잘못된 입력값이 존재합니다."),
 
     /**
      * Eureak 2000번대
@@ -28,6 +28,9 @@ public enum Code {
     /**
      * User 3000번대
      */
+    REQUIRED_ARGUMENT_EXCEPTION(HttpStatus.BAD_REQUEST, 3001, "입력값이 없는 항목이 있습니다."),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 3002, "토큰이 만료되었습니다."),
+    CAN_NOT_FIND_TOKEN(HttpStatus.BAD_REQUEST, 3003, "해당 토큰을 찾을 수 없습니다.");
 
     /**
      * Hub 4000번대

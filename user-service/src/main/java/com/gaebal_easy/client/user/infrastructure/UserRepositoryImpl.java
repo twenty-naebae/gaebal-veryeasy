@@ -15,4 +15,7 @@ public class UserRepositoryImpl implements UserRepository{
         return userJpaRepository.save(user);
     }
 
+    public User findByUsername(String username) {
+        return userJpaRepository.findByUsername(username);
+    }
 }
