@@ -15,8 +15,9 @@ public class UserController {
     private final JoinService joinService;
 
     @GetMapping("/hello")
-    public String hello() {
-        return "hello";
+    public String hello(@RequestHeader("userId") Long userId,
+                        @RequestHeader("role") String role) {
+        return "hello " + userId + " " + role;
     }
 
     @PostMapping("/signup")

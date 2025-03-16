@@ -3,9 +3,10 @@ package com.gaebal_easy.client.user.application.service;
 import com.gaebal_easy.client.user.domain.entity.RefreshToken;
 import com.gaebal_easy.client.user.domain.repository.RefreshTokenRepository;
 import com.gaebal_easy.client.user.infrastructure.jwt.JWTUtil;
-import gaebal_easy.common.global.exception.userService.CanNotFindTokenException;
-import gaebal_easy.common.global.exception.userService.ExpiredTokenException;
-import gaebal_easy.common.global.exception.userService.RequiredArgumentException;
+import gaebal_easy.common.global.exception.CanNotFindTokenException;
+import gaebal_easy.common.global.exception.Code;
+import gaebal_easy.common.global.exception.ExpiredTokenException;
+import gaebal_easy.common.global.exception.RequiredArgumentException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,7 +45,7 @@ public class RefreshTokenService {
                 }
             }
         }
-        throw new RequiredArgumentException("쿠키에 refresh토큰이 존재하지 않습니다.");
+        throw new RequiredArgumentException(Code.USER_REQUIRED_ARGUMENT_EXCEPTION,"쿠키에 refresh토큰이 존재하지 않습니다.");
     }
 
     // refreshToken을 검증한뒤 return한다.
@@ -57,7 +58,7 @@ public class RefreshTokenService {
     // RefreshToken만료 여부 확인
     private void checkExpired(String refreshToken){
         if (jwtUtil.isExpired(refreshToken)) {
-            throw new ExpiredTokenException();
+            throw new ExpiredTokenException(Code.USER_EXPIRED_TOKEN);
         }
     }
 
@@ -65,14 +66,14 @@ public class RefreshTokenService {
     private void checkRefreshTokenCategory(String refreshToken){
         String category = jwtUtil.getCategory(refreshToken);
         if (!"refresh".equals(category)) {
-            throw new RequiredArgumentException("리프레시 토큰이 아닙니다.");
+            throw new RequiredArgumentException(Code.USER_REQUIRED_ARGUMENT_EXCEPTION,"리프레시 토큰이 아닙니다.");
         }
     }
 
     // RefreshToken이 DB에 존재하는지 확인
     public RefreshToken getRefreshTokenInDB(String refreshToken){
         return refreshTokenRepository.getRefreshTokenByValue(refreshToken)
-                .orElseThrow(()->new CanNotFindTokenException());
+                .orElseThrow(()->new CanNotFindTokenException(Code.USER_CAN_NOT_FIND_TOKEN));
 
     }
 }
