@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.user.application.enums;
+package gaebal_easy.common.global.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

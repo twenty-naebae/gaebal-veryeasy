@@ -1,6 +1,6 @@
 package com.gaebal_easy.client.user.presentation.dtos;
 
-import com.gaebal_easy.client.user.application.enums.Role;
+import gaebal_easy.common.global.enums.Role;
 import lombok.Getter;
 
 @Getter
