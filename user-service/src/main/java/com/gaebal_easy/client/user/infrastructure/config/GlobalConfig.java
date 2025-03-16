@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.user.infrastructure;
+package com.gaebal_easy.client.user.infrastructure.config;
 
 import gaebal_easy.common.global.config.JpaAuditingConfig;
 import gaebal_easy.common.global.config.PropertyConfig;
