@@ -19,6 +19,7 @@ public class JoinService {
     public void join(JoinRequest joinRequest) {
         joinRequest.setPassword(bCryptPasswordEncoder.encode(joinRequest.getPassword()));
         User user = new User(joinRequest);
+        //todo - 각 서비스에 권한에 맞는 유저 생성 이벤트 요청
         userRepository.save(user);
     }
 }
