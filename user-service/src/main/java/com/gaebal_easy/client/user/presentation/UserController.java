@@ -3,6 +3,8 @@ package com.gaebal_easy.client.user.presentation;
 import com.gaebal_easy.client.user.application.service.JoinService;
 import com.gaebal_easy.client.user.presentation.dtos.JoinRequest;
 import gaebal_easy.common.global.dto.ApiResponseData;
+import gaebal_easy.common.global.enums.Role;
+import gaebal_easy.common.global.utils.RequiredRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ public class UserController {
 
     private final JoinService joinService;
 
+    @RequiredRole(role = Role.COMPANY_USER)
     @GetMapping("/hello")
     public String hello(@RequestHeader("userId") Long userId,
                         @RequestHeader("role") String role) {
