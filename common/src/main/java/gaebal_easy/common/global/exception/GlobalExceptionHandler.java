@@ -1,10 +1,14 @@
-package com.gaebal_easy.client.user.global.exception;
+package gaebal_easy.common.global.exception;
 
-import com.gaebal_easy.client.user.global.dto.ApiResponseData;
+import gaebal_easy.common.global.dto.ApiResponseData;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Component
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)

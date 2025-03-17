@@ -1,7 +1,7 @@
-//package com.gaebal_easy.client.user.global.exception;
+package gaebal_easy.common.global.exception;
 
-//public class AccessDeniedException extends BaseException {
-//    public AccessDeniedException() {
-//        super(Code.ACCESS_DENIED,"오류~~발생");
-//    }
-//}
+public class AccessDeniedException extends BaseException {
+    public AccessDeniedException(String message) {
+        super(Code.ACCESS_DENIED_EXCEPTION,message);
+    }
+}
