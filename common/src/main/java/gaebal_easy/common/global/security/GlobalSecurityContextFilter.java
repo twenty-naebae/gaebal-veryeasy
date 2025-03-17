@@ -18,7 +18,7 @@ public class GlobalSecurityContextFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String userId = request.getHeader("X-USER-ID");
-        String role = request.getHeader("X-ROLE");
+        String role = request.getHeader("X-USER-ROLE");
 
         if(userId!=null && role != null) {
             // SecurityContext에 사용자 정보 저장

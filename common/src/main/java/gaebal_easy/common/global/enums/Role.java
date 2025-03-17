@@ -13,4 +13,5 @@ public enum Role {
     COMPANY_USER("ROLE_COMPANY_USER"); //업체 담당자
 
     private final String roleName;
+
 }
