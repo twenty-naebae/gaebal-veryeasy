@@ -1,8 +1,9 @@
-package com.gaebal_easy.client.user.global.exception;
+package gaebal_easy.common.global.exception;
 
-import static com.gaebal_easy.client.user.global.exception.Code.INTERNAL_SERVER_ERROR;
 
 import lombok.Getter;
+
+import static gaebal_easy.common.global.exception.Code.INTERNAL_SERVER_ERROR;
 
 @Getter
 public class BaseException extends RuntimeException {

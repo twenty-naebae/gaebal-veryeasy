@@ -1,13 +1,11 @@
-package com.gaebal_easy.client.user.global.dto;
+package gaebal_easy.common.global.dto;
 
-
-import com.gaebal_easy.client.user.global.exception.Code;
+import gaebal_easy.common.global.exception.Code;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
