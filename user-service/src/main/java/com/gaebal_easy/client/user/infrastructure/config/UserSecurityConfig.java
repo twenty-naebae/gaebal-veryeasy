@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class UserSecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
@@ -26,11 +26,11 @@ public class SecurityConfig {
     private final RefreshTokenService refreshTokenService;
 //    private final LogoutService logoutService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-                          JWTUtil jwtUtil,
-                          RefreshTokenService refreshTokenService,
-                          UserRepository userRepository,
-                          ObjectMapper objectMapper
+    public UserSecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                              JWTUtil jwtUtil,
+                              RefreshTokenService refreshTokenService,
+                              UserRepository userRepository,
+                              ObjectMapper objectMapper
 //                          LogoutService logoutService
     ) {
         this.authenticationConfiguration = authenticationConfiguration;
@@ -48,22 +48,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterCHain(HttpSecurity http) throws Exception {
-
-        //csrf disable. 세션방식에서는 항상 고정되기 때문에 방어해야 하지만, jwt방식은 stateless하기 때문에 disable해도 된다.
-        http
-                .csrf((auth) -> auth.disable());
-        //Form 로그인 방식 disable
-        http
-                .formLogin((auth) -> auth.disable());
-
-        //httpBasic 로그인 방식 disable
-        http
-                .httpBasic((auth) -> auth.disable());
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .authorizeHttpRequests((auth) -> auth
-                        .anyRequest().permitAll());
+                .securityMatcher("user-service/**");
 
         //로그인 필터 추가
         http

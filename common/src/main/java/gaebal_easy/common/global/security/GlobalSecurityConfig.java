@@ -14,12 +14,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class GlobalSecurityConfig {
 
-    private final SecurityContextFilter securityContextFilter;
+    GlobalSecurityContextFilter globalSecurityContextFilter;
 
-    @Bean
-    public SecurityFilterChain filterCHain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain globalSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf((auth) -> auth.disable())
                 .formLogin((auth) -> auth.disable())
@@ -30,7 +29,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll())
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(securityContextFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(globalSecurityContextFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
