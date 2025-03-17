@@ -6,3 +6,6 @@ services:
       - "6379:6379"
     networks:
       - gaebal-network
+networks:
+  gaebal-network:
+    external: true

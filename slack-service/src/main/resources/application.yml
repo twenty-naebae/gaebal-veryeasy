@@ -1,17 +1,49 @@
+server:
+  port: ${SERVER_PORT}
+
 spring:
+  config:
+    import: classpath:properties/env.properties
   application:
     name: slack-service
-server:
-  port: 19098
+  datasource:
+    url: jdbc:mariadb://localhost:${DB_PORT}/slackdb
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  kafka:
+    bootstrap-servers: kafka:${KAFKA_PORT}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  data:
+    redis:
+      host: redis
+      port: ${REDIS_PORT}
+
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:19090/eureka/
+      defaultZone: ${EUREKA_SERVER}
+    register-with-eureka: true
+    fetch-registry: true
+
+jwt:
+  secret: ${JWT_SECRET}
 
 management:
   zipkin:
     tracing:
-      endpoint: "http://localhost:9411/api/v2/spans"
+      endpoint: ${ZIPKIN_URL}
   tracing:
     sampling:
       probability: 1.0
