@@ -5,6 +5,7 @@ import com.gaebal_easy.client.user.application.service.RefreshTokenService;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
 import com.gaebal_easy.client.user.infrastructure.jwt.JWTUtil;
 import com.gaebal_easy.client.user.infrastructure.jwt.LoginFilter;
+import gaebal_easy.common.global.security.GlobalSecurityContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,13 +25,17 @@ public class UserSecurityConfig {
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
     private final RefreshTokenService refreshTokenService;
+    private final GlobalSecurityContextFilter globalSecurityContextFilter;
+
 //    private final LogoutService logoutService;
 
     public UserSecurityConfig(AuthenticationConfiguration authenticationConfiguration,
                               JWTUtil jwtUtil,
                               RefreshTokenService refreshTokenService,
                               UserRepository userRepository,
-                              ObjectMapper objectMapper
+                              ObjectMapper objectMapper,
+                              GlobalSecurityContextFilter globalSecurityContextFilter
+
 //                          LogoutService logoutService
     ) {
         this.authenticationConfiguration = authenticationConfiguration;
@@ -38,6 +43,8 @@ public class UserSecurityConfig {
         this.refreshTokenService = refreshTokenService;
         this.userRepository = userRepository;
         this.objectMapper = objectMapper;
+        this.globalSecurityContextFilter = globalSecurityContextFilter;
+
 //        this.logoutService = logoutService;
 
     }
@@ -51,7 +58,10 @@ public class UserSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .securityMatcher("user-service/**");
+                .csrf((auth) -> auth.disable())
+                .formLogin((auth) -> auth.disable())
+                .httpBasic((auth) -> auth.disable())
+                .logout((auth) -> auth.disable());
 
         //로그인 필터 추가
         http

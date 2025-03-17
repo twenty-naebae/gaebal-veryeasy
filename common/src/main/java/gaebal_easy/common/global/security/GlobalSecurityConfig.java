@@ -23,7 +23,6 @@ public class GlobalSecurityConfig {
                 .csrf((auth) -> auth.disable())
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
-                .logout((auth) -> auth.disable())
 
                 .authorizeHttpRequests((auth) -> auth
                         .anyRequest().permitAll())
