@@ -18,8 +18,8 @@ public class UserController {
 
     @RequiredRole(role = Role.COMPANY_USER)
     @GetMapping("/hello")
-    public String hello(@RequestHeader("userId") Long userId,
-                        @RequestHeader("role") String role) {
+    public String hello(@RequestHeader("X-USER-ID") Long userId,
+                        @RequestHeader("X-USER-ROLE") String role) {
         return "hello " + userId + " " + role;
     }
 

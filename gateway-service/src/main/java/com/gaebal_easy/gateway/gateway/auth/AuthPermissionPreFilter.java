@@ -71,8 +71,8 @@ public class AuthPermissionPreFilter extends AbstractGatewayFilterFactory<AuthPe
             // 사용자 정보를 헤더에 추가
             ServerHttpRequest authRequest = request.mutate()
                     .header("Auth", "true")
-                    .header("userId", userId)
-                    .header("role", role)
+                    .header("X-USER-ID", userId)
+                    .header("X-USER-ROLE", role)
                     .build();
 
             return chain.filter(exchange.mutate().request(authRequest).build());
