@@ -52,6 +52,12 @@ spring:
             - Path=/store-service/api/**
           filters:
             - name: AuthPermissionPreFilter
+
+        # product-service
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/product-service/api/**
       discovery:
         locator:
           enabled: true  # 서비스 디스커버리를 통해 동적으로 라우트를 생성하도록 설정
