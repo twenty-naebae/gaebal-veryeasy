@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.user.global.config;
+package gaebal_easy.common.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
