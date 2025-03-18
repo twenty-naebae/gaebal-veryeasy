@@ -5,9 +5,12 @@ import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.UUID;
 
+@SQLRestriction("is_deleted = false")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -21,11 +24,11 @@ public class Product extends BaseTimeEntity {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private Long price;
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
 

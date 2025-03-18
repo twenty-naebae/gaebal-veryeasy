@@ -42,4 +42,13 @@ public class ProductService {
         productRepository.save(find);
         return ProductResponse.of(find);
     }
+
+    @Transactional
+    public ProductResponse deleteProduct(UUID productId) {
+        Product find = productRepository.findById(productId).orElseThrow();
+        // TODO: deltedBY 설정
+        find.delete("test deletedby");
+        productRepository.save(find);
+        return ProductResponse.of(find);
+    }
 }
