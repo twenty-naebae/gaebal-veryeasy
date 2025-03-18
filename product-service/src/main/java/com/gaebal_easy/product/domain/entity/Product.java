@@ -13,12 +13,13 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @Getter
+@Table(name = "p_product")
 public class Product extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
+    @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
     @Column(name = "name")
     private String name;
@@ -26,6 +27,13 @@ public class Product extends BaseTimeEntity {
     private Long price;
     @Column(name = "description")
     private String description;
+
+
+    public void update(String name, Long price, String description){
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
 
 
 }
