@@ -1,12 +1,16 @@
 package com.gaebal_easy.product.application.service;
 
-import com.gaebal_easy.product.application.dto.ProductDto;
 import com.gaebal_easy.product.application.dto.ProductResponse;
 import com.gaebal_easy.product.domain.entity.Product;
 import com.gaebal_easy.product.domain.repository.ProductRepository;
 import com.gaebal_easy.product.presentation.dto.CreateProductRequest;
+import com.gaebal_easy.product.presentation.dto.SearchProductRequest;
 import com.gaebal_easy.product.presentation.dto.UpdateProductRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,5 +54,15 @@ public class ProductService {
         find.delete("test deletedby");
         productRepository.save(find);
         return ProductResponse.of(find);
+    }
+
+    public Page<Product> searchProduct(SearchProductRequest searchRequest, int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Product> products = productRepository.searchProduct(searchRequest, pageable);
+
+        return products;
     }
 }
