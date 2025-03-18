@@ -1,12 +1,14 @@
 package com.gaebal_easy.product.presentation.dto;
 
-import lombok.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class CreateProductRequest {
+public class UpdateProductRequest {
 
     private String name;
     private Long price;

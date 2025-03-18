@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         PropertyConfig.class,
-        BaseTimeEntity.class
 })
 public class GlobalConfig {
 }
