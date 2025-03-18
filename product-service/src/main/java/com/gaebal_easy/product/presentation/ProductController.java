@@ -1,16 +1,22 @@
 package com.gaebal_easy.product.presentation;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.gaebal_easy.product.application.dto.ProductResponse;
+import com.gaebal_easy.product.application.service.ProductService;
+import com.gaebal_easy.product.presentation.dto.CreateProductRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product-service/api")
+@RequiredArgsConstructor
 public class ProductController {
 
+    private final ProductService productService;
 
-    @GetMapping("/test")
-    public String test(){
-        return "test";
+    @PostMapping("/products")
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody CreateProductRequest createProductRequest) {
+
+        return ResponseEntity.ok(productService.createProduct(createProductRequest));
     }
 }
