@@ -9,6 +9,7 @@ import java.util.Date;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "p_refresh_token")
 public class RefreshToken {
 
     @Id
