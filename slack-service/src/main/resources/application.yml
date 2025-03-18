@@ -2,14 +2,12 @@ server:
   port: ${SERVER_PORT}
 
 spring:
-  config:
-    import: classpath:properties/env.properties
   application:
     name: slack-service
   datasource:
-    url: jdbc:mariadb://localhost:${DB_PORT}/slackdb
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:mariadb://slack-mariadb:3306/slack-database?useSSL=false
+    username: slackUser
+    password: 19890422pkl!
 
   kafka:
     bootstrap-servers: kafka:${KAFKA_PORT}
@@ -21,7 +19,9 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
+
   jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -43,7 +43,7 @@ jwt:
 management:
   zipkin:
     tracing:
-      endpoint: ${ZIPKIN_URL}
+      endpoint: "http://zipkin:9411/api/v2/spans"
   tracing:
     sampling:
       probability: 1.0
