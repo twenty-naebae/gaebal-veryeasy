@@ -3,51 +3,48 @@ server:
 
 spring:
   application:
-    name: hub
-
-  # MariaDB
+    name: hub-service
   datasource:
-    url: jdbc:mariadb://${DB_PORT}/hubapp
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://hub-mariadb:3310/hub-database?useSSL=false
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
-  # Redis
-  data:
-    redis:
-      host: localhost
-      port: ${REDIS_PORT}
-      username: default
-      password: systempass
-
-  # Kafka
   kafka:
-    bootstrap-servers: localhost:${KAFKA_PORT}
+    bootstrap-servers: kafka:${KAFKA_PORT}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
+  data:
+    redis:
+      host: redis
+      port: ${REDIS_PORT}
+
   jpa:
     hibernate:
-      ddl-auto: create
-    defer-datasource-initialization: true
+      ddl-auto: update
     show-sql: true
 
+jwt:
+  secret: ${JWT_SECRET}
 
-eureka:
-  client:
-    service-url:
-      defaultZone: ${EUREKA_SERVER}
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: ${EUREKA_SERVER}
+#    register-with-eureka: false
+#    fetch-registry: false
 
 
-# zipkin
-management:
-  zipkin:
-    tracing:
-      endpoint: "http://localhost:9411/api/v2/spans"
-  tracing:
-    sampling:
-      probability: 1.0
+
+#management:
+#  zipkin:
+#    tracing:
+#      endpoint: "http://zipkin:9411/api/v2/spans"
+#  tracing:
+#    sampling:
+#      probability: 1.0
