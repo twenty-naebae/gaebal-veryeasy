@@ -7,7 +7,7 @@ import com.gaebal_easy.client.user.application.service.RefreshTokenService;
 import com.gaebal_easy.client.user.domain.entity.RefreshToken;
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
-import com.gaebal_easy.client.user.presentation.dtos.LoginRequest;
+import com.gaebal_easy.client.user.presentation.dto.LoginRequest;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.RequiredArgumentException;
 import jakarta.servlet.FilterChain;
@@ -89,7 +89,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+            String role = auth.getAuthority();
 
         //토큰 생성
         String accessToken = jwtUtil.createJwt("access", user.getId(), role, EXPIRED_MS);

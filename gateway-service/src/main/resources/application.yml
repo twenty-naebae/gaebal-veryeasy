@@ -23,6 +23,11 @@ spring:
           predicates:
             - Path=/user-service/api/login
             - Method=POST
+        - id: user-service-test
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/api/hello2
+            - Method=GET
         - id: user-service-logout
           uri: lb://user-service
           predicates:
