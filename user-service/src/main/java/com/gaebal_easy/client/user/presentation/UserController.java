@@ -1,7 +1,7 @@
 package com.gaebal_easy.client.user.presentation;
 
 import com.gaebal_easy.client.user.application.service.JoinService;
-import com.gaebal_easy.client.user.presentation.dtos.JoinRequest;
+import com.gaebal_easy.client.user.presentation.dto.JoinRequest;
 import gaebal_easy.common.global.dto.ApiResponseData;
 import gaebal_easy.common.global.enums.Role;
 import gaebal_easy.common.global.security.CustomUserDetails;
@@ -25,6 +25,11 @@ public class UserController {
     public String hello(
                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ("Custom User: " + customUserDetails.getUsername()+","+customUserDetails.getRole());
+    }
+
+    @GetMapping("/hello2")
+    public String hello2() {
+        return ("Hello World");
     }
 
     @PostMapping("/signup")
