@@ -27,6 +27,11 @@ public class UserController {
         return ("Custom User: " + customUserDetails.getUsername()+","+customUserDetails.getRole());
     }
 
+    @GetMapping("/hello2")
+    public String hello2() {
+        return ("Hello World");
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<ApiResponseData<String>> signup(@RequestBody JoinRequest joinRequest){
         joinService.join(joinRequest);
