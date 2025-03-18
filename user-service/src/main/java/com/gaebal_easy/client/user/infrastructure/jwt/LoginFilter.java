@@ -7,7 +7,7 @@ import com.gaebal_easy.client.user.application.service.RefreshTokenService;
 import com.gaebal_easy.client.user.domain.entity.RefreshToken;
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
-import com.gaebal_easy.client.user.presentation.dtos.LoginRequest;
+import com.gaebal_easy.client.user.presentation.dto.LoginRequest;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.RequiredArgumentException;
 import jakarta.servlet.FilterChain;

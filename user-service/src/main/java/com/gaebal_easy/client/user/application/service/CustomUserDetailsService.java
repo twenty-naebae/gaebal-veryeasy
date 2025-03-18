@@ -2,7 +2,7 @@ package com.gaebal_easy.client.user.application.service;
 
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
-import com.gaebal_easy.client.user.presentation.dtos.CustomUserDetails;
+import com.gaebal_easy.client.user.presentation.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
