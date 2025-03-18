@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/product-service/api")
 @RequiredArgsConstructor
@@ -19,4 +21,12 @@ public class ProductController {
 
         return ResponseEntity.ok(productService.createProduct(createProductRequest));
     }
+
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable("productId") UUID productId){
+        return ResponseEntity.ok(productService.getProduct(productId));
+    }
+
+
+
 }

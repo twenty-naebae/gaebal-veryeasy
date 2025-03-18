@@ -1,5 +1,6 @@
 package com.gaebal_easy.product.application.service;
 
+import com.gaebal_easy.product.application.dto.ProductDto;
 import com.gaebal_easy.product.application.dto.ProductResponse;
 import com.gaebal_easy.product.domain.entity.Product;
 import com.gaebal_easy.product.domain.repository.ProductRepository;
@@ -7,6 +8,8 @@ import com.gaebal_easy.product.presentation.dto.CreateProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +28,9 @@ public class ProductService {
         productRepository.save(product);
 
         return ProductResponse.of(product);
+    }
+
+    public ProductResponse getProduct(UUID id) {
+        return productRepository.findById(id).map(ProductResponse::of).orElseThrow();
     }
 }
