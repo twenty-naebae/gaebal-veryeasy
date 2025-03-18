@@ -30,6 +30,8 @@ public class Product extends BaseTimeEntity {
     private Long price;
     @Column(name = "description", nullable = false)
     private String description;
+    @Column(name = "amount", nullable = false)
+    private Long amount;
 
 
     public void update(String name, Long price, String description){
