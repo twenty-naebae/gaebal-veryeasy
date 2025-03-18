@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +27,6 @@ public class UserSecurityConfig {
     private final ObjectMapper objectMapper;
     private final RefreshTokenService refreshTokenService;
     private final GlobalSecurityContextFilter globalSecurityContextFilter;
-
 //    private final LogoutService logoutService;
 
     public UserSecurityConfig(AuthenticationConfiguration authenticationConfiguration,
@@ -35,7 +35,6 @@ public class UserSecurityConfig {
                               UserRepository userRepository,
                               ObjectMapper objectMapper,
                               GlobalSecurityContextFilter globalSecurityContextFilter
-
 //                          LogoutService logoutService
     ) {
         this.authenticationConfiguration = authenticationConfiguration;
@@ -44,7 +43,6 @@ public class UserSecurityConfig {
         this.userRepository = userRepository;
         this.objectMapper = objectMapper;
         this.globalSecurityContextFilter = globalSecurityContextFilter;
-
 //        this.logoutService = logoutService;
 
     }
@@ -56,23 +54,21 @@ public class UserSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
+                .securityMatcher("/user-service/api/login") // 특정 경로에 대한 필터 체인
                 .csrf((auth) -> auth.disable())
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
                 .logout((auth) -> auth.disable());
 
-        //로그인 필터 추가
+        // 로그인 필터 추가
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,
-                        refreshTokenService, this.userRepository), UsernamePasswordAuthenticationFilter.class);
+                        refreshTokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
+        http
+            .addFilterBefore(globalSecurityContextFilter, UsernamePasswordAuthenticationFilter.class);
 
-//        //로그아웃 필터 추가
-//        http
-//                .addFilterBefore(new CustomLogoutFilter(objectMapper, refreshTokenService,logoutService ), LogoutFilter.class);
-
-        //세션 설정
+        // 세션 설정
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
