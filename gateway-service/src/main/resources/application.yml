@@ -6,6 +6,7 @@ spring:
     web-application-type: reactive
   application:
     name: gateway-service
+
   config:
     import: optional:file:.env[.properties]
   cloud:
@@ -64,7 +65,8 @@ spring:
   jwt:
     secret: ${JWT_SECRET}
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration # JPA 자동설정 무시. JPA가 필요하지 않기때문
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration # JPA 자동설정 무시. JPA가 필요하지 않기때문
 eureka:
   client:
     service-url:
