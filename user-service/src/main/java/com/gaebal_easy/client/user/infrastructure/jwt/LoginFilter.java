@@ -89,7 +89,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+            String role = auth.getAuthority();
 
         //토큰 생성
         String accessToken = jwtUtil.createJwt("access", user.getId(), role, EXPIRED_MS);
