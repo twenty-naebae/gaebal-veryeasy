@@ -5,6 +5,7 @@ import com.gaebal_easy.client.user.application.service.RefreshTokenService;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
 import com.gaebal_easy.client.user.infrastructure.jwt.JWTUtil;
 import com.gaebal_easy.client.user.infrastructure.jwt.LoginFilter;
+import gaebal_easy.common.global.security.GlobalSecurityContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,20 +18,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class UserSecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
     private final RefreshTokenService refreshTokenService;
+    private final GlobalSecurityContextFilter globalSecurityContextFilter;
+
 //    private final LogoutService logoutService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-                          JWTUtil jwtUtil,
-                          RefreshTokenService refreshTokenService,
-                          UserRepository userRepository,
-                          ObjectMapper objectMapper
+    public UserSecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                              JWTUtil jwtUtil,
+                              RefreshTokenService refreshTokenService,
+                              UserRepository userRepository,
+                              ObjectMapper objectMapper,
+                              GlobalSecurityContextFilter globalSecurityContextFilter
+
 //                          LogoutService logoutService
     ) {
         this.authenticationConfiguration = authenticationConfiguration;
@@ -38,6 +43,8 @@ public class SecurityConfig {
         this.refreshTokenService = refreshTokenService;
         this.userRepository = userRepository;
         this.objectMapper = objectMapper;
+        this.globalSecurityContextFilter = globalSecurityContextFilter;
+
 //        this.logoutService = logoutService;
 
     }
@@ -48,22 +55,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterCHain(HttpSecurity http) throws Exception {
-
-        //csrf disable. 세션방식에서는 항상 고정되기 때문에 방어해야 하지만, jwt방식은 stateless하기 때문에 disable해도 된다.
-        http
-                .csrf((auth) -> auth.disable());
-        //Form 로그인 방식 disable
-        http
-                .formLogin((auth) -> auth.disable());
-
-        //httpBasic 로그인 방식 disable
-        http
-                .httpBasic((auth) -> auth.disable());
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .authorizeHttpRequests((auth) -> auth
-                        .anyRequest().permitAll());
+                .csrf((auth) -> auth.disable())
+                .formLogin((auth) -> auth.disable())
+                .httpBasic((auth) -> auth.disable())
+                .logout((auth) -> auth.disable());
 
         //로그인 필터 추가
         http
