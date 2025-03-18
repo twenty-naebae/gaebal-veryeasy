@@ -1,7 +1,7 @@
 package com.gaebal_easy.client.user.domain.entity;
 
 import gaebal_easy.common.global.enums.Role;
-import com.gaebal_easy.client.user.presentation.dtos.JoinRequest;
+import com.gaebal_easy.client.user.presentation.dto.JoinRequest;
 import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

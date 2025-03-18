@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.user.presentation.dtos;
+package com.gaebal_easy.client.user.presentation.dto;
 
 import com.gaebal_easy.client.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;

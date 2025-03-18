@@ -2,7 +2,7 @@ package com.gaebal_easy.client.user.application.service;
 
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
-import com.gaebal_easy.client.user.presentation.dtos.JoinRequest;
+import com.gaebal_easy.client.user.presentation.dto.JoinRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
