@@ -19,6 +19,7 @@ public class OrderResponseDto {
     private String receiver;
     private String orderRequest;
     private Long totalPrice;
+    private String address;
 
     public static OrderResponseDto from(OrderResponse orderResponse) {
         return OrderResponseDto.builder()
@@ -27,6 +28,7 @@ public class OrderResponseDto {
                 .receiver(orderResponse.getReceiver())
                 .orderRequest(orderResponse.getOrderRequest())
                 .totalPrice(orderResponse.getTotalPrice())
+                .address(orderResponse.getAddress())
                 .build();
     }
 

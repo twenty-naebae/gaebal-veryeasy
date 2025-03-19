@@ -17,6 +17,7 @@ public class OrderResponse {
     private String receiver;
     private String orderRequest;
     private Long totalPrice;
+    private String address;
 
     public static OrderResponse from(Order order){
         return OrderResponse.builder()
@@ -25,6 +26,7 @@ public class OrderResponse {
                 .receiver(order.getReceiver())
                 .orderRequest(order.getOrderRequest())
                 .totalPrice(order.getTotalPrice())
+                .address(order.getAddress())
                 .build();
     }
 

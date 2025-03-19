@@ -19,11 +19,12 @@ import java.util.UUID;
 public class Order extends BaseTimeEntity {
 
     @Builder(access = AccessLevel.PROTECTED)
-    public Order(String supplier, String receiver, String orderRequest, Long totalPrice) {
+    public Order(String supplier, String receiver, String orderRequest, Long totalPrice, String address) {
         this.supplier = supplier;
         this.receiver = receiver;
         this.orderRequest = orderRequest;
         this.totalPrice = totalPrice;
+        this.address = address;
     }
 
     @Id
@@ -38,6 +39,8 @@ public class Order extends BaseTimeEntity {
     private String orderRequest;
     @Column(name = "total_price", nullable = false)
     private Long totalPrice;
+    @Column(name = "address", nullable = false)
+    private String address;
 
     @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrderProduct> orderProducts = new ArrayList<>();
@@ -50,6 +53,9 @@ public class Order extends BaseTimeEntity {
         }
     }
 
+    public void changeAddress(String address) {
+        this.address = address;
+    }
 
 
 

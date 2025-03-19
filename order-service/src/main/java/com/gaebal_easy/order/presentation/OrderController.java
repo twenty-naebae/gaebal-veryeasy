@@ -4,13 +4,12 @@ import com.gaebal_easy.order.application.dto.OrderResponse;
 import com.gaebal_easy.order.application.service.OrderService;
 import com.gaebal_easy.order.domain.entity.Order;
 import com.gaebal_easy.order.presentation.dto.OrderResponseDto;
+import com.gaebal_easy.order.presentation.dto.UpdateOrderRequest;
 import gaebal_easy.common.global.dto.ApiResponseData;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.Update;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -28,5 +27,11 @@ public class OrderController {
 
     }
 
+    @PatchMapping("/orders/{id}")
+    public ResponseEntity<ApiResponseData<OrderResponseDto>> updateOrder(@PathVariable UUID orderId,
+                                                                         @RequestBody UpdateOrderRequest request) {
+        OrderResponse orderResponse = orderService.updateOrder(orderId, request.toDto());
+        return ResponseEntity.ok(ApiResponseData.success(OrderResponseDto.from(orderResponse)));
+    }
 
 }
