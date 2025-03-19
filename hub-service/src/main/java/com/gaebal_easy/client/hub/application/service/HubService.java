@@ -1,5 +1,6 @@
 package com.gaebal_easy.client.hub.application.service;
 
+import com.gaebal_easy.client.hub.application.dto.HubResponseDto;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
 import com.gaebal_easy.client.hub.domain.entity.HubProductList;
@@ -37,12 +38,18 @@ public class HubService {
         hubRepository.save(hub);
     }
 
+    public HubResponseDto requireHub(UUID id) {
+        Hub hub = getHub(id);
+        return HubResponseDto.of(hub);
+    }
+
     private Hub getHub(UUID id){
         return hubRepository.getHub(id).orElseThrow(() -> new HubNotFoundException(Code.HUB_NOT_FOUND));
     }
     private HubProductList getHubProductList(UUID id){
         return hubProductListRepository.getProduct(id).orElseThrow(() -> new ProductNotFoundException(Code.HUB_PRODUCT_NOT_FOUND));
     }
+
 
 
 }
