@@ -29,4 +29,5 @@ public class Hub extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "hub", cascade = CascadeType.ALL)
     private final List<HubManager> hubManagers = new ArrayList<>();
+
 }

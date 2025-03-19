@@ -15,7 +15,7 @@ import java.util.UUID;
 @Table(name = "p_hub_direct_movement_info")
 public class HubDirectMovementInfo extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)

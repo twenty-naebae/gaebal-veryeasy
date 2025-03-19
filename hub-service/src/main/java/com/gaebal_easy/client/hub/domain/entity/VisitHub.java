@@ -14,7 +14,7 @@ import java.util.UUID;
 @Table(name = "p_visit_hub")
 public class VisitHub {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
