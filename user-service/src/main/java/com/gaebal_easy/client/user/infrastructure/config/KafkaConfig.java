@@ -19,11 +19,7 @@ import java.util.Map;
 @Configuration
 @EnableKafka  // Kafka 관련 어노테이션 활성화
 public class KafkaConfig {
-
-
-    // 토픽 이름 상수 정의
-    public static final String HUB_ADMIN_TOPIC = "hub-manager-topic";
-
+    
     // 환경변수에서 Kafka 서버 주소 가져오기
     @Value("${spring.kafka.url}")
     private String kafkaServerUrl;
