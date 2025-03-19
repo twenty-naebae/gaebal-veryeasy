@@ -25,6 +25,11 @@ spring:
           predicates:
             - Path=/user-service/api/login
             - Method=POST
+        - id: user-service-test
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/api/hello2
+            - Method=GET
         - id: user-service-logout
           uri: lb://user-service
           predicates:
@@ -49,6 +54,15 @@ spring:
             - Path=/store-service/api/**
           filters:
             - name: AuthPermissionPreFilter
+
+        # product-service
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/product-service/api/**
+          filters:
+            - name: AuthPermissionPreFilter
+
       discovery:
         locator:
           enabled: true  # 서비스 디스커버리를 통해 동적으로 라우트를 생성하도록 설정
