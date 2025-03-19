@@ -16,6 +16,7 @@ import java.util.UUID;
 @Table(name = "p_hub_product_list")
 public class HubProductList extends BaseTimeEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
