@@ -5,6 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 .env
+/src/resources/application.yml
+docker-compose.yml
+Dockerfile
 ### STS ###
 .apt_generated
 .classpath
