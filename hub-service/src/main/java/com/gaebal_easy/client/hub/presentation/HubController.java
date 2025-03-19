@@ -1,6 +1,7 @@
 package com.gaebal_easy.client.hub.presentation;
 
 import com.gaebal_easy.client.hub.application.service.HubService;
+import com.gaebal_easy.client.hub.presentation.dto.HubCreateRequestDto;
 import com.gaebal_easy.client.hub.presentation.dto.HubRequestDto;
 import gaebal_easy.common.global.dto.ApiResponseData;
 import lombok.*;
@@ -39,6 +40,10 @@ public class HubController {
     @GetMapping("/{id}")
     public ResponseEntity<?> requireHub(@PathVariable UUID id) {
         return ResponseEntity.ok(ApiResponseData.success(hubService.requireHub(id)));
+    }
+    @PostMapping
+    public ResponseEntity<?> createHub(@RequestBody HubCreateRequestDto hubCreateRequestDto) {
+        return ResponseEntity.ok(ApiResponseData.success(null,"담당자가 확인 후 허브를 추가하겠습니다."));
     }
 
     @GetMapping("/hello")
