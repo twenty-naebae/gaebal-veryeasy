@@ -29,10 +29,11 @@ spring:
   # kafka 관련 설정
   kafka:
     url: ${KAFKA_URL}
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_URL}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 5 # 메시지 전송 실패시 재시도 횟수 5회.
     consumer:
       group-id: gaebal-group  # 컨슈머 그룹 식별자, 임의로 지정 가능
       auto-offset-reset: earliest  # 컨슈머가 처음 시작할 때 어떤 오프셋부터 읽을지 설정 (earliest: 가장 오래된 메시지부터, latest: 최신 메시지부터)

@@ -1,4 +1,4 @@
-package com.yourcompany.config;
+package com.gaebal_easy.client.user.infrastructure.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
