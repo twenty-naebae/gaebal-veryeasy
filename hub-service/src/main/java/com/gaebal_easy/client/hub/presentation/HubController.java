@@ -36,8 +36,15 @@ public class HubController {
         return ResponseEntity.ok(ApiResponseData.success(null,"담당자가 확인 후 수정하겠습니다."));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> requireHub(@PathVariable UUID id) {
+        return ResponseEntity.ok(ApiResponseData.success(hubService.requireHub(id)));
+    }
+
     @GetMapping("/hello")
     public ResponseEntity<?> hello() {
         return ResponseEntity.ok(ApiResponseData.success("Hello"));
     }
+
+
 }
