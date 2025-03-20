@@ -2,6 +2,8 @@ server:
   port: 8080  # 로컬 테스트용 포트
 
 spring:
+  profiles:
+    active: dev
   application:
     name: hub-service
 

@@ -32,4 +32,6 @@ public class HubProductList extends BaseTimeEntity {
 
     private String description;
 
+    private UUID productId;
+
 }
