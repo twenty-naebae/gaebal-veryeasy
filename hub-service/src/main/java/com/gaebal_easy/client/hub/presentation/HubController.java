@@ -8,6 +8,8 @@ import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -49,6 +51,13 @@ public class HubController {
     @GetMapping("/hello")
     public ResponseEntity<?> hello() {
         return ResponseEntity.ok(ApiResponseData.success("Hello"));
+    }
+
+
+    @GetMapping("/products/stock")
+    public String checkStock(@RequestParam List<?> products){
+
+        return "페인 클라이언트 연결 확인";
     }
 
 
