@@ -3,13 +3,14 @@ server:
 
 spring:
   application:
-    name: product
-
+    name: product-service
+  config:
+    import: optional:file:.env[.properties]
   # MariaDB
   datasource:
-    url: jdbc:mariadb://${DB_PORT}/productapp
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
 
   # Redis
@@ -32,9 +33,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
-    defer-datasource-initialization: true
-    show-sql: true
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    database-platform: org.hibernate.dialect.MariaDBDialect
 
 
 eureka:
@@ -47,7 +52,7 @@ eureka:
 management:
   zipkin:
     tracing:
-      endpoint: "http://localhost:9411/api/v2/spans"
+      endpoint: ${ZIPKIN_URL}
   tracing:
     sampling:
       probability: 1.0

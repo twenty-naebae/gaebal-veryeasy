@@ -1,15 +1,14 @@
 server:
-  port: ${SERVER_PORT}
+  port: 8080  # 로컬 테스트용 포트
 
 spring:
   application:
     name: hub-service
 
-  # MariaDB
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:mariadb://localhost:3310/hub-database?useSSL=false
+    username: gaebal
+    password: gaebal
     driver-class-name: org.mariadb.jdbc.Driver
 
   # Redis
@@ -32,23 +31,16 @@ spring:
       auto-offset-reset: earliest  # 컨슈머가 처음 시작할 때 어떤 오프셋부터 읽을지 설정 (earliest: 가장 오래된 메시지부터, latest: 최신 메시지부터)
 
   jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: update
-    defer-datasource-initialization: true
     show-sql: true
-
 
 eureka:
   client:
-    service-url:
-      defaultZone: ${EUREKA_SERVER}
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
 
-
-# zipkin
-management:
-  zipkin:
-    tracing:
-      endpoint: "http://localhost:9411/api/v2/spans"
-  tracing:
-    sampling:
-      probability: 1.0
+jwt:
+  secret: Adsfvabewryethadbgnq4ertjadfhjmetDHJarkmyshfzdjykmrtejkymhndgThJymhfngbfcsdsdfsdafasdfasd
