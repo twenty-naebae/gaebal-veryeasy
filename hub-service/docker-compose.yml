@@ -4,30 +4,37 @@ services:
     container_name: hub-mariadb
     restart: always
     environment:
-      MYSQL_DATABASE: gaebal-easy
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: hub-database
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - .env
     ports:
       - "${DB_PORT}:3306"
     networks:
       - gaebal-network
 
   backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: hub-backend
+    container_name: hub-backend
     depends_on:
       - mariadb
-      - redis
-      - kafka
     env_file:
       - .env
     environment:
-      SPRING_DATASOURCE_USERNAME: gaebaleasy
+      SPRING_DATASOURCE_URL: jdbc:mariadb://hub-mariadb:3306/hub-database?useSSL=false
+      SPRING_DATASOURCE_USERNAME: gaebal
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       REDIS_HOST: redis
       REDIS_PORT: 6379
       EUREKA_SERVER: http://eureka-server:19090/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
     ports:
       - "${SERVER_PORT}:8080"
     networks:
@@ -35,3 +42,4 @@ services:
 
 networks:
   gaebal-network:
+    external: true
