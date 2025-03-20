@@ -2,7 +2,9 @@ package com.gaebal_easy.client.slack.application.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gaebal_easy.client.slack.application.service.dto.GeminiRequest;
+import com.gaebal_easy.client.slack.presentation.dto.SlackRequest;
 import com.gaebal_easy.client.slack.exception.GeminiException;
 
 import lombok.RequiredArgsConstructor;
@@ -21,13 +23,13 @@ import lombok.RequiredArgsConstructor;
 public class GeminiService {
 
 	private final WebClient aiWebClient;
-	private final SlackService slackService;
+	private final SlackMessageService slackMessageService;
 
 	@Value("${ai.api.key}")
 	private String apiKey;
 
-	public void generateAndSendDeadline(GeminiRequest.GenerateDeadLineRequest requestDto, String slackUserId) {
-		String orderMessage = buildOrderMessage(requestDto);
+	public void generateAndSendDeadline(SlackRequest.GenerateDeadLineRequest requestDto, String slackUserId, UUID receiveId) {
+		String orderMessage = buildGeminiOrder(requestDto);
 
 		// AI API에 보낼 payload 구성 (요청 JSON 구조)
 		Map<String, Object> payload = new HashMap<>();
@@ -53,6 +55,15 @@ public class GeminiService {
 		String deadline = extractDeadline(responseBody);
 
 		// Slack 메시지 형식으로 변환
+		String message = buildSlackMessage(requestDto, deadline);
+
+		// Slack으로 메시지 전송
+		slackMessageService.saveMesage(receiveId, message);
+		slackMessageService.sendMessage(message, slackUserId);
+	}
+
+	@NotNull
+	private static String buildSlackMessage(SlackRequest.GenerateDeadLineRequest requestDto, String deadline) {
 		String message = String.format("주문 번호: %d\n" +
 				"주문자 정보: %s / %s\n" +
 				"상품 정보: %s\n" +
@@ -73,12 +84,10 @@ public class GeminiService {
 			requestDto.getDeliveryManager(),
 			requestDto.getDeliveryManagerEmail(),
 			deadline);
-
-		// Slack으로 메시지 전송
-		slackService.sendMessage(message, slackUserId);
+		return message;
 	}
 
-	private String buildOrderMessage(GeminiRequest.GenerateDeadLineRequest requestDto) {
+	private String buildGeminiOrder(SlackRequest.GenerateDeadLineRequest requestDto) {
 		return String.format(
 			"주문 번호: %s\n" +
 				"주문자 정보: %s / %s\n" +

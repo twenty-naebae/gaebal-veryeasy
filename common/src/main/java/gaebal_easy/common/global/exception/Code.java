@@ -65,7 +65,8 @@ public enum Code {
     SLACK_AUTH_EXCEPTION(HttpStatus.UNAUTHORIZED, 9003, "Slack 인증에 실패하였습니다."),
     SLACK_RATE_LIMITED_EXCEPTION(HttpStatus.TOO_MANY_REQUESTS, 9004, "Slack API 요청이 너무 많습니다. 잠시 후 다시 시도해주세요."),
     SLACK_DM_CHANNEL_OPEN_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, 9005, "DM 채널을 열 수 없습니다."),
-    GEMINI_PARSING_EXCEPTION(HttpStatus.NOT_FOUND, 9006, "발송 데드라인 생성 중 오류가 발생했습니다.");
+    GEMINI_PARSING_EXCEPTION(HttpStatus.NOT_FOUND, 9006, "발송 데드라인 생성 중 오류가 발생했습니다."),
+    SLACK_MESSAGE_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 9007, "슬랙메시지가 존재하지 않습니다.");
 
     /**
      * Kafka 통신 10000번대

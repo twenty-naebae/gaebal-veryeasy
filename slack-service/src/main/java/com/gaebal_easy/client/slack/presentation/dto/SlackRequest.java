@@ -1,8 +1,8 @@
-package com.gaebal_easy.client.slack.application.service.dto;
+package com.gaebal_easy.client.slack.presentation.dto;
 
 import lombok.Getter;
 
-public class GeminiRequest {
+public class SlackRequest {
 
 	@Getter
 	public static class GenerateDeadLineRequest {
