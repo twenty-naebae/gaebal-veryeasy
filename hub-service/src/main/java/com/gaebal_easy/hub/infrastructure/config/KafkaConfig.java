@@ -1,5 +1,6 @@
 package com.gaebal_easy.hub.infrastructure.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -10,14 +11,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@Slf4j
 @EnableKafka  // Kafka 관련 어노테이션 활성화
 public class KafkaConfig {
 
@@ -74,13 +78,13 @@ public class KafkaConfig {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         // 실제 역직렬화기 지정
-        props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
+        props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class.getName());
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
 
         // 타입 매핑 추가 - producer 패키지를 현재 서비스의 패키지로 매핑한다. 
         props.put(JsonDeserializer.TYPE_MAPPINGS,
                 "com.gaebal_easy.client.user.application.dto.HubManagerInfoMessage:" +
-                        "com.gaebal_easy.hub.domain.dto.HubManagerInfoMessage");
+                        "com.gaebal_easy.hub.presentation.dto.HubManagerInfoMessage");
 
         // JsonDeserializer 관련 설정
         // 모든 패키지의 클래스 역직렬화 허용 (보안에 주의)
@@ -88,7 +92,7 @@ public class KafkaConfig {
         // 타입 정보가 없는 경우 Map으로 변환
         props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "java.util.Map");
 
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(Object.class));
+        return new DefaultKafkaConsumerFactory<>(props);
     }
 
     /**
@@ -105,6 +109,18 @@ public class KafkaConfig {
         factory.setConcurrency(3);
         // 배치 리스너 비활성화 (개별 메시지 처리)
         factory.setBatchListener(false);
+
+        // 에러 핸들러 수정 - 재시도 없이 로깅만 하도록 설정
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler((record, exception) -> {
+            log.error("메시지 처리 실패: {}", exception.getMessage());
+            log.error("실패한 메시지: {}", record);
+            // 필요한 추가 작업 수행 (예: 데드 레터 큐로 전송)
+        }, new FixedBackOff(3L, 3L)); // 재시도 3회 반복
+
+        // SerializationException도 처리하도록 설정
+        errorHandler.addNotRetryableExceptions(org.apache.kafka.common.errors.SerializationException.class);
+
+        factory.setCommonErrorHandler(errorHandler);
 
         return factory;
     }
