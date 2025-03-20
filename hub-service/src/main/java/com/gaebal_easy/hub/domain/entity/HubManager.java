@@ -20,7 +20,7 @@ public class HubManager extends BaseTimeEntity {
     @Column
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hub_id", nullable = false)
     private HubTemp hub;
 

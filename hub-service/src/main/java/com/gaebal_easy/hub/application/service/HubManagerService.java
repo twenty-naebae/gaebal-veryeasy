@@ -8,6 +8,7 @@ import com.gaebal_easy.hub.presentation.dto.HubManagerInfoMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -16,6 +17,7 @@ public class HubManagerService {
 
     private final HubManagerRepository hubManagerRepository;
     private final HubTempRepository hubTempRepository;
+    @Transactional
     public void createHubManager(HubManagerInfoMessage hubManagerInfoMessage) {
         HubTemp hub = hubTempRepository.findByHubName(hubManagerInfoMessage.getGroup());
         HubManager hubManager = HubManager.of(hub, hubManagerInfoMessage.getName());
