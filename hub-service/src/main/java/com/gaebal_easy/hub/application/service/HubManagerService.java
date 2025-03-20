@@ -19,7 +19,7 @@ public class HubManagerService {
     private final HubTempRepository hubTempRepository;
     @Transactional
     public void createHubManager(HubManagerInfoMessage hubManagerInfoMessage) {
-        HubTemp hub = hubTempRepository.findByHubName(hubManagerInfoMessage.getGroup());
+        HubTemp hub = hubTempRepository.findByHubName(hubManagerInfoMessage.getGroup()); //todo - hub 발견하지 못할경우 예외처리
         HubManager hubManager = HubManager.of(hub, hubManagerInfoMessage.getName());
         hubManagerRepository.save(hubManager);
         log.info("허브 매니저 생성 : " + hubManager.getHub().getHubName() + ", " + hubManager.getManagerName());
