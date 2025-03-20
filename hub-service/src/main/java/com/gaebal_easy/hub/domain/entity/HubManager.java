@@ -2,13 +2,16 @@ package com.gaebal_easy.hub.domain.entity;
 
 import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Table(name = "p_hub_manager")
 public class HubManager extends BaseTimeEntity {
 
@@ -23,4 +26,11 @@ public class HubManager extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String managerName;
+
+    public static HubManager of(HubTemp hub, String managerName) {
+        return HubManager.builder()
+                .hub(hub)
+                .managerName(managerName)
+                .build();
+    }
 }
