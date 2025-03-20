@@ -1,7 +1,8 @@
-package com.gaebal_easy.hub;
+package com.gaebal_easy.client.hub;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
