@@ -16,3 +16,10 @@ services:
       - kafka_data:/bitnami/kafka
     networks:
       - gaebal-network
+
+volumes:
+  kafka_data:
+
+networks:
+  gaebal-network:
+    external: true

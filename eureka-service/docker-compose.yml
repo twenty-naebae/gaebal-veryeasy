@@ -1,0 +1,18 @@
+services:
+  eureka-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eureka-server
+    container_name: eureka-server
+    ports:
+      - "19090:19090"
+    environment:
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: false
+      EUREKA_CLIENT_FETCH_REGISTRY: false
+    networks:
+      - gaebal-network
+
+networks:
+  gaebal-network:
+    external: true

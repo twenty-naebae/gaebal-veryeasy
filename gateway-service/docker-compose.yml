@@ -1,0 +1,18 @@
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "19091:19091"
+    env_file:
+      - .env
+    networks:
+      - gaebal-network
+    environment:
+      EUREKA_SERVER: http://eureka-server:19090/eureka
+
+networks:
+  gaebal-network:
+    external: true
