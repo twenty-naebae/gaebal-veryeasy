@@ -18,6 +18,7 @@ public class JoinService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ProducerService producerService;
 
+    //todo - validation 체크 해줘야함. unique검사등
     @Transactional
     public void join(JoinRequest joinRequest) {
         joinRequest.setPassword(bCryptPasswordEncoder.encode(joinRequest.getPassword()));
