@@ -8,8 +8,10 @@ services:
     ports:
       - "19090:19090"
     environment:
+
       EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
       EUREKA_CLIENT_FETCH_REGISTRY: "false"
+
     networks:
       - gaebal-network
 
