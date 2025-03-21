@@ -1,7 +1,10 @@
 package com.gaebal_easy.gateway.gateway.auth;
 
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import gaebal_easy.common.global.dto.ApiResponseData;
+import gaebal_easy.common.global.exception.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -10,18 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import gaebal_easy.common.global.dto.ApiResponseData;
-import gaebal_easy.common.global.exception.BaseException;
-import gaebal_easy.common.global.exception.Code;
-import gaebal_easy.common.global.exception.ExpiredTokenException;
-import gaebal_easy.common.global.exception.InvalidTokenException;
-import gaebal_easy.common.global.exception.RequiredArgumentException;
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -78,8 +73,7 @@ public class AuthPermissionPreFilter extends AbstractGatewayFilterFactory<AuthPe
                     .header("X-USER-ID", userId)
                     .header("X-USER-ROLE", role)
                     .build();
-            log.info("X-USER-ID: " + userId);
-            log.info("X-USER-ROLE: " + role);
+
             return chain.filter(exchange.mutate().request(authRequest).build());
         };
     }

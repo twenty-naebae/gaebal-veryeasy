@@ -1,11 +1,14 @@
 server:
-  port: 19091
+  port: ${SERVER_PORT}
 
 spring:
   main:
     web-application-type: reactive
   application:
     name: gateway-service
+
+  config:
+    import: optional:file:.env[.properties]
   cloud:
     gateway:
       routes:
@@ -40,7 +43,6 @@ spring:
           predicates:
             - Path=/delivery-service/api/send
             - Method=GET
-
         - id: hub-service
           uri: lb://hub-service
           predicates:
@@ -50,6 +52,12 @@ spring:
           uri: lb://user-service  # 'user-service'라는 이름으로 로드 밸런싱된 서비스로 라우팅
           predicates:
             - Path=/user-service/api/**  # 경로로 들어오는 요청을 이 라우트로 처리
+          filters:
+            - name: AuthPermissionPreFilter
+        - id: slack-service
+          uri: lb://slack-service
+          predicates:
+            - Path=/slack-service/api/**
           filters:
             - name: AuthPermissionPreFilter
         - id: store-service
@@ -85,7 +93,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka-server:19090/eureka
+      defaultZone: ${EUREKA_SERVER}
     register-with-eureka: true
     fetch-registry: true
 
