@@ -16,7 +16,7 @@ public class JoinService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ProducerService producerService;
+    private final HubManagerEventService hubManagerEventService;
 
     //todo - validation 체크 해줘야함. unique검사등
     @Transactional
@@ -26,7 +26,7 @@ public class JoinService {
         userRepository.save(user);
         //todo - 각 서비스에 권한에 맞는 유저 생성 이벤트 요청
         if(user.getRole().equals(Role.HUB_MANAGER)){
-            producerService.sendHubManagerInfo(HubManagerInfoMessage.of(user.getId(), joinRequest.getName(), joinRequest.getGroup()));
+            hubManagerEventService.sendHubManagerInfo(HubManagerInfoMessage.of(user.getId(), joinRequest.getName(), joinRequest.getGroup()));
         }
         else if(user.getRole().equals(Role.HUB_DELIVERY_USER)|| user.getRole().equals(Role.STORE_DELIVERY_USER)){
             //todo - sendDeliverUserInfo 처리
