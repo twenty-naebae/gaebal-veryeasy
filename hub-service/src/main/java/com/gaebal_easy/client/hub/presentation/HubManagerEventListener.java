@@ -24,4 +24,14 @@ public class HubManagerEventListener {
             eventErrorHandler.handleEventError(e, hubManagerInfoMessage, "hub-manager-create-error");
         }
     }
+
+    @KafkaListener(topics = "hub-manager-update", groupId = "hub-manager")
+    public void handleHubManagerUpdate(HubManagerInfoMessage hubManagerInfoMessage) {
+        try {
+            log.info("handleHubManagerUpdate : {}", hubManagerInfoMessage);
+            hubManagerService.updateHubManager(hubManagerInfoMessage);
+        } catch (Exception e) {
+            eventErrorHandler.handleEventError(e, hubManagerInfoMessage, "hub-manager-update-error");
+        }
+    }
 }

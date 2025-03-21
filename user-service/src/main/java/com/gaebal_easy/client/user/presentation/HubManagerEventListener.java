@@ -19,7 +19,7 @@ public class HubManagerEventListener {
             log.info("handleHubManagerInfo : {}", hubManagerInfoMessage);
             hubManagerEventService.rollbackHubManagerInfo(hubManagerInfoMessage);
         } catch (Exception e) {
-            log.error("handleHubManagerInfo : {}", hubManagerInfoMessage, ", rollback실패");
+            log.error("handleHubManagerInfo : {} message : {}",hubManagerInfoMessage, ", rollback실패");
         }
     }
 }

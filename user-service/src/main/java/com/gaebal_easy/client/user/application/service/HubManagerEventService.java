@@ -40,7 +40,7 @@ public class HubManagerEventService {
     // hub-manager-update 이벤트 전송
     public void sendHubManagerUpdate(HubManagerUpdateMessage hubManagerUpdateMessage) {
         updateKafkaTemplate.send("hub-manager-update", hubManagerUpdateMessage);
-        log.info("전송 완료");
+        log.info("hub manager 업데이트 이벤트 전송 완료");
     }
 
 //    @Transactional

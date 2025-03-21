@@ -35,4 +35,9 @@ public class HubManager extends BaseTimeEntity {
                 .build();
     }
 
+    public void update(String name, Hub newHub) {
+        this.name = name;
+        this.hub = newHub;
+    }
+
 }

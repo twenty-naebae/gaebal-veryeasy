@@ -19,4 +19,5 @@ public class HubManagerUpdateMessage extends BaseMessage {
                 .group(group)
                 .build();
     }
+
 }
