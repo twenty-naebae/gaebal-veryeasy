@@ -78,7 +78,8 @@ public class AuthPermissionPreFilter extends AbstractGatewayFilterFactory<AuthPe
                     .header("X-USER-ID", userId)
                     .header("X-USER-ROLE", role)
                     .build();
-
+            log.info("X-USER-ID: " + userId);
+            log.info("X-USER-ROLE: " + role);
             return chain.filter(exchange.mutate().request(authRequest).build());
         };
     }

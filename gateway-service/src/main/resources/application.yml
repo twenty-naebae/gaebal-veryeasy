@@ -61,8 +61,7 @@ spring:
         - id: slack-service-get-messages
           uri: lb://slack-service
           predicates:
-            - Path=/slack-service/api/**;
-            - Method=GET
+            - Path=/slack-service/api/**
           filters:
             - name: AuthPermissionPreFilter
 
