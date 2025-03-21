@@ -1,4 +1,4 @@
-package com.gaebal_easy.hub.infrastructure.repository;
+package com.gaebal_easy.client.hub.infrastructure;
 
 import com.gaebal_easy.hub.domain.entity.HubManager;
 import org.springframework.data.jpa.repository.JpaRepository;

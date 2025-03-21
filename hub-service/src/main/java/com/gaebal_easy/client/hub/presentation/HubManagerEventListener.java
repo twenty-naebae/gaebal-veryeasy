@@ -1,7 +1,8 @@
-package com.gaebal_easy.hub.presentation;
+package com.gaebal_easy.client.hub.presentation;
 
-import com.gaebal_easy.hub.application.service.HubManagerService;
-import com.gaebal_easy.hub.presentation.dto.HubManagerInfoMessage;
+import com.gaebal_easy.client.hub.application.service.EventErrorHandler;
+import com.gaebal_easy.client.hub.application.service.HubManagerService;
+import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -13,14 +14,14 @@ import org.springframework.stereotype.Component;
 public class HubManagerEventListener {
 
     private final HubManagerService hubManagerService;
-
-    @KafkaListener(topics = "hub-manager-info", groupId = "hub-manager")
+    private final EventErrorHandler eventErrorHandler;
+    @KafkaListener(topics = "hub-manager-create", groupId = "hub-manager")
     public void handleHubManagerInfo(HubManagerInfoMessage hubManagerInfoMessage) {
         try {
             log.info("handleHubManagerInfo : {}", hubManagerInfoMessage);
             hubManagerService.createHubManager(hubManagerInfoMessage);
         } catch (Exception e) {
-            log.error("handleHubManagerInfo error : {}", e.getMessage());
+            eventErrorHandler.handleEventError(e, hubManagerInfoMessage, "hub-manager-create-error");
         }
     }
 }
