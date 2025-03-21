@@ -10,4 +10,5 @@ public interface HubManagerRepository {
     public HubManager save(HubManager hubManager);
     public Optional<HubManager> findByUserId(Long userId);
     public void update(HubManager hubManager, String name, Hub newHub);
+    public void delete(HubManager hubManager, String deletedBy);
 }

@@ -9,6 +9,7 @@ import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.HubManagerNotFoundException;
 import gaebal_easy.common.global.exception.HubNotFoundException;
+import gaebal_easy.common.global.message.HubManagerDeleteMessage;
 import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,13 @@ public class HubManagerService {
         hubManagerRepository.update(hubManager, hubManagerName,newHub);
     }
 
+    @Transactional
+    public void deleteHubManager(HubManagerDeleteMessage hubManagerDeleteMessage) {
+        // 허브 매니저 찾기
+        HubManager hubManager = hubManagerRepository.findByUserId(hubManagerDeleteMessage.getUserId()).orElseThrow(() -> new HubManagerNotFoundException(Code.HUB_CAN_NOT_FIND_HUBMANAGER));
+        hubManagerRepository.delete(hubManager, hubManagerDeleteMessage.getDeletedBy());
+    }
+
     // Hubname으로 HubLocation 찾기
     private HubLocation getHubLocation(String group) {
         HubLocation hubLocation = HubLocation.findByName(group);
@@ -59,5 +67,6 @@ public class HubManagerService {
     private Hub getHub(HubLocation hubLocation) {
         return hubRepository.findByHubLocation(hubLocation).orElseThrow(() -> new HubNotFoundException(Code.HUB_NOT_FOUND));
     }
+
 
 }

@@ -29,4 +29,10 @@ public class HubManagerImplRepository implements HubManagerRepository {
     public void update(HubManager hubManager, String name, Hub newHub) {
         hubManager.update(hubManager.getName(), newHub);
     }
+
+    @Override
+    public void delete(HubManager hubManager, String deletedBy) {
+        hubManager.delete(deletedBy);
+        hubManagerJpaRepository.save(hubManager);
+    }
 }
