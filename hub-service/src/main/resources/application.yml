@@ -7,7 +7,7 @@ spring:
     name: hub-service
 
   datasource:
-    url: jdbc:mariadb://mariadb:3310/hub-database?useSSL=false
+    url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
