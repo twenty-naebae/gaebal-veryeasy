@@ -36,10 +36,14 @@ public class HubManagerService {
         Hub newHub = getHub(getHubLocation(hubManagerUpdateMessage.getGroup()));
 
         // 허브 매니저 찾기
-
         HubManager hubManager = hubManagerRepository.findByUserId(hubManagerUpdateMessage.getUserId()).orElseThrow(() -> new HubManagerNotFoundException(Code.HUB_CAN_NOT_FIND_HUBMANAGER));
         // 허브 매니저 업데이트
-        hubManagerRepository.update(hubManager, hubManagerUpdateMessage.getName(),newHub);
+
+        String hubManagerName = hubManager.getName();
+        if(hubManagerUpdateMessage.getName()!=null){
+            hubManagerName = hubManagerUpdateMessage.getName();
+        }
+        hubManagerRepository.update(hubManager, hubManagerName,newHub);
     }
 
     // Hubname으로 HubLocation 찾기

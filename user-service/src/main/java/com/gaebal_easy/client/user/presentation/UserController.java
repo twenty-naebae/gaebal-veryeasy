@@ -21,6 +21,7 @@ public class UserController {
     private final JoinService joinService;
     private final UserService userService;
 
+    // todo- 회원가입 예외처리. 이미 존재하는 userId일 경우등 unique 제약조건 위반시
     @PostMapping("/signup")
     public ResponseEntity<ApiResponseData<String>> signup(@RequestBody JoinRequest joinRequest){
         joinService.join(joinRequest);

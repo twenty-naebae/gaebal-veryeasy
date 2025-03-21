@@ -22,7 +22,16 @@ public class UserService {
     @Transactional
     public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CanNotFindUserException());
-        String newPassword = bCryptPasswordEncoder.encode(userUpdateRequest.getPassword());
+
+        String newPassword = user.getPassword();
+        if (userUpdateRequest.getPassword() != null) {
+            newPassword = bCryptPasswordEncoder.encode(userUpdateRequest.getPassword());
+        }
+
+        String username = user.getUsername();
+        if(userUpdateRequest.getUsername() != null) {
+            username = userUpdateRequest.getUsername();
+        }
         userRepository.update(user, userUpdateRequest.getUsername(), newPassword);
         hubManagerEventService.sendHubManagerUpdate(HubManagerUpdateMessage.of(userId, userUpdateRequest.getName(), userUpdateRequest.getGroup()));
     }
