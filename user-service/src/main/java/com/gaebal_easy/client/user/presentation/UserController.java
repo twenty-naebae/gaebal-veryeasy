@@ -1,12 +1,11 @@
 package com.gaebal_easy.client.user.presentation;
 
 import com.gaebal_easy.client.user.application.service.JoinService;
-import com.gaebal_easy.client.user.application.service.HubManagerEventService;
 import com.gaebal_easy.client.user.application.service.UserService;
-import com.gaebal_easy.client.user.presentation.dto.CustomUserDetails;
 import com.gaebal_easy.client.user.presentation.dto.JoinRequest;
 import com.gaebal_easy.client.user.presentation.dto.UserUpdateRequest;
 import gaebal_easy.common.global.dto.ApiResponseData;
+import gaebal_easy.common.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,10 +34,15 @@ public class UserController {
         return ResponseEntity.ok(ApiResponseData.success(null, "유저 정보가 수정되었습니다."));
     }
 
-    @PreAuthorize("hasRole('MASTER')")
+//    @PreAuthorize("hasRole('MASTER')")
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<ApiResponseData<String>> deleteUser(@AuthenticationPrincipal CustomUserDetails customUserDetails,@PathVariable Long userId){
         userService.deleteUser(customUserDetails, userId);
         return ResponseEntity.ok(ApiResponseData.success(null, "유저 정보가 삭제되었습니다."));
+    }
+
+    @GetMapping("/test")
+    public String test(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        return "test: "+ customUserDetails.getUsername();
     }
 }

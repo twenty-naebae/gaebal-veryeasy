@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
 @Import({
         JpaAuditingConfig.class,
         PropertyConfig.class,
-        GlobalSecurityContextFilter.class
+        GlobalSecurityContextFilter.class,
 })
 public class GlobalConfig {
 }
