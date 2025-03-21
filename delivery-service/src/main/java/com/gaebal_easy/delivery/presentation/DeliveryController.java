@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/delivery-service/api")
 public class DeliveryController {
-    private final DeliveryService deliveryService;
-
-    @GetMapping("/send")
-    public String sendMessage() {
-        deliveryService.assignDeliveryManager();
-        return "Message sent to Kafka topic";
-    }
-
+	private final DeliveryService deliveryService;
+	//카프카 테스트용
+	@GetMapping("/send")
+	public String sendMessage() {
+		deliveryService.assignDeliveryManager();
+		return "Message sent to Kafka topic";
+	}
 }

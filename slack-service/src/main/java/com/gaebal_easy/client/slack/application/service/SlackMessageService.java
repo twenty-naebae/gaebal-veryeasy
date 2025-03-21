@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.gaebal_easy.client.slack.domain.entity.SlackMessage;
@@ -83,7 +84,11 @@ public class SlackMessageService {
 	}
 
 	public SlackResponse.GetSlackMessagesResponse getMessages(UUID receiveId, int page, int size) {
-		Pageable pageable = PageRequest.of(page - 1, size);
+		if (size != 10 && size != 30 && size != 50) {
+			size = 10;
+		}
+		Sort sort = Sort.by(Sort.Order.desc("createdAt"), Sort.Order.desc("updatedAt"));
+		Pageable pageable = PageRequest.of(page - 1, size, sort);
 		Page<SlackMessage> slackMessagePage= slackMessageRepository.findAllByReceiveId(receiveId, pageable);
 		List<SlackMessageDTO> slackMessageDTOS = new ArrayList<>();
 		for (SlackMessage slackMessage : slackMessagePage.getContent()) {
