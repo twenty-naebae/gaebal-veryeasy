@@ -3,6 +3,7 @@ package com.gaebal_easy.client.hub.presentation;
 import com.gaebal_easy.client.hub.application.service.EventErrorHandler;
 import com.gaebal_easy.client.hub.application.service.HubManagerService;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage;
+import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -26,12 +27,12 @@ public class HubManagerEventListener {
     }
 
     @KafkaListener(topics = "hub-manager-update", groupId = "hub-manager")
-    public void handleHubManagerUpdate(HubManagerInfoMessage hubManagerInfoMessage) {
+    public void handleHubManagerUpdate(HubManagerUpdateMessage hubManagerUpdateMessage) {
         try {
-            log.info("handleHubManagerUpdate : {}", hubManagerInfoMessage);
-            hubManagerService.updateHubManager(hubManagerInfoMessage);
+            log.info("handleHubManagerUpdate : {}", hubManagerUpdateMessage);
+            hubManagerService.updateHubManager(hubManagerUpdateMessage);
         } catch (Exception e) {
-            eventErrorHandler.handleEventError(e, hubManagerInfoMessage, "hub-manager-update-error");
+            eventErrorHandler.handleEventError(e, hubManagerUpdateMessage, "hub-manager-update-error");
         }
     }
 }
