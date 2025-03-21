@@ -33,7 +33,15 @@ public class UserService {
             username = userUpdateRequest.getUsername();
         }
         userRepository.update(user, userUpdateRequest.getUsername(), newPassword);
-        hubManagerEventService.sendHubManagerUpdate(HubManagerUpdateMessage.of(userId, userUpdateRequest.getName(), userUpdateRequest.getGroup()));
+        hubManagerEventService.sendHubManagerUpdate(HubManagerUpdateMessage.of(userId, username, userUpdateRequest.getGroup()));
     }
 
+    @Transactional
+    public void deleteUser(CustomUserDetails customUserDetails,Long userId) {
+
+        // 유저 정보 삭제
+        User user = userRepository.findById(userId).orElseThrow(() -> new CanNotFindUserException());
+        userRepository.delete(user, customUserDetails.getUsername());
+        
+    }
 }

@@ -30,8 +30,15 @@ public class UserController {
 
     @PreAuthorize("hasRole('MASTER')")
     @PutMapping("/users/{userId}")
-    public ResponseEntity<ApiResponseData<String>> updateUser(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long userId, @RequestBody UserUpdateRequest userUpdateRequest){
+    public ResponseEntity<ApiResponseData<String>> updateUser(@PathVariable Long userId, @RequestBody UserUpdateRequest userUpdateRequest){
         userService.updateUser(userId, userUpdateRequest);
         return ResponseEntity.ok(ApiResponseData.success(null, "유저 정보가 수정되었습니다."));
+    }
+
+    @PreAuthorize("hasRole('MASTER')")
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<ApiResponseData<String>> deleteUser(@AuthenticationPrincipal CustomUserDetails customUserDetails,@PathVariable Long userId){
+        userService.deleteUser(customUserDetails, userId);
+        return ResponseEntity.ok(ApiResponseData.success(null, "유저 정보가 삭제되었습니다."));
     }
 }

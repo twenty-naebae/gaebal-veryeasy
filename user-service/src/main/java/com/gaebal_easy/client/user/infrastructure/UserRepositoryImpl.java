@@ -33,4 +33,10 @@ public class UserRepositoryImpl implements UserRepository{
         user.update(username, newPassword);
         userJpaRepository.save(user);
     }
+
+    @Override
+    public void delete(User user, String deletedBy) {
+        user.delete(deletedBy);
+        userJpaRepository.save(user);
+    }
 }

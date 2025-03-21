@@ -15,4 +15,6 @@ public interface UserRepository {
     Optional<User> findById(Long userId);
 
     void update(User user, String username, String newPassword);
+
+    void delete(User user, String deletedBy);
 }
