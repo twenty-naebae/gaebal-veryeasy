@@ -116,7 +116,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setCharacterEncoding("UTF-8");
 
         // 실패 응답 객체 생성
-        ResponseEntity<ApiResponseData<String>> responseBody = ResponseEntity.badRequest().body(ApiResponseData.failure(Code.INVALID_INPUT.getCode(), "아이디 혹은 비밀번호를 다시 입력해주세요"));
+        ResponseEntity<ApiResponseData<String>> responseBody = ResponseEntity.badRequest().body(ApiResponseData.failure(Code.ACCESS_DENIED_EXCEPTION.getCode(), "아이디 혹은 비밀번호를 다시 입력해주세요"));
 
         // JSON 변환 후 출력
         ObjectMapper objectMapper = new ObjectMapper();
