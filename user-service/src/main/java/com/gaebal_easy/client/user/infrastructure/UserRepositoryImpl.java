@@ -39,4 +39,9 @@ public class UserRepositoryImpl implements UserRepository{
         user.delete(deletedBy);
         userJpaRepository.save(user);
     }
+
+    @Override
+    public void rollbackDelete(User user, String errorLocation) {
+        user.rollbackDelete(errorLocation);
+    }
 }

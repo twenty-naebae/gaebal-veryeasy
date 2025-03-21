@@ -17,4 +17,6 @@ public interface UserRepository {
     void update(User user, String username, String newPassword);
 
     void delete(User user, String deletedBy);
+
+    void rollbackDelete(User user, String errorLocation);
 }

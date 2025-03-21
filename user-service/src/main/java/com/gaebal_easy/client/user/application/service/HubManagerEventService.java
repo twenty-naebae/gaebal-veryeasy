@@ -12,8 +12,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -49,6 +47,12 @@ public class HubManagerEventService {
     public void sendHubManagerDelete(HubManagerDeleteMessage hubManagerDeleteMessage) {
         deleteKafkaTemplate.send("hub-manager-delete", hubManagerDeleteMessage);
         log.info("hub manage 삭제 이벤트 전송 완료");
+    }
+
+    // hub-manager-delete 롤백
+    public void rollbackHubMangerDelete(HubManagerDeleteMessage hubManagerDeleteMessage) {
+        User user = userRepository.findById(hubManagerDeleteMessage.getUserId()).orElseThrow(() -> new CanNotFindUserException());
+        userRepository.rollbackDelete(user, hubManagerDeleteMessage.getErrorLocation());
     }
 
 //    @Transactional
