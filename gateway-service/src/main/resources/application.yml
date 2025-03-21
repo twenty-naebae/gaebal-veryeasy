@@ -38,6 +38,11 @@ spring:
           predicates:
             - Path=/user-service/api/token/reissue
             - Method=POST
+        - id: delivery-service-assign-manager
+          uri: lb://delivery-service
+          predicates:
+            - Path=/delivery-service/api/send
+            - Method=GET
         - id: hub-service
           uri: lb://hub-service
           predicates:
@@ -67,6 +72,13 @@ spring:
           uri: lb://product-service
           predicates:
             - Path=/product-service/api/**
+          filters:
+            - name: AuthPermissionPreFilter
+
+        - id: slack-service-get-messages
+          uri: lb://slack-service
+          predicates:
+            - Path=/slack-service/api/**
           filters:
             - name: AuthPermissionPreFilter
 

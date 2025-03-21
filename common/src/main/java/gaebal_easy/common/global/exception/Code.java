@@ -43,7 +43,7 @@ public enum Code {
      */
     HUB_NOT_FOUND(HttpStatus.BAD_REQUEST,4001,"허브가 존재하지 않습니다."),
     HUB_PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST,4002,"상품이 존재하지 않습니다."),
-    HUB_CAN_NOT_FIND_PRODUCT_IN_HUB(HttpStatus.BAD_REQUEST,4003,"허브에 해당 상품이 존재하지 않습니다.");
+    HUB_CAN_NOT_FIND_PRODUCT_IN_HUB(HttpStatus.BAD_REQUEST,4003,"허브에 해당 상품이 존재하지 않습니다."),
 
     /**
      * Delivery 5000번대
@@ -62,8 +62,15 @@ public enum Code {
      */
 
     /**
-     * Slcak 9000번대
+     * Slack 9000번대
      */
+    SLACK_MESSAGE_NOT_SEND_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 9001, "슬랙 메시지 전송이 실패하였습니다."),
+    SLACK_INVALID_USER_ID_EXCEPTION(HttpStatus.BAD_REQUEST, 9002, "유효하지 않은 Slack User ID입니다."),
+    SLACK_AUTH_EXCEPTION(HttpStatus.UNAUTHORIZED, 9003, "Slack 인증에 실패하였습니다."),
+    SLACK_RATE_LIMITED_EXCEPTION(HttpStatus.TOO_MANY_REQUESTS, 9004, "Slack API 요청이 너무 많습니다. 잠시 후 다시 시도해주세요."),
+    SLACK_DM_CHANNEL_OPEN_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, 9005, "DM 채널을 열 수 없습니다."),
+    GEMINI_PARSING_EXCEPTION(HttpStatus.NOT_FOUND, 9006, "발송 데드라인 생성 중 오류가 발생했습니다."),
+    SLACK_MESSAGE_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 9007, "슬랙메시지가 존재하지 않습니다.");
 
     /**
      * Kafka 통신 10000번대
