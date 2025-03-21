@@ -1,10 +1,10 @@
 services:
   mariadb:
     image: mariadb:10.11
-    container_name: delivery-mariadb
+    container_name: slack-mariadb
     restart: always
     environment:
-      MARIADB_DATABASE: delivery-database
+      MARIADB_DATABASE: slack-database
       MARIADB_USER: ${DB_USER}
       MARIADB_PASSWORD: ${DB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -17,14 +17,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: delivery-backend
-    container_name: delivery-backend
+    image: slack-backend
+    container_name: slack-backend
     depends_on:
       - mariadb
     env_file:
       - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://delivery-mariadb:3306/delivery-database?useSSL=false
+      SPRING_DATASOURCE_URL: jdbc:mariadb://slack-mariadb:3306/slack-database?useSSL=false
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
@@ -36,7 +36,7 @@ services:
       SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
       AI_API_KEY: ${AI_API_KEY}
     ports:
-      - "19096:19096"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     networks:
       - gaebal-network
 

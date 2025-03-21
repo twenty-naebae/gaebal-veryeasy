@@ -1,53 +1,51 @@
 server:
-  port: ${SERVER_PORT}
+  port: 19096
+  address: 0.0.0.0
 
 spring:
   application:
-    name: delivery
-
-  # MariaDB
+    name: delivery-service
   datasource:
-    url: jdbc:mariadb://${DB_PORT}/deliveryapp
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://delivery-mariadb:3306/delivery-database?useSSL=false
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
-  # Redis
-  data:
-    redis:
-      host: localhost
-      port: ${REDIS_PORT}
-      username: default
-      password: systempass
-
-  # Kafka
   kafka:
-    bootstrap-servers: localhost:${KAFKA_PORT}
+    bootstrap-servers: kafka:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-    defer-datasource-initialization: true
-    show-sql: true
 
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  data:
+    redis:
+      host: redis
+      port: 6379
 
 eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER}
+    register-with-eureka: true
+    fetch-registry: true
 
+jwt:
+  secret: ${JWT_SECRET}
 
-# zipkin
 management:
   zipkin:
     tracing:
-      endpoint: "http://localhost:9411/api/v2/spans"
+      endpoint: ${ZIPKIN_URL}
   tracing:
     sampling:
       probability: 1.0
+

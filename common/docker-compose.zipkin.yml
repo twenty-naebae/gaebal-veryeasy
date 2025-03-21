@@ -6,3 +6,7 @@ services:
       - "9411:9411"
     networks:
       - gaebal-network
+
+networks:
+  gaebal-network:
+    external: true
