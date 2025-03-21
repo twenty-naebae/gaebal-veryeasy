@@ -12,13 +12,6 @@ public class SlackResponse {
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PRIVATE)
 	@Builder
-	public static class GenerateDeadlineResponse {
-		private String deadline;
-	}
-
-	@Getter
-	@AllArgsConstructor(access = AccessLevel.PRIVATE)
-	@Builder
 	public static class GetSlackMessagesResponse {
 		private List<SlackMessageDTO> slackMessages;
 		private int totalPages;
