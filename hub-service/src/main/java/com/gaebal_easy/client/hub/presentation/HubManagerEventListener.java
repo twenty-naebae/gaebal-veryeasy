@@ -16,7 +16,7 @@ public class HubManagerEventListener {
 
     private final HubManagerService hubManagerService;
     private final EventErrorHandler eventErrorHandler;
-    @KafkaListener(topics = "hub-manager-create", groupId = "hub-manager")
+    @KafkaListener(topics = "hub-manager-create", groupId = "gaebal-group")
     public void handleHubManagerInfo(HubManagerInfoMessage hubManagerInfoMessage) {
         try {
             log.info("handleHubManagerInfo : {}", hubManagerInfoMessage);
@@ -26,7 +26,8 @@ public class HubManagerEventListener {
         }
     }
 
-    @KafkaListener(topics = "hub-manager-update", groupId = "hub-manager")
+    // todo - updatedBy 정보도 받아야함.
+    @KafkaListener(topics = "hub-manager-update", groupId = "geabal-group")
     public void handleHubManagerUpdate(HubManagerUpdateMessage hubManagerUpdateMessage) {
         try {
             log.info("handleHubManagerUpdate : {}", hubManagerUpdateMessage);
