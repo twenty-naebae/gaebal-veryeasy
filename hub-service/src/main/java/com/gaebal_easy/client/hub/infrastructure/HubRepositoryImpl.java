@@ -6,6 +6,7 @@ import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,4 +26,6 @@ public class HubRepositoryImpl implements HubRepository {
     public Optional<Hub> findByHubLocation(HubLocation hubLocation) {
         return hubJpaRepository.findByHubLocation(hubLocation);
     }
+
+    public List<Hub> findAll() {return hubJpaRepository.findAll();}
 }

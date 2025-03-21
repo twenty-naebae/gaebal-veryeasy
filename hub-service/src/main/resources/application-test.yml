@@ -1,0 +1,21 @@
+server:
+  port: 8080  # 로컬 테스트용 포트
+
+spring:
+  application:
+    name: hub-service
+
+  datasource:
+    url: jdbc:mariadb://localhost:3306/hub-database?useSSL=false
+    username: gaebal
+    password: gaebal
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  secret: Adsfvabewryethadbgnq4ertjadfhjmetDHJarkmyshfzdjykmrtejkymhndgThJymhfngbfcsdsdfsdafasdfasd
