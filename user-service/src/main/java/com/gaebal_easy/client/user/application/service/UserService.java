@@ -4,7 +4,9 @@ import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
 import com.gaebal_easy.client.user.presentation.dto.CustomUserDetails;
 import com.gaebal_easy.client.user.presentation.dto.UserUpdateRequest;
+import gaebal_easy.common.global.enums.Role;
 import gaebal_easy.common.global.exception.CanNotFindUserException;
+import gaebal_easy.common.global.message.HubManagerDeleteMessage;
 import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,7 +35,9 @@ public class UserService {
             username = userUpdateRequest.getUsername();
         }
         userRepository.update(user, userUpdateRequest.getUsername(), newPassword);
-        hubManagerEventService.sendHubManagerUpdate(HubManagerUpdateMessage.of(userId, username, userUpdateRequest.getGroup()));
+        if(user.getRole().equals(Role.HUB_MANAGER)) {
+            hubManagerEventService.sendHubManagerUpdate(HubManagerUpdateMessage.of(userId, username, userUpdateRequest.getGroup()));
+        }
     }
 
     @Transactional
@@ -42,6 +46,9 @@ public class UserService {
         // 유저 정보 삭제
         User user = userRepository.findById(userId).orElseThrow(() -> new CanNotFindUserException());
         userRepository.delete(user, customUserDetails.getUsername());
-        
+        if(user.getRole().equals(Role.HUB_MANAGER)) {
+            hubManagerEventService.sendHubManagerDelete(HubManagerDeleteMessage.of(userId, customUserDetails.getUsername()));
+        }
+
     }
 }
