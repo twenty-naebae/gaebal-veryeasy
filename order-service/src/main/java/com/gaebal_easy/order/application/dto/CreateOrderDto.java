@@ -8,12 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class CreateOrderDto {
+    private UUID hubId;
     private List<ProductDto> products;
     private String orderRequest;
     private String receiver;
@@ -21,8 +23,9 @@ public class CreateOrderDto {
     private String address;
 
 
-    public static CreateOrderDto create(List<ProductDto> products, String orderRequest, String receiver, String supplier, String address) {
+    public static CreateOrderDto create(UUID hubId, List<ProductDto> products, String orderRequest, String receiver, String supplier, String address) {
         return CreateOrderDto.builder()
+                .hubId(hubId)
                 .products(products)
                 .orderRequest(orderRequest)
                 .receiver(receiver)

@@ -15,6 +15,7 @@ import java.util.UUID;
 @Getter
 public class CreateOrderRequest {
 
+    private UUID hubId;
     private List<ProductDto> products;
     private String orderRequest;
     private String receiver;
@@ -23,7 +24,7 @@ public class CreateOrderRequest {
 
 
     public CreateOrderDto toDto() {
-        return CreateOrderDto.create(this.products, this.orderRequest, this.receiver, this.supplier, this.address);
+        return CreateOrderDto.create(this.hubId, this.products, this.orderRequest, this.receiver, this.supplier, this.address);
     }
 
 }

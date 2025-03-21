@@ -5,8 +5,10 @@ import com.gaebal_easy.order.application.dto.OrderResponse;
 import com.gaebal_easy.order.application.dto.UpdateOrderDto;
 import com.gaebal_easy.order.domain.entity.Order;
 import com.gaebal_easy.order.domain.repository.OrderRepository;
+import com.gaebal_easy.order.presentation.dto.StockCheckRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,9 +37,13 @@ public class OrderService {
     }
 
     public String checkStock(CreateOrderDto dto) {
+        StockCheckRequest stockCheck = StockCheckRequest.builder()
+                .products(dto.getProducts())
+                .hubId(dto.getHubId())
+                .build();
 
-        String s = hubClient.checkStock(dto.getProducts());
-        log.info("Check stock: {}", s);
-        return s;
+        ResponseEntity<?> responseEntity = hubClient.checkStock(stockCheck);
+        log.info("Check stock: {}", responseEntity.getBody());
+        return "test OK";
     }
 }
