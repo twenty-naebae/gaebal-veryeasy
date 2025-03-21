@@ -35,6 +35,11 @@ spring:
           predicates:
             - Path=/user-service/api/token/reissue
             - Method=POST
+        - id: delivery-service-assign-manager
+          uri: lb://delivery-service
+          predicates:
+            - Path=/delivery-service/api/send
+            - Method=GET
 
         # 로그인 필요한 요청(토큰 검증 필터 존재)
         - id: user-service # 라우트 식별자

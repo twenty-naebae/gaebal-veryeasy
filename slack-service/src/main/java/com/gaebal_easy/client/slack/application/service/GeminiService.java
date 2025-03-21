@@ -64,25 +64,23 @@ public class GeminiService {
 
 	@NotNull
 	private static String buildSlackMessage(SlackRequest.GenerateDeadLineRequest requestDto, String deadline) {
-		String message = String.format("주문 번호: %d\n" +
-				"주문자 정보: %s / %s\n" +
+		String message = String.format("주문 번호: %s\n" +
+				"주문자 정보: %s \n" +
 				"상품 정보: %s\n" +
 				"요청 사항: %s\n" +
 				"발송지: %s\n" +
 				"경유지: %s\n" +
 				"도착지: %s\n" +
-				"배송담당자: %s / %s\n\n" +
+				"배송담당자: %s \n\n" +
 				"위 내용을 기반으로 도출된 최종 발송 시한은 %s 입니다.",
 			requestDto.getOrderNumber(),
 			requestDto.getCustomerName(),
-			requestDto.getCustomerEmail(),
 			requestDto.getProductInfo(),
 			requestDto.getRequestDetails(),
 			requestDto.getShippingAddress(),
 			requestDto.getTransitAddress(),
 			requestDto.getDestination(),
 			requestDto.getDeliveryManager(),
-			requestDto.getDeliveryManagerEmail(),
 			deadline);
 		return message;
 	}
@@ -90,24 +88,22 @@ public class GeminiService {
 	private String buildGeminiOrder(SlackRequest.GenerateDeadLineRequest requestDto) {
 		return String.format(
 			"주문 번호: %s\n" +
-				"주문자 정보: %s / %s\n" +
+				"주문자 정보: %s\n" +
 				"상품 정보: %s\n" +
 				"요청 사항: %s\n" +
 				"발송지: %s\n" +
 				"경유지: %s\n" +
 				"도착지: %s\n" +
-				"배송담당자: %s / %s\n\n" +
+				"배송담당자: %s\n\n" +
 				"위 내용 기반으로 도출된 발송 시한을 날짜, 시간까지 생성해주세요.",
 			requestDto.getOrderNumber(),
 			requestDto.getCustomerName(),
-			requestDto.getCustomerEmail(),
 			requestDto.getProductInfo(),
 			requestDto.getRequestDetails(),
 			requestDto.getShippingAddress(),
 			requestDto.getTransitAddress(),
 			requestDto.getDestination(),
-			requestDto.getDeliveryManager(),
-			requestDto.getDeliveryManagerEmail()
+			requestDto.getDeliveryManager()
 		);
 	}
 
