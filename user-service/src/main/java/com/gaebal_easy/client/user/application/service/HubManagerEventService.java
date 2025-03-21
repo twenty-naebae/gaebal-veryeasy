@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -25,10 +26,12 @@ public class HubManagerEventService {
         log.info("전송 완료");
     }
 
+    @Transactional
     // hub-manager-create 롤백
     public void rollbackHubManagerInfo(HubManagerInfoMessage hubManagerInfoMessage) {
         User user  = userRepository.findById(hubManagerInfoMessage.getUserId()).orElseThrow(() -> new CanNotFindUserException());
         user.delete(hubManagerInfoMessage.getErrorLocation());
+        userRepository.save(user);
         log.info("유저 롤백 완료");
     }
 }

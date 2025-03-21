@@ -1,6 +1,7 @@
 package com.gaebal_easy.client.hub.infrastructure;
 
-import com.gaebal_easy.hub.domain.entity.HubManager;
+
+import com.gaebal_easy.client.hub.domain.entity.HubManager;
 import com.gaebal_easy.client.hub.domain.repository.HubManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

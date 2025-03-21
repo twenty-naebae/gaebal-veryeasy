@@ -78,6 +78,11 @@ public class KafkaConfig {
         // 타입 정보가 없는 경우 Map으로 변환
         props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "java.util.Map");
 
+        // todo- 직렬화 메서드를 따로 구현하는것을 고려해봐야함. 초기상태라 변화가 많을 것 같아 일단 이렇게 구현
+        props.put(JsonDeserializer.TYPE_MAPPINGS,
+                "com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage:" +
+                        "com.gaebal_easy.client.user.application.dto.HubManagerInfoMessage");
+
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(Object.class));
     }
 

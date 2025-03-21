@@ -13,7 +13,7 @@ public class HubManagerInfoMessage extends BaseMessage {
     private String name;
     private String group;
 
-    public static HubManagerInfoMessage of(Long userId, String name, String group, String errorType) {
+    public static HubManagerInfoMessage of(Long userId, String name, String group) {
         return HubManagerInfoMessage.builder()
                 .userId(userId)
                 .name(name)

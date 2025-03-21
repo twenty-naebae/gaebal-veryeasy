@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class EventErrorHandler {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private static final String ERROR_LOCATION = "hub-service";
 
 //    public void handleHumbManagerCreateError(Exception exception, HubManagerInfoMessage hubManagerInfoMessage) {
 //        log.error("이벤트 처리 중 오류 발생: {}", exception.getMessage(), exception);
@@ -32,7 +31,7 @@ public class EventErrorHandler {
             String errorTopic){
 
         if(message.getErrorLocation()!=null){
-            message.setErrorInfo(ERROR_LOCATION, exception.getMessage());
+            message.setErrorInfo("hub-service", exception.getMessage());
         }
         log.error("이벤트 처리 중 오류 발생: {}", exception.getMessage(), exception);
         kafkaTemplate.send(errorTopic, message);
