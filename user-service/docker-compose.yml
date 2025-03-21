@@ -34,7 +34,7 @@ services:
       EUREKA_SERVER: ${EUREKA_SERVER}
       MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: ${ZIPKIN_URL}
     ports:
-      - "19092:19092"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     networks:
       - gaebal-network
 

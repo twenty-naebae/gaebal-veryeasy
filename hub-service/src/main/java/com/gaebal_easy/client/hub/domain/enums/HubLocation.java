@@ -29,4 +29,13 @@ public enum HubLocation {
     private final Double latitude;
     private final Double longitude;
 
+    public static HubLocation findByName(String name) {
+        for (HubLocation hubLocation : HubLocation.values()) {
+            if (hubLocation.getName().equals(name)) {
+                return hubLocation;
+            }
+        }
+        return null;
+    }
+
 }

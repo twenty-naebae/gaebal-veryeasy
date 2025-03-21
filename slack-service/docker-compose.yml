@@ -36,7 +36,7 @@ services:
       SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
       AI_API_KEY: ${AI_API_KEY}
     ports:
-      - "19098:19098"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     networks:
       - gaebal-network
 

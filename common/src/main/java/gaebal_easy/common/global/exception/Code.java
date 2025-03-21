@@ -36,6 +36,7 @@ public enum Code {
     USER_REQUIRED_ARGUMENT_EXCEPTION(HttpStatus.BAD_REQUEST, 3001, "입력값이 없는 항목이 있습니다."),
     USER_EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 3002, "토큰이 만료되었습니다."),
     USER_CAN_NOT_FIND_TOKEN(HttpStatus.BAD_REQUEST, 3003, "해당 토큰을 찾을 수 없습니다."),
+    CAN_NOT_FIND_USER(HttpStatus.BAD_REQUEST,3004 , "해당 유저를 찾을 수 없습니다." ),
 
     /**
      * Hub 4000번대
@@ -43,7 +44,6 @@ public enum Code {
     HUB_NOT_FOUND(HttpStatus.BAD_REQUEST,4001,"허브가 존재하지 않습니다."),
     HUB_PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST,4002,"상품이 존재하지 않습니다."),
     HUB_CAN_NOT_FIND_PRODUCT_IN_HUB(HttpStatus.BAD_REQUEST,4003,"허브에 해당 상품이 존재하지 않습니다."),
-
 
     /**
      * Delivery 5000번대
