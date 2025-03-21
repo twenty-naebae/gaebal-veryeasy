@@ -16,7 +16,7 @@ public class HubManagerEventListener {
     @KafkaListener(topics = "hub-manager-create-error", groupId = "hub-manager")
     public void handleHubManagerInfo(HubManagerInfoMessage hubManagerInfoMessage) {
         try {
-            log.info("handleHubManagerInfo : {}", hubManagerInfoMessage);
+            log.error("에러발생! 롤백 진행: "+ "handleHubManagerInfo : {}", hubManagerInfoMessage);
             hubManagerEventService.rollbackHubManagerInfo(hubManagerInfoMessage);
         } catch (Exception e) {
             log.error("handleHubManagerInfo : {} message : {}",hubManagerInfoMessage, ", rollback실패");

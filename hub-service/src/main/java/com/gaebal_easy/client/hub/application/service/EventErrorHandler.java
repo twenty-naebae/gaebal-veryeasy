@@ -30,7 +30,7 @@ public class EventErrorHandler {
             T message,
             String errorTopic){
 
-        if(message.getErrorLocation()!=null){
+        if(message.getErrorLocation()==null){
             message.setErrorInfo("hub-service", exception.getMessage());
         }
         log.error("이벤트 처리 중 오류 발생: {}", exception.getMessage(), exception);
