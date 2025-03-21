@@ -5,6 +5,7 @@ import com.gaebal_easy.client.user.application.service.RefreshTokenService;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
 import com.gaebal_easy.client.user.infrastructure.jwt.JWTUtil;
 import com.gaebal_easy.client.user.infrastructure.jwt.LoginFilter;
+import gaebal_easy.common.global.enums.Role;
 import gaebal_easy.common.global.security.GlobalSecurityContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,7 +55,12 @@ public class UserSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/user-service/api/login")
+//                .securityMatcher("/user-service/api/login")
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user-service/api/signup", "/user-service/api/login").permitAll()
+                        .requestMatchers("/user-service/api/users/**").hasRole("MASTER")
+                        .requestMatchers("/error").permitAll()
+                        .anyRequest().authenticated())
                 .csrf((auth) -> auth.disable())
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
