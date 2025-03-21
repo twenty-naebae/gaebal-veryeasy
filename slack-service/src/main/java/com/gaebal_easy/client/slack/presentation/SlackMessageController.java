@@ -30,12 +30,7 @@ public class SlackMessageController {
 	// 	slackService.sendMessage("hi", "U08J95TTQA0");
 	// }
 
-	@PostMapping("/slack")
-	public void sendSlack (
-		@RequestBody SlackRequest.GenerateDeadLineRequest request
-	) {
-		geminiService.generateAndSendDeadline(request, "U08J95TTQA0", UUID.fromString("5e92fc94-f954-4e9d-95ca-76ed9cf6883d"));
-	}
+
 
 	@GetMapping("/getSlack")
 	@PreAuthorize("hasRole('MASTER')")

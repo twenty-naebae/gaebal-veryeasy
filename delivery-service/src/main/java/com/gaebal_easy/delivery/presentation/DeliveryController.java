@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/delivery-service/api")
 public class DeliveryController {
 	private final DeliveryService deliveryService;
+	//카프카 테스트용
 	@GetMapping("/send")
 	public String sendMessage() {
 		deliveryService.assignDeliveryManager();

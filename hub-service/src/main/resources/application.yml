@@ -6,7 +6,7 @@ spring:
     name: hub-service
 
   datasource:
-    url: jdbc:mariadb://localhost:3310/hub-database?useSSL=false
+    url: jdbc:mariadb://hub-service:3310/hub-database?useSSL=false
     username: gaebal
     password: gaebal
     driver-class-name: org.mariadb.jdbc.Driver
@@ -14,7 +14,7 @@ spring:
   # Redis
   data:
     redis:
-      host: localhost
+      host:
       port: ${REDIS_PORT}
       username: default
       password: systempass
