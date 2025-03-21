@@ -1,5 +1,5 @@
 server:
-  port: 8080  # 로컬 테스트용 포트
+  port: ${SERVER_PORT}  # 로컬 테스트용 포트
 
 spring:
   application:
@@ -10,6 +10,25 @@ spring:
     username: gaebal
     password: gaebal
     driver-class-name: org.mariadb.jdbc.Driver
+
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: ${REDIS_PORT}
+      username: default
+      password: systempass
+
+  # Kafka
+  kafka:
+    url: ${KAFKA_URL}
+    bootstrap-servers: ${KAFKA_URL}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 5 # 메시지 전송 실패시 재시도 횟수 5회.
+    consumer:
+      auto-offset-reset: earliest  # 컨슈머가 처음 시작할 때 어떤 오프셋부터 읽을지 설정 (earliest: 가장 오래된 메시지부터, latest: 최신 메시지부터)
 
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
@@ -25,3 +44,11 @@ eureka:
 
 jwt:
   secret: Adsfvabewryethadbgnq4ertjadfhjmetDHJarkmyshfzdjykmrtejkymhndgThJymhfngbfcsdsdfsdafasdfasd
+
+management:
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_URL}
+  tracing:
+    sampling:
+      probability: 1.0

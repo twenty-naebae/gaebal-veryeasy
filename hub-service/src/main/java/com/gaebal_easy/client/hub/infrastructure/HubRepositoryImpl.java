@@ -1,6 +1,7 @@
 package com.gaebal_easy.client.hub.infrastructure;
 
 import com.gaebal_easy.client.hub.domain.entity.Hub;
+import com.gaebal_easy.client.hub.domain.enums.HubLocation;
 import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -19,4 +20,9 @@ public class HubRepositoryImpl implements HubRepository {
     }
 
     public void save(Hub hub) {hubJpaRepository.save(hub);}
+
+    @Override
+    public Optional<Hub> findByHubLocation(HubLocation hubLocation) {
+        return hubJpaRepository.findByHubLocation(hubLocation);
+    }
 }

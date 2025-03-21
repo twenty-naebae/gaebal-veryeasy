@@ -1,15 +1,16 @@
+server:
+  port: 19090
+
 spring:
   application:
     name: eureka-server
-
-server:
-  port: 19090
 
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: http://eureka-server:19090/eureka/
-  instance:
-    hostname: localhost
+      defaultZone: http://localhost:19090/eureka/
+  server:
+    enable-self-preservation: false
+    wait-time-in-ms-when-sync-empty: 0

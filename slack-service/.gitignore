@@ -4,7 +4,10 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
+.env
+/src/resources/application.yml
+docker-compose.yml
+Dockerfile
 ### STS ###
 .apt_generated
 .classpath
@@ -35,3 +38,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+src/main/resources/application-dev.yml

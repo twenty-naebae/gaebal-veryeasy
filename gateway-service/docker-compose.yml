@@ -8,10 +8,17 @@ services:
       - "19091:19091"
     env_file:
       - .env
+    environment:
+      SERVER_PORT: ${SERVER_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      EUREKA_SERVER: ${EUREKA_SERVER}
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: ${ZIPKIN_URL}
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
     networks:
       - gaebal-network
-    environment:
-      EUREKA_SERVER: http://eureka-server:19090/eureka
 
 networks:
   gaebal-network:
