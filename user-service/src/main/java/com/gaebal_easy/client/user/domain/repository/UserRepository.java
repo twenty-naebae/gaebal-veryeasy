@@ -1,7 +1,6 @@
 package com.gaebal_easy.client.user.domain.repository;
 
 import com.gaebal_easy.client.user.domain.entity.User;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
@@ -14,4 +13,6 @@ public interface UserRepository {
     User findByUsername(String username);
 
     Optional<User> findById(Long userId);
+
+    void update(User user, String username, String newPassword);
 }
