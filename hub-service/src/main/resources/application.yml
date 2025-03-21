@@ -1,5 +1,5 @@
 server:
-  port: 8080  # 로컬 테스트용 포트
+  port: ${SERVER_PORT}  # 로컬 테스트용 포트
 
 spring:
   application:
@@ -44,3 +44,11 @@ eureka:
 
 jwt:
   secret: Adsfvabewryethadbgnq4ertjadfhjmetDHJarkmyshfzdjykmrtejkymhndgThJymhfngbfcsdsdfsdafasdfasd
+
+management:
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_URL}
+  tracing:
+    sampling:
+      probability: 1.0
