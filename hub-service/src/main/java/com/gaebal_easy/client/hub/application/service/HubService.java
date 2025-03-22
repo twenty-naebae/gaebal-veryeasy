@@ -18,7 +18,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -63,40 +63,54 @@ public class HubService {
 
     @Transactional
     public Boolean checkStock(CheckStockDto stockCheckDto){
-
-
+        Map<UUID, Long> productQuantities = new HashMap<>();
+        ArrayList<RLock> locks = new ArrayList<>();
         boolean isEnoughStock = true;
-        for(CheckStokProductDto product : stockCheckDto.getProducts()){
-            Long stock=0L;
-            Long preemption=0L;
 
-            // product별로 락 획득
-            RLock lock = redissonClient.getLock("key:"+product.getProductId().toString());
-            log.info("재고확인 요청 Product: {}, 요청수량: {}",product.getProductId(), product.getQuantity());
-            try{
+        for(CheckStokProductDto product : stockCheckDto.getProducts()){
+            productQuantities.put(product.getProductId(), product.getQuantity());
+        }
+
+        // 모든 상품에 대한 락 획득 시도
+        List<String> acquiredLocks = new ArrayList<>();
+        try{
+            // 상품 ID 기준으로 정렬하여 데드락 방지
+            List<UUID> sortedProductIds = new ArrayList<>(productQuantities.keySet());
+            Collections.sort(sortedProductIds);
+
+
+            for(UUID productId : sortedProductIds){
+                RLock lock = redissonClient.getLock("key:"+productId.toString());
+                locks.add(lock);
                 // 락 획득 시도
                 boolean available = lock.tryLock(10, 5, TimeUnit.SECONDS);
 
                 if (!available){
-                    log.info("Lock {} 획득 실패", "key:"+product.getProductId().toString());
+                    log.info("Lock {} 획득 실패", "key:"+productId.toString());
                     throw new IllegalStateException("Lock을 획득할 수 없습니다.");
                 }
 
+            }
+
+
+            for(UUID productId : sortedProductIds){
+                Long stock=0L;
+                Long preemption=0L;
                 // 먼저 캐시에 해당 상품의 재고 확인
                 Cache stockCache = cacheManager.getCache("stock");
                 Cache preemtionCache = cacheManager.getCache("preemption");
 
-                if(preemtionCache.get("reserved:"+product.getProductId().toString(), String.class)==null) {
+                if(preemtionCache.get("reserved:"+productId.toString(), String.class)==null) {
                     preemption = 0L;
                 }
 
                 // 캐싱 Hit
-                if(stockCache.get(product.getProductId().toString(), String.class) != null){
+                if(stockCache.get(productId.toString(), String.class) != null){
                     log.info("캐싱 Hit!!!");
-                    stock = Long.parseLong(stockCache.get(product.getProductId().toString(), String.class));
+                    stock = Long.parseLong(stockCache.get(productId.toString(), String.class));
 
                     // 재고가 요청보다 부족
-                    if( stock-preemption < product.getQuantity()){
+                    if( stock-preemption < productQuantities.get(productId)){
                         isEnoughStock = false;
                         throw new OutOfStockException(Code.OUT_OF_STOCK);
                     }
@@ -104,42 +118,45 @@ public class HubService {
                 else {
                     // 캐싱 Miss
                     log.info("캐싱 Miss!!!");
-                    ProductResponseDto findProduct = getProduct(product.getProductId(), stockCheckDto.getHubId());
+                    ProductResponseDto findProduct = getProduct(productId, stockCheckDto.getHubId());
 
                     stock = findProduct.getAmount();
 
-                    if (stock-preemption < product.getQuantity()) {
+                    if( stock-preemption < productQuantities.get(productId)){
                         isEnoughStock = false;
                         throw new OutOfStockException(Code.OUT_OF_STOCK);
                     }
-                    stockCache.put(product.getProductId().toString(), stock);
+                    stockCache.put(productId.toString(), stock);
                 }
 
+            }
 
-            } catch (InterruptedException e) {
-                log.info("실패 : Product: {}, 재고: {}, 요청수량: {}",product.getProductId(), stock-preemption, product.getQuantity());
-                throw new OrderFailExceiption(Code.ORDER_FAIL_EXCEIPTION);
-            }finally {
 
-                if(isEnoughStock){
-                    Cache reservationCache = cacheManager.getCache("reservation");
-                    Cache preemptionCache = cacheManager.getCache("preemption");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }finally {
+            if(isEnoughStock){
+                Cache reservationCache = cacheManager.getCache("reservation");
+                Cache preemptionCache = cacheManager.getCache("preemption");
 
-                    // 예약정보 캐시 저장
-                    String reservationId = UUID.randomUUID().toString();
-                    reservationCache.put(reservationId, stockCheckDto);
+                // 예약정보 캐시 저장
+                String reservationId = UUID.randomUUID().toString();
+                reservationCache.put(reservationId, stockCheckDto);
 
-                    // 선점 재고 수량 캐시 저장
-                    for(CheckStokProductDto p : stockCheckDto.getProducts()){
-                        Long cnt = 0L;
-                        if(preemptionCache.get("reserved:" + p.getProductId().toString()) != null){
-                            cnt = Long.parseLong(preemptionCache.get("reserved:" + p.getProductId().toString(), String.class));
-                        }
-                        preemptionCache.put("reserved:"+p.getProductId().toString(), cnt + p.getQuantity());
-                        log.info("상품: {}, 선점 수: {}",p.getProductId(), cnt+p.getQuantity());
+                // 선점 재고 수량 캐시 저장
+                for(CheckStokProductDto p : stockCheckDto.getProducts()){
+                    Long cnt = 0L;
+                    if(preemptionCache.get("reserved:" + p.getProductId().toString()) != null){
+                        cnt = Long.parseLong(preemptionCache.get("reserved:" + p.getProductId().toString(), String.class));
                     }
-                    log.info("예약정보 저장, 선점 저장");
+                    preemptionCache.put("reserved:"+p.getProductId().toString(), cnt + p.getQuantity());
+                    log.info("상품: {}, 선점 수: {}",p.getProductId(), cnt+p.getQuantity());
                 }
+                log.info("예약정보 저장, 선점 저장");
+            }
+
+            // 획득한 모든 락 해제
+            for (RLock lock : locks) {
                 lock.unlock();
             }
         }
