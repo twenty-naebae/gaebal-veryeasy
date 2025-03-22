@@ -83,9 +83,9 @@ public class KafkaConfig {
 
         // 타입 매핑 추가 - producer 패키지를 현재 서비스의 패키지로 매핑
         // todo- 직렬화 메서드를 따로 구현하는것을 고려해봐야함. 초기상태라 변화가 많을 것 같아 일단 이렇게 구현
-        props.put(JsonDeserializer.TYPE_MAPPINGS,
-                "com.gaebal_easy.client.user.application.dto.HubManagerInfoMessage:" +
-                        "com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage");
+//        props.put(JsonDeserializer.TYPE_MAPPINGS,
+//                "com.gaebal_easy.client.user.application.dto.HubManagerInfoMessage:" +
+//                        "com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage");
 
         // JsonDeserializer 관련 설정
         // 모든 패키지의 클래스 역직렬화 허용 (보안에 주의)

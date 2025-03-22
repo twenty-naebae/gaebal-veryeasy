@@ -1,5 +1,7 @@
 package com.gaebal_easy.client.hub.presentation;
 
+import com.gaebal_easy.client.hub.application.dto.HubDirectDto;
+import com.gaebal_easy.client.hub.application.service.HubDirectRedisService;
 import com.gaebal_easy.client.hub.application.service.HubService;
 import com.gaebal_easy.client.hub.presentation.dto.HubCreateRequestDto;
 import com.gaebal_easy.client.hub.presentation.dto.HubRequestDto;
@@ -16,6 +18,7 @@ import java.util.UUID;
 public class HubController {
 
     private final HubService hubService;
+    private final HubDirectRedisService hubDirectRedisService;
 
     @GetMapping("/getProduct")
     public ResponseEntity<?> requestGetProduct(@RequestParam UUID productId,
@@ -44,6 +47,14 @@ public class HubController {
     @PostMapping
     public ResponseEntity<?> createHub(@RequestBody HubCreateRequestDto hubCreateRequestDto) {
         return ResponseEntity.ok(ApiResponseData.success(null,"담당자가 확인 후 허브를 추가하겠습니다."));
+    }
+
+    @GetMapping("/direct/directHub")
+    public ResponseEntity<?> getDirectHub(@RequestParam String depart,
+                                        @RequestParam String arrive) {
+        HubDirectDto hubDirectDto = hubDirectRedisService.getDirectRedis(depart,arrive);
+        if(hubDirectDto!=null) return ResponseEntity.ok(ApiResponseData.success(hubDirectDto));
+        return ResponseEntity.ok(ApiResponseData.success(hubService.getDirectHub(depart, arrive)));
     }
 
     @GetMapping("/hello")

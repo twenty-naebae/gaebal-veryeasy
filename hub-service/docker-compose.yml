@@ -35,6 +35,8 @@ services:
       REDIS_PORT: 6379
       EUREKA_SERVER: http://eureka-server:19090/eureka
       MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      NAVER_DIRECTION5_CLIENT_ID: ${Client_ID}
+      NAVER_DIRECTION5_CLIENT_SECRET: ${Client_Secret}
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     networks:

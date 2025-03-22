@@ -1,5 +1,6 @@
 package com.gaebal_easy.client.hub.domain.entity;
 
+import com.gaebal_easy.client.hub.domain.enums.HubLocation;
 import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,15 +20,15 @@ public class HubDirectMovementInfo extends BaseTimeEntity {
     private UUID id;
 
     @Column(nullable = false)
-    private UUID depart;
+    private String depart;
 
     @Column(nullable = false)
-    private UUID arrive;
+    private String arrive;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int requiredTime;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private double distance;
 
 
