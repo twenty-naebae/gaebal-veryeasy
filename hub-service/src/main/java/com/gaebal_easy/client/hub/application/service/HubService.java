@@ -64,6 +64,7 @@ public class HubService {
     @Transactional
     public Boolean checkStock(CheckStockDto stockCheckDto){
 
+
         boolean isEnoughStock = true;
         for(CheckStokProductDto product : stockCheckDto.getProducts()){
             Long stock=0L;
@@ -135,6 +136,7 @@ public class HubService {
                             cnt = Long.parseLong(preemptionCache.get("reserved:" + p.getProductId().toString(), String.class));
                         }
                         preemptionCache.put("reserved:"+p.getProductId().toString(), cnt + p.getQuantity());
+                        log.info("상품: {}, 선점 수: {}",p.getProductId(), cnt+p.getQuantity());
                     }
                     log.info("예약정보 저장, 선점 저장");
                 }

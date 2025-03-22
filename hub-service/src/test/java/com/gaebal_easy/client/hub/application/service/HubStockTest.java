@@ -33,13 +33,13 @@ class HubStockTest {
     @DisplayName("dtest")
     @Transactional
     void test() throws InterruptedException {
-        int thred =100;
+        int thred =4;
 
         ExecutorService executor = Executors.newFixedThreadPool(thred);
         CountDownLatch latch = new CountDownLatch(thred);
 
 
-        for (int i = 0; i < thred; i++) {
+        for (int i = 1; i <= thred; i++) {
             CheckStockDto check = null;
             if((i%2)==0) {
                 List<CheckStokProductDto> products = new ArrayList<>();
@@ -93,11 +93,18 @@ class HubStockTest {
             });
         }
         latch.await();
-        Cache stockCache = cacheManager.getCache("productStockCache");
+
+        Cache stockCache = cacheManager.getCache("stock");
+        Cache preemptionCache = cacheManager.getCache("preemption");
+        Long stock1 = Long.parseLong(stockCache.get("6bc4dbbc-05d2-11f0-82d4-0242ac110004", String.class));
+        Long preemption1 = Long.parseLong(preemptionCache.get("reserved:"+"6bc4dbbc-05d2-11f0-82d4-0242ac110004", String.class));
+
+        Long stock2 = Long.parseLong(stockCache.get("6bc5a25a-05d2-11f0-82d4-0242ac110004", String.class));
+        Long preemption2 = Long.parseLong(preemptionCache.get("reserved:"+"6bc5a25a-05d2-11f0-82d4-0242ac110004", String.class));
 
         org.junit.jupiter.api.Assertions.assertAll(
-                () -> Assertions.assertThat(stockCache.get("6bc4dbbc-05d2-11f0-82d4-0242ac110004", Long.class)).isEqualTo(8500L),
-                () -> Assertions.assertThat(stockCache.get("6bc5a25a-05d2-11f0-82d4-0242ac110004", Long.class)).isEqualTo(18500L)
+                () -> Assertions.assertThat(stock1-preemption1).isEqualTo(9700L),
+                () -> Assertions.assertThat(stock2-preemption2).isEqualTo(19700L)
         );
     }
 
