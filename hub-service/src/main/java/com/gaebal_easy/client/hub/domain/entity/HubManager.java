@@ -18,7 +18,7 @@ public class HubManager extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long userId;
 
     private String name;

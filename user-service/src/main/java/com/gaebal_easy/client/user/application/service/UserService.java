@@ -45,7 +45,7 @@ public class UserService {
 
         // 유저 정보 삭제
         User user = userRepository.findById(userId).orElseThrow(() -> new CanNotFindUserException());
-        userRepository.delete(user, customUserDetails.getUsername());
+        userRepository.delete(user, customUserDetails.getUserId());
         if(user.getRole().equals(Role.HUB_MANAGER)) {
             hubManagerEventService.sendHubManagerDelete(HubManagerDeleteMessage.of(userId, customUserDetails.getUsername()));
         }

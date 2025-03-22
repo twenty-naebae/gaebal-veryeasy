@@ -50,6 +50,7 @@ public class HubManagerEventService {
     }
 
     // hub-manager-delete 롤백
+    @Transactional
     public void rollbackHubMangerDelete(HubManagerDeleteMessage hubManagerDeleteMessage) {
         User user = userRepository.findById(hubManagerDeleteMessage.getUserId()).orElseThrow(() -> new CanNotFindUserException());
         userRepository.rollbackDelete(user, hubManagerDeleteMessage.getErrorLocation());
