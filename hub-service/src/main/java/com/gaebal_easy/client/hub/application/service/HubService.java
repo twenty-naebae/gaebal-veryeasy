@@ -3,7 +3,7 @@ package com.gaebal_easy.client.hub.application.service;
 import com.gaebal_easy.client.hub.application.dto.HubResponseDto;
 import com.gaebal_easy.client.hub.application.dto.CheckStokProductDto;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
-import com.gaebal_easy.client.hub.application.dto.StockCheckDto;
+import com.gaebal_easy.client.hub.application.dto.CheckStockDto;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
 import com.gaebal_easy.client.hub.domain.entity.HubProductList;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
@@ -15,11 +15,9 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -64,60 +62,88 @@ public class HubService {
 
 
     @Transactional
-    public Boolean checkStock(StockCheckDto stockCheckDto){
+    public Boolean checkStock(CheckStockDto stockCheckDto){
 
-        boolean possibleStock = true;
+        boolean isEnoughStock = true;
         for(CheckStokProductDto product : stockCheckDto.getProducts()){
-            log.info("Product: {}, 수량: {}",product.getProductId(), product.getQuantity());
+            Long stock=0L;
+            Long preemption=0L;
+
             // product별로 락 획득
             RLock lock = redissonClient.getLock("key:"+product.getProductId().toString());
+            log.info("재고확인 요청 Product: {}, 요청수량: {}",product.getProductId(), product.getQuantity());
             try{
                 // 락 획득 시도
-                boolean available = lock.tryLock(5, 5, TimeUnit.SECONDS);
+                boolean available = lock.tryLock(10, 5, TimeUnit.SECONDS);
 
                 if (!available){
                     log.info("Lock {} 획득 실패", "key:"+product.getProductId().toString());
                     throw new IllegalStateException("Lock을 획득할 수 없습니다.");
                 }
 
-                log.info("재고 확인 로직");
                 // 먼저 캐시에 해당 상품의 재고 확인
-                Cache stockCache = cacheManager.getCache("productStockCache");
-                Long stock = stockCache.get(product.getProductId().toString(), Long.class);
+                Cache stockCache = cacheManager.getCache("stock");
+                Cache preemtionCache = cacheManager.getCache("preemption");
+
+                if(preemtionCache.get("reserved:"+product.getProductId().toString(), String.class)==null) {
+                    preemption = 0L;
+                }
 
                 // 캐싱 Hit
-                if(stock != null){
+                if(stockCache.get(product.getProductId().toString(), String.class) != null){
                     log.info("캐싱 Hit!!!");
+                    stock = Long.parseLong(stockCache.get(product.getProductId().toString(), String.class));
 
                     // 재고가 요청보다 부족
-                    if(stock< product.getQuantity()){
-                        possibleStock = false;
+                    if( stock-preemption < product.getQuantity()){
+                        isEnoughStock = false;
                         throw new OutOfStockException(Code.OUT_OF_STOCK);
                     }
-                    // 재고 여유(주문에 대해 재고 선점 : 캐시에서 재고 차감, 이 후 주문이 완료되면 mariaDB에서 재고 차감 반영)
-                    stockCache.put(product.getProductId().toString(), stock-product.getQuantity());
+                }
+                else {
+                    // 캐싱 Miss
+                    log.info("캐싱 Miss!!!");
+                    ProductResponseDto findProduct = getProduct(product.getProductId(), stockCheckDto.getHubId());
+
+                    stock = findProduct.getAmount();
+
+                    if (stock-preemption < product.getQuantity()) {
+                        isEnoughStock = false;
+                        throw new OutOfStockException(Code.OUT_OF_STOCK);
+                    }
+                    stockCache.put(product.getProductId().toString(), stock);
                 }
 
-                // 캐싱 Miss
-                log.info("캐싱 Miss!!!");
-                ProductResponseDto findProduct = getProduct(product.getProductId(), stockCheckDto.getHubId());
-
-                stock = findProduct.getAmount();
-
-                if(stock< product.getQuantity()){
-                    possibleStock = false;
-                    throw new OutOfStockException(Code.OUT_OF_STOCK);
-                }
-                stockCache.put(product.getProductId().toString(), stock-product.getQuantity());
 
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-
+                log.info("실패 : Product: {}, 재고: {}, 요청수량: {}",product.getProductId(), stock-preemption, product.getQuantity());
+                throw new OrderFailExceiption(Code.ORDER_FAIL_EXCEIPTION);
             }finally {
+
+                if(isEnoughStock){
+                    Cache reservationCache = cacheManager.getCache("reservation");
+                    Cache preemptionCache = cacheManager.getCache("preemption");
+
+                    // 예약정보 캐시 저장
+                    String reservationId = UUID.randomUUID().toString();
+                    reservationCache.put(reservationId, stockCheckDto);
+
+                    // 선점 재고 수량 캐시 저장
+                    for(CheckStokProductDto p : stockCheckDto.getProducts()){
+                        Long cnt = 0L;
+                        if(preemptionCache.get("reserved:" + p.getProductId().toString()) != null){
+                            cnt = Long.parseLong(preemptionCache.get("reserved:" + p.getProductId().toString(), String.class));
+                        }
+                        preemptionCache.put("reserved:"+p.getProductId().toString(), cnt + p.getQuantity());
+                    }
+                    log.info("예약정보 저장, 선점 저장");
+                }
                 lock.unlock();
             }
         }
-        return possibleStock;
+
+
+        return isEnoughStock;
     }
 
 

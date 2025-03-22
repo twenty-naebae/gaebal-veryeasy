@@ -46,7 +46,7 @@ public enum Code {
     OUT_OF_STOCK(HttpStatus.CONFLICT,4004,"현재 해당 상품의 재고가 없습니다."),
 
 
-    ;
+
 
     /**
      * Delivery 5000번대
@@ -59,6 +59,7 @@ public enum Code {
     /**
      * Order 7000번대
      */
+    ORDER_FAIL_EXCEIPTION(HttpStatus.BAD_REQUEST,7001,"주문 처리 중 에러가 발생했습니다.");
 
     /**
      * Store 8000번대

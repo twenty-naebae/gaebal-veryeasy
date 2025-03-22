@@ -1,7 +1,6 @@
 package com.gaebal_easy.client.hub.presentation;
 
-import com.gaebal_easy.client.hub.application.dto.CheckStokProductDto;
-import com.gaebal_easy.client.hub.application.dto.StockCheckDto;
+import com.gaebal_easy.client.hub.application.dto.CheckStockDto;
 import com.gaebal_easy.client.hub.application.service.HubService;
 import com.gaebal_easy.client.hub.presentation.dto.HubCreateRequestDto;
 import com.gaebal_easy.client.hub.presentation.dto.HubRequestDto;
@@ -11,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -58,7 +56,7 @@ public class HubController {
 
 
     @PostMapping("/products/stock")
-    public ResponseEntity<?> checkStock(@RequestBody StockCheckDto stockCheckDto) {
+    public ResponseEntity<?> checkStock(@RequestBody CheckStockDto stockCheckDto) {
         log.info("stockCheck {}", stockCheckDto.toString());
         Boolean possibleStock = hubService.checkStock(stockCheckDto);
         return ResponseEntity.ok(ApiResponseData.success(possibleStock));
