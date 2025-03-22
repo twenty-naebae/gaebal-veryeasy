@@ -44,6 +44,7 @@ public enum Code {
     HUB_NOT_FOUND(HttpStatus.BAD_REQUEST,4001,"허브가 존재하지 않습니다."),
     HUB_PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST,4002,"상품이 존재하지 않습니다."),
     HUB_CAN_NOT_FIND_PRODUCT_IN_HUB(HttpStatus.BAD_REQUEST,4003,"허브에 해당 상품이 존재하지 않습니다."),
+    HUB_CAN_NOT_FIND_HUB_NAME(HttpStatus.BAD_REQUEST,4004,"허브 이름이 유효하지 않습니다."),
 
     /**
      * Delivery 5000번대

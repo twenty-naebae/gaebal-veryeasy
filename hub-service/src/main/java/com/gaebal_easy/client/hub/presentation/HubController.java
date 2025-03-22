@@ -1,14 +1,16 @@
 package com.gaebal_easy.client.hub.presentation;
 
 import com.gaebal_easy.client.hub.application.dto.HubDirectDto;
+import com.gaebal_easy.client.hub.application.dto.HubRouteDto;
 import com.gaebal_easy.client.hub.application.service.HubDirectRedisService;
+import com.gaebal_easy.client.hub.application.service.HubMovementService;
+import com.gaebal_easy.client.hub.application.service.HubRouteRedisService;
 import com.gaebal_easy.client.hub.application.service.HubService;
 import com.gaebal_easy.client.hub.presentation.dto.HubCreateRequestDto;
 import com.gaebal_easy.client.hub.presentation.dto.HubRequestDto;
 import gaebal_easy.common.global.dto.ApiResponseData;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
@@ -19,6 +21,8 @@ public class HubController {
 
     private final HubService hubService;
     private final HubDirectRedisService hubDirectRedisService;
+    private final HubMovementService hubMovementService;
+    private final HubRouteRedisService hubRouteRedisService;
 
     @GetMapping("/getProduct")
     public ResponseEntity<?> requestGetProduct(@RequestParam UUID productId,
@@ -49,12 +53,20 @@ public class HubController {
         return ResponseEntity.ok(ApiResponseData.success(null,"담당자가 확인 후 허브를 추가하겠습니다."));
     }
 
-    @GetMapping("/direct/directHub")
+    @GetMapping("/direct")
     public ResponseEntity<?> getDirectHub(@RequestParam String depart,
                                         @RequestParam String arrive) {
         HubDirectDto hubDirectDto = hubDirectRedisService.getDirectRedis(depart,arrive);
         if(hubDirectDto!=null) return ResponseEntity.ok(ApiResponseData.success(hubDirectDto));
-        return ResponseEntity.ok(ApiResponseData.success(hubService.getDirectHub(depart, arrive)));
+        return ResponseEntity.ok(ApiResponseData.success(hubMovementService.getDirectHub(depart, arrive)));
+    }
+
+    @GetMapping("/route")
+    public ResponseEntity<?> getHubRoute(@RequestParam String depart,
+                                          @RequestParam String arrive) {
+        HubRouteDto hubRouteDto = hubRouteRedisService.getRouteRedis(depart,arrive);
+        if(hubRouteDto!=null) return ResponseEntity.ok(ApiResponseData.success(hubRouteDto));
+        return ResponseEntity.ok(ApiResponseData.success(hubMovementService.getHubRoute(depart, arrive)));
     }
 
     @GetMapping("/hello")

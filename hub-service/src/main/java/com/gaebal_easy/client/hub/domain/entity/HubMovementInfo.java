@@ -31,7 +31,7 @@ public class HubMovementInfo extends BaseTimeEntity {
 
     @Column(nullable = false)
     private double totalDistance;
-
-    @OneToMany(mappedBy = "hubMovementInfo", cascade = CascadeType.ALL)
-    private final List<VisitHub> visitHubs = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "hubMovementInfo", cascade = CascadeType.ALL)
+//    private final List<VisitHub> visitHubs = new ArrayList<>();
 }
