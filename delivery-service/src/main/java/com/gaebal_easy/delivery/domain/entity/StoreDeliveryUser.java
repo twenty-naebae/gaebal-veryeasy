@@ -29,19 +29,19 @@ public class StoreDeliveryUser extends BaseTimeEntity {
 
     // 배송 순번
     @Column(nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer deliveryOrder;
 
 
     @Column(nullable = false)
     private Integer hubId;
 
-    public static StoreDeliveryUser of(Long userId, String name, String slackId, String hubId) {
+    public static StoreDeliveryUser of(Long userId, String name, String slackId, String hubId, Integer deliveryOrder) {
         return StoreDeliveryUser.builder()
                 .userId(userId)
                 .name(name)
                 .slackId(slackId)
                 .hubId(Integer.parseInt(hubId))
+                .deliveryOrder(deliveryOrder)
                 .build();
     }
 }

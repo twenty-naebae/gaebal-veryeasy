@@ -21,7 +21,7 @@ public class DeliveryUserEventListener {
             log.info("handleDeliveryUserInfo : {}", deliveryUserInfoMessage);
             deliveryUserService.createDeliveryUser(deliveryUserInfoMessage);
         } catch (Exception e) {
-            eventErrorHandler.handleEventError(e, deliveryUserInfoMessage, "hub-manager-create-error");
+            eventErrorHandler.handleEventError(e, deliveryUserInfoMessage, "delivery-user-create-error");
         }
     }
 }

@@ -28,16 +28,14 @@ public class HubDeliveryUser {
 
     // 배송 순번
     @Column(nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer deliveryOrder;
 
-    public static HubDeliveryUser of(Long userId, String name, String slackId) {
+    public static HubDeliveryUser of(Long userId, String name, String slackId,Integer deliveryOrder) {
         return HubDeliveryUser.builder()
                 .userId(userId)
                 .name(name)
                 .slackId(slackId)
+                .deliveryOrder(deliveryOrder)
                 .build();
     }
-}
-
 }
