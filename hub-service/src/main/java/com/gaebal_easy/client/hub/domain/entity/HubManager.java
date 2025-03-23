@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @AllArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)
@@ -21,6 +21,7 @@ public class HubManager extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private Long userId;
 
+    @Column
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
