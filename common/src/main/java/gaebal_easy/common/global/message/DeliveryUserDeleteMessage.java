@@ -7,20 +7,15 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC) // 직렬화할때 기본생성자 필요함.
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class DeliveryUserInfoMessage extends BaseMessage {
+public class DeliveryUserDeleteMessage extends BaseMessage {
 
     private Long userId;
-    private String slackId;
-    private String name;
-    private String group;
+    private String deletedBy;
 
-    public static DeliveryUserInfoMessage of(Long userId, String name, String group, String slackId) {
-        return DeliveryUserInfoMessage.builder()
+    public static DeliveryUserDeleteMessage of(Long userId, String deletedBy) {
+        return DeliveryUserDeleteMessage.builder()
                 .userId(userId)
-                .name(name)
-                .group(group)
-                .slackId(slackId)
+                .deletedBy(deletedBy)
                 .build();
     }
 }
-
