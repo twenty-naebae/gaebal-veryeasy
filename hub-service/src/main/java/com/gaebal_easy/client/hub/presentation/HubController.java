@@ -59,7 +59,7 @@ public class HubController {
     public ResponseEntity<?> checkStock(@RequestBody CheckStockDto stockCheckDto) {
         log.info("stockCheck {}", stockCheckDto.toString());
         Boolean possibleStock = hubService.checkStock(stockCheckDto);
-        return ResponseEntity.ok(ApiResponseData.success(possibleStock));
+        return ResponseEntity.ok(possibleStock);
     }
 
 

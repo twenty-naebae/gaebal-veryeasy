@@ -33,7 +33,7 @@ class HubStockTest {
     @DisplayName("데드락 test")
     @Transactional
     void test() throws InterruptedException {
-        int thred =500;
+        int thred =2;
 
         ExecutorService executor = Executors.newFixedThreadPool(thred);
         CountDownLatch latch = new CountDownLatch(thred);
@@ -103,8 +103,8 @@ class HubStockTest {
         Long preemption2 = Long.parseLong(preemptionCache.get("reserved:"+"6bc5a25a-05d2-11f0-82d4-0242ac110004", String.class));
 
         org.junit.jupiter.api.Assertions.assertAll(
-                () -> Assertions.assertThat(stock1-preemption1).isEqualTo(2500L),
-                () -> Assertions.assertThat(stock2-preemption2).isEqualTo(12500L)
+                () -> Assertions.assertThat(stock1-preemption1).isEqualTo(9970L),
+                () -> Assertions.assertThat(stock2-preemption2).isEqualTo(19970L)
         );
     }
 

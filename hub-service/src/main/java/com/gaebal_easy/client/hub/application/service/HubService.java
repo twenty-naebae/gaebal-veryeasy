@@ -72,7 +72,6 @@ public class HubService {
         }
 
         // 모든 상품에 대한 락 획득 시도
-        List<String> acquiredLocks = new ArrayList<>();
         try{
             // 상품 ID 기준으로 정렬하여 데드락 방지
             List<UUID> sortedProductIds = new ArrayList<>(productQuantities.keySet());
@@ -133,7 +132,7 @@ public class HubService {
 
 
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new OrderFailExceiption(Code.ORDER_FAIL_EXCEIPTION);
         }finally {
             if(isEnoughStock){
                 Cache reservationCache = cacheManager.getCache("reservation");

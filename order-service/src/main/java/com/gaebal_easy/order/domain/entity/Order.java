@@ -47,10 +47,23 @@ public class Order extends BaseTimeEntity {
 
 
     public void addOrderProduct(OrderProduct orderProduct) {
+        if (this.orderProducts == null) {
+            this.orderProducts = new ArrayList<>();
+        }
         this.orderProducts.add(orderProduct);
-        if(orderProduct.getOrder() != null) {
+        if(orderProduct.getOrder() != this) {
             orderProduct.setOrder(this);
         }
+    }
+
+    public static Order create(String supplier, String receiver, String orderRequest, String address, Long totalPrice){
+        return Order.builder()
+                .supplier(supplier)
+                .receiver(receiver)
+                .orderRequest(orderRequest)
+                .totalPrice(totalPrice)
+                .address(address)
+                .build();
     }
 
     public void changeAddress(String address) {

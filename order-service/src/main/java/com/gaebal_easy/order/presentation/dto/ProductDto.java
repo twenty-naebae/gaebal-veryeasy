@@ -15,4 +15,5 @@ public class ProductDto {
 
     private UUID productId;
     private Long quantity;
+    private Long price;
 }

@@ -24,11 +24,9 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/orders")
-    public ResponseEntity<?> checkStock(@RequestBody CreateOrderRequest request) {
-        log.info("orderservice 컨트롤러 chekcoStock");
+    public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request) {
 
-        // 재고 확인
-        orderService.checkStock(request.toDto());
+        orderService.createOrder(request.toDto());
 
         return ResponseEntity.ok("OK");
 

@@ -14,13 +14,6 @@ import java.util.UUID;
 @Table(name = "p_order_product")
 public class OrderProduct {
 
-    @Builder(access = AccessLevel.PROTECTED)
-    public OrderProduct(Order order, UUID productId, Long quantity) {
-        this.order = order;
-        this.productId = productId;
-        this.quantity = quantity;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -35,11 +28,21 @@ public class OrderProduct {
     @Column(name = "quantity")
     private Long quantity;
 
-    public void setOrder(Order order) {
-        this.order = order;
-        if(!order.getOrderProducts().contains(this)) {
-            order.getOrderProducts().add(this);
-        }
+    public static OrderProduct create(UUID productId, Long quantity){
+        return OrderProduct.builder()
+                .productId(productId)
+                .quantity(quantity)
+                .build();
     }
+
+    protected void setOrder(Order order) {
+        if(this.order != null){
+            this.order.getOrderProducts().remove(this);
+        }
+        this.order = order;
+        this.order.getOrderProducts().add(this);
+    }
+
+
 
 }

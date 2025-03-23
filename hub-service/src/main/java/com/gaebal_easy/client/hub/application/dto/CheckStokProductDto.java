@@ -16,4 +16,5 @@ public class CheckStokProductDto implements Serializable {
 
     private UUID productId;
     private Long quantity;
+    private Long price;
 }
