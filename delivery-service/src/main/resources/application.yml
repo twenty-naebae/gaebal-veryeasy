@@ -1,35 +1,41 @@
 server:
-  port: 19096
+  port: ${SERVER_PORT}
   address: 0.0.0.0
 
 spring:
   application:
     name: delivery-service
+
   datasource:
-    url: jdbc:mariadb://delivery-mariadb:3306/delivery-database?useSSL=false
+    url: jdbc:mariadb://mariadb:3311/delivery-database?useSSL=false
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
 
+  # Redis
+  data:
+    redis:
+      host: redis
+      port: ${REDIS_PORT}
+      username: default
+      password: systempass
+
+  # Kafka
   kafka:
-    bootstrap-servers: kafka:9092
+    url: ${KAFKA_URL}
+    bootstrap-servers: ${KAFKA_URL}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 5 # 메시지 전송 실패시 재시도 횟수 5회.
     consumer:
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-
+      auto-offset-reset: earliest  # 컨슈머가 처음 시작할 때 어떤 오프셋부터 읽을지 설정 (earliest: 가장 오래된 메시지부터, latest: 최신 메시지부터)
 
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: update
     show-sql: true
-  data:
-    redis:
-      host: redis
-      port: 6379
 
 eureka:
   client:
@@ -38,8 +44,9 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+
 jwt:
-  secret: ${JWT_SECRET}
+  secret: Adsfvabewryethadbgnq4ertjadfhjmetDHJarkmyshfzdjykmrtejkymhndgThJymhfngbfcsdsdfsdafasdfasd
 
 management:
   zipkin:
@@ -48,4 +55,3 @@ management:
   tracing:
     sampling:
       probability: 1.0
-

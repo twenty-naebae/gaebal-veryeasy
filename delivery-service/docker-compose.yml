@@ -8,6 +8,8 @@ services:
       MARIADB_USER: ${DB_USER}
       MARIADB_PASSWORD: ${DB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - .env
     ports:
       - "${DB_PORT}:3306"
     networks:
@@ -24,19 +26,17 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://delivery-mariadb:3306/delivery-database?useSSL=false
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_URL: jdbc:mariadb://hub-mariadb:3306/delivery-database?useSSL=false
+      SPRING_DATASOURCE_USERNAME: gaebal
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      EUREKA_SERVER: ${EUREKA_SERVER}
-      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: ${ZIPKIN_URL}
-      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
-      AI_API_KEY: ${AI_API_KEY}
+      EUREKA_SERVER: http://eureka-server:19090/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
     ports:
-      - "19096:19096"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     networks:
       - gaebal-network
 

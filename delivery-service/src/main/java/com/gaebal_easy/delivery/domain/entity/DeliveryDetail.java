@@ -13,8 +13,8 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "p_delivery")
-public class Delivery extends BaseTimeEntity {
+@Table(name = "p_delivery_route")
+public class DeliveryDetail extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -23,31 +23,23 @@ public class Delivery extends BaseTimeEntity {
     private UUID orderId;
 
     @Column(nullable = false)
-    private UUID receiverId;
-
-    @Column(nullable = false)
-    private UUID supplierId;
-
-    @Enumerated(value = EnumType.STRING)
-    private DeliveryStatus deliveryStatus;
-
-    @Column(nullable = false)
     private String departHubName;
-
-    @Column(nullable = false)
-    private String departAddress;
 
     @Column(nullable = false)
     private String arriveHubName;
 
-    @Column(nullable = false)
-    private String arriveAddress;
+    private int sequence;
 
-    private UUID deliveryPersonId;
+    private int expectedTime;
+    private double expectedDistance;
 
-    private int totalTime;
-    private double totalDist;
+    private int realTime;
+    private double realDistance;
 
+    @Enumerated(value = EnumType.STRING)
+    private DeliveryStatus deliveryStatus;
+
+    private UUID hubDeliveryPersonId;
     public void updateStatus(DeliveryStatus status){
         this.deliveryStatus = status;
     }
