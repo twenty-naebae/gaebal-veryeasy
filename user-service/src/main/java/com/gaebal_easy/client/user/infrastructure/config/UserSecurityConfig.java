@@ -58,7 +58,8 @@ public class UserSecurityConfig {
 //                .securityMatcher("/user-service/api/login")
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user-service/api/signup", "/user-service/api/login").permitAll()
-                        .requestMatchers("/user-service/api/users/**").hasRole("MASTER")
+                        .requestMatchers("/user-service/api/users").hasRole("MASTER")
+                        .requestMatchers("/user-service/api/users/**").authenticated()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated())
                 .csrf((auth) -> auth.disable())

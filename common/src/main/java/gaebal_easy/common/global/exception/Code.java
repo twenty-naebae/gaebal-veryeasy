@@ -37,7 +37,7 @@ public enum Code {
     USER_EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 3002, "토큰이 만료되었습니다."),
     USER_CAN_NOT_FIND_TOKEN(HttpStatus.BAD_REQUEST, 3003, "해당 토큰을 찾을 수 없습니다."),
     CAN_NOT_FIND_USER(HttpStatus.BAD_REQUEST,3004 , "해당 유저를 찾을 수 없습니다." ),
-
+    CAN_NOT_ACCESS_USER_INFO(HttpStatus.FORBIDDEN,3005 , "해당 유저 정보에 접근할 수 없습니다." ),
     /**
      * Hub 4000번대
      */
