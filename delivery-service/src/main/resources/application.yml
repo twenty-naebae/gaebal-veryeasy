@@ -30,11 +30,9 @@ spring:
     show-sql: true
   data:
     redis:
-      host: redis
+      host: ${REDIS_HOST} #sever : redis
       port: 6379
-  sql:
-    init:
-      mode: always
+
 eureka:
   client:
     service-url:

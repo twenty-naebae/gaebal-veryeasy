@@ -49,6 +49,7 @@ public enum Code {
     /**
      * Delivery 5000번대
      */
+    DELIVERY_USER_REDIS_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 5010, "Redis에서 정보를 가져오는 중 오류가 발생했습니다."),
 
     /**
      * Product 6000번대
