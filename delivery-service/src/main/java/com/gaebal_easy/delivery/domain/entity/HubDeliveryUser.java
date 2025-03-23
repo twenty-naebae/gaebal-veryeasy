@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)
-@Table(name = "p_store_delivery_user")
+@Table(name = "p_hub_delivery_user")
 public class HubDeliveryUser {
 
     @Id
@@ -23,13 +23,12 @@ public class HubDeliveryUser {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String slackId;
+
     // 배송 순번
     @Column(nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer deliveryOrder;
-
-
-    @Column(nullable = false)
-    private Integer hubId;
 
 }

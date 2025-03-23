@@ -24,6 +24,9 @@ public class StoreDeliveryUser extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String slackId;
+
     // 배송 순번
     @Column(nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.AUTO)
