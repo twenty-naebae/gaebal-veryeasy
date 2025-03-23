@@ -1,6 +1,5 @@
 package com.gaebal_easy.client.hub.domain.entity;
 
-import brave.internal.Nullable;
 import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "p_hub_product_list")
-public class HubProductList extends BaseTimeEntity {
+public class HubProduct extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

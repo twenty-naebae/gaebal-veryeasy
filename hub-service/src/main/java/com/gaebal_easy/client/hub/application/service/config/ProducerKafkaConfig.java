@@ -1,5 +1,8 @@
 package com.gaebal_easy.client.hub.application.service.config;
 
+import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.KafkaOrderStoreInfoDto;
+import com.gaebal_easy.client.hub.application.dto.kafkaProducerDto.KafkaOrderFailDto;
+import com.gaebal_easy.client.hub.application.dto.kafkaProducerDto.KafkaRequireAddressToHubDto;
 import com.gaebal_easy.client.hub.application.dto.kafkaProducerDto.KafkaStoreCreateAssignDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -36,5 +39,25 @@ public class ProducerKafkaConfig {
     @Bean
     public KafkaTemplate<String, KafkaStoreCreateAssignDto> storeCreateAssignKafkaTemplate() {
         return new KafkaTemplate<>(storeCreateAssignProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, KafkaOrderFailDto> orderFailProducerFactory() {
+        return createProducerFactory(KafkaOrderFailDto.class);
+    }
+
+    @Bean
+    public KafkaTemplate<String, KafkaOrderFailDto> orderFailKafkaTemplate() {
+        return new KafkaTemplate<>(orderFailProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, KafkaRequireAddressToHubDto> requireAddressToHubProducerFactory() {
+        return createProducerFactory(KafkaRequireAddressToHubDto.class);
+    }
+
+    @Bean
+    public KafkaTemplate<String, KafkaRequireAddressToHubDto> requireAddressToHubKafkaTemplate() {
+        return new KafkaTemplate<>(requireAddressToHubProducerFactory());
     }
 }

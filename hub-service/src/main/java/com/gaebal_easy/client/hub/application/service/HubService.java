@@ -3,7 +3,7 @@ package com.gaebal_easy.client.hub.application.service;
 import com.gaebal_easy.client.hub.application.dto.HubResponseDto;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
-import com.gaebal_easy.client.hub.domain.entity.HubProductList;
+import com.gaebal_easy.client.hub.domain.entity.HubProduct;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
 import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import gaebal_easy.common.global.exception.CanNotFindProductInHubException;
@@ -24,7 +24,7 @@ public class HubService {
 
     public ProductResponseDto getProduct(UUID productId, UUID hubId) {
         Hub hub = getHub(hubId);
-        HubProductList hubProductList = getHubProductList(productId);
+        HubProduct hubProductList = getHubProductList(productId);
         if(!hubProductList.getHub().getId().equals(hub.getId()))
             throw new CanNotFindProductInHubException(Code.HUB_CAN_NOT_FIND_PRODUCT_IN_HUB);
         return ProductResponseDto.of(hubProductList,hub);
@@ -45,7 +45,7 @@ public class HubService {
     private Hub getHub(UUID id){
         return hubRepository.getHub(id).orElseThrow(() -> new HubNotFoundException(Code.HUB_NOT_FOUND));
     }
-    private HubProductList getHubProductList(UUID id){
+    private HubProduct getHubProductList(UUID id){
         return hubProductListRepository.getProduct(id).orElseThrow(() -> new ProductNotFoundException(Code.HUB_PRODUCT_NOT_FOUND));
     }
 
