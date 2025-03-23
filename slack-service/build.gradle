@@ -57,6 +57,28 @@ dependencies {
 	// 테스트
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	//슬랙
+	implementation("com.slack.api:bolt-socket-mode:1.45.3")
+	implementation("javax.websocket:javax.websocket-api:1.1")
+	implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.20")
+	implementation("org.slf4j:slf4j-simple:1.7.36")
+
+	// Common패키지
+	implementation project(':common')
+
+	//gemini webclient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// SpringSecurity
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+	implementation 'org.springframework.kafka:spring-kafka'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+
 }
 
 dependencyManagement {

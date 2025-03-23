@@ -55,7 +55,7 @@ public class UserSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/user-service/api/login") // 특정 경로에 대한 필터 체인
+//                .securityMatcher("/user-service/api/login") // 특정 경로에 대한 필터 체인
                 .csrf((auth) -> auth.disable())
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
