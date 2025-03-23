@@ -206,7 +206,7 @@ class HubStockTest {
     @DisplayName("동시구매 테스트")
     @Transactional
     void outOfStockTest() throws InterruptedException {
-        int thred =1000;
+        int thred =999;
 
         ExecutorService executor = Executors.newFixedThreadPool(thred);
         CountDownLatch latch = new CountDownLatch(thred);

@@ -1,5 +1,6 @@
 package com.gaebal_easy.order.presentation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gaebal_easy.order.application.dto.OrderResponse;
 import com.gaebal_easy.order.application.service.OrderService;
 import com.gaebal_easy.order.domain.entity.Order;
@@ -24,7 +25,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/orders")
-    public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request) {
+    public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request){
 
         orderService.createOrder(request.toDto());
 

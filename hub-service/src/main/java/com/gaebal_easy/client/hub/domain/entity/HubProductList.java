@@ -34,4 +34,9 @@ public class HubProductList extends BaseTimeEntity {
 
     private UUID productId;
 
+
+    public void updateAmount(Long amount) {
+        this.amount = amount;
+    }
+
 }

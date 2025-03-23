@@ -1,5 +1,6 @@
 package com.gaebal_easy.order.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaebal_easy.order.application.dto.CreateOrderDto;
 import com.gaebal_easy.order.application.dto.OrderResponse;
@@ -13,6 +14,7 @@ import gaebal_easy.common.global.dto.ApiResponseData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,8 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final HubClient hubClient;
+    private final KafkaTemplate kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     public OrderResponse getOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow();
@@ -41,12 +45,14 @@ public class OrderService {
         return OrderResponse.from(order);
     }
 
-    public String createOrder(CreateOrderDto dto) {
-        Boolean availableStock = checkStock(dto);
+    public String createOrder(CreateOrderDto dto)  {
+        // 재고확인
+        Boolean enoughStock = checkStock(dto);
 
-        Long totalPrice = calculateTotalPrice(dto);
-
-        if(availableStock){
+        // 재고 충분
+        if(enoughStock){
+            // 주문 생성
+            Long totalPrice = calculateTotalPrice(dto);
             Order order = Order.create(dto.getSupplier(), dto.getReceiver(), dto.getOrderRequest(), dto.getAddress(), totalPrice);
 
             for(ProductDto product: dto.getProducts()){
@@ -56,6 +62,10 @@ public class OrderService {
             }
             orderRepository.save(order);
         }
+
+        // 허브에 선점했던 재고 확정 처리 요청
+        kafkaTemplate.send("confirm_stock", "product_list", dto.getProducts());
+
 
         return "test";
     }
