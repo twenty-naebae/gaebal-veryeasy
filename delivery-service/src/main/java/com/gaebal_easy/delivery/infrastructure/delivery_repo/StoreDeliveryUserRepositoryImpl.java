@@ -1,0 +1,18 @@
+package com.gaebal_easy.delivery.infrastructure.delivery_repo;
+
+import com.gaebal_easy.delivery.domain.entity.StoreDeliveryUser;
+import com.gaebal_easy.delivery.domain.repository.StoreDeliveryUserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class StoreDeliveryUserRepositoryImpl implements StoreDeliveryUserRepository {
+
+    private final StoreDeliveryUserJpaRepository storeDeliveryUserJpaRepository;
+
+    @Override
+    public StoreDeliveryUser save(StoreDeliveryUser storeDeliveryUser) {
+        return storeDeliveryUserJpaRepository.save(storeDeliveryUser);
+    }
+}

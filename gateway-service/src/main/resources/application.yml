@@ -64,7 +64,12 @@ spring:
             - Path=/store-service/api/**
           filters:
             - name: AuthPermissionPreFilter
-
+        - id: delivery-service
+          uri: lb://delivery-service
+          predicates:
+              - Path=/delivery-service/api/**
+          filters:
+              - name: AuthPermissionPreFilter
 
         # product-service
         - id: product-service

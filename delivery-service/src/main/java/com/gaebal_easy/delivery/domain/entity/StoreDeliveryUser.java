@@ -35,4 +35,13 @@ public class StoreDeliveryUser extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Integer hubId;
+
+    public static StoreDeliveryUser of(Long userId, String name, String slackId, String hubId) {
+        return StoreDeliveryUser.builder()
+                .userId(userId)
+                .name(name)
+                .slackId(slackId)
+                .hubId(Integer.parseInt(hubId))
+                .build();
+    }
 }

@@ -31,4 +31,13 @@ public class HubDeliveryUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer deliveryOrder;
 
+    public static HubDeliveryUser of(Long userId, String name, String slackId) {
+        return HubDeliveryUser.builder()
+                .userId(userId)
+                .name(name)
+                .slackId(slackId)
+                .build();
+    }
+}
+
 }

@@ -23,6 +23,7 @@ public class HubManagerService {
 
     private final HubManagerRepository hubManagerRepository;
     private final HubRepository hubRepository;
+    //todo - 허브 이름 대신 hubId를 받는 방식으로 변경
     @Transactional
     public void createHubManager(HubManagerInfoMessage hubManagerInfoMessage) {
         Hub hub = getHub(getHubLocation(hubManagerInfoMessage.getGroup()));

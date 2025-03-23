@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.hub.application.service;
+package com.gaebal_easy.delivery.application.service;
 
 import gaebal_easy.common.global.dto.BaseMessage;
 import lombok.RequiredArgsConstructor;
