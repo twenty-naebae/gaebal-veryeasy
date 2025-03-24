@@ -17,7 +17,6 @@ public class SlackMessageInfoDTO {
 	private String slackId; //배송담당자 슬랙 아이디
 	private UUID receiveId; //슬랙을 받을 배송담당자 아이디
 	private UUID orderId;           // 주문 아이디
-	private String customerName;       // 주문자 이름
 	private String productName;        // 상품명
 	private String orderRequest;     // 요청 사항
 	private String departHub;    // 출발 허브
