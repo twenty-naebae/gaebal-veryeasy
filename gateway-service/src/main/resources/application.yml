@@ -7,8 +7,8 @@ spring:
   application:
     name: gateway-service
 
-  config:
-    import: optional:file:.env[.properties]
+#  config:
+#    import: optional:file:.env[.properties]
   cloud:
     gateway:
       routes:
@@ -66,7 +66,12 @@ spring:
             - Path=/store-service/api/**
           filters:
             - name: AuthPermissionPreFilter
-
+        - id: delivery-service
+          uri: lb://delivery-service
+          predicates:
+              - Path=/delivery-service/api/**
+          filters:
+              - name: AuthPermissionPreFilter
 
         # product-service
         - id: product-service
@@ -80,7 +85,8 @@ spring:
           uri: lb://slack-service
           predicates:
             - Path=/slack-service/api/**
-
+          filters:
+            - name: AuthPermissionPreFilter
         - id: hub-service
           uri: lb://hub-service
           predicates:

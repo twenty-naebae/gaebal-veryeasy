@@ -5,6 +5,7 @@ import com.gaebal_easy.client.user.application.service.RefreshTokenService;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
 import com.gaebal_easy.client.user.infrastructure.jwt.JWTUtil;
 import com.gaebal_easy.client.user.infrastructure.jwt.LoginFilter;
+import gaebal_easy.common.global.enums.Role;
 import gaebal_easy.common.global.security.GlobalSecurityContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -55,21 +55,20 @@ public class UserSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-//                .securityMatcher("/user-service/api/login") // 특정 경로에 대한 필터 체인
+//                .securityMatcher("/user-service/api/login")
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user-service/api/signup", "/user-service/api/login").permitAll()
+                        .requestMatchers("/user-service/api/users").hasRole("MASTER")
+                        .requestMatchers("/user-service/api/users/**").authenticated()
+                        .requestMatchers("/error").permitAll()
+                        .anyRequest().authenticated())
                 .csrf((auth) -> auth.disable())
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
-                .logout((auth) -> auth.disable());
-
-        // 로그인 필터 추가
-        http
+                .logout((auth) -> auth.disable())
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,
-                        refreshTokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
-        http
-            .addFilterBefore(globalSecurityContextFilter, UsernamePasswordAuthenticationFilter.class);
-
-        // 세션 설정
-        http
+                        refreshTokenService, userRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(globalSecurityContextFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

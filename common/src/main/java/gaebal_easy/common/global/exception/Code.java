@@ -37,13 +37,15 @@ public enum Code {
     USER_EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 3002, "토큰이 만료되었습니다."),
     USER_CAN_NOT_FIND_TOKEN(HttpStatus.BAD_REQUEST, 3003, "해당 토큰을 찾을 수 없습니다."),
     CAN_NOT_FIND_USER(HttpStatus.BAD_REQUEST,3004 , "해당 유저를 찾을 수 없습니다." ),
-
+    CAN_NOT_ACCESS_USER_INFO(HttpStatus.FORBIDDEN,3005 , "해당 유저 정보에 접근할 수 없습니다." ),
+    USER_ALREADY_USERNAME_EXCEPTION(HttpStatus.BAD_REQUEST, 3006, "해당 유저네임이 이미 존재합니다."),
     /**
      * Hub 4000번대
      */
     HUB_NOT_FOUND(HttpStatus.BAD_REQUEST,4001,"허브가 존재하지 않습니다."),
     HUB_PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST,4002,"상품이 존재하지 않습니다."),
     HUB_CAN_NOT_FIND_PRODUCT_IN_HUB(HttpStatus.BAD_REQUEST,4003,"허브에 해당 상품이 존재하지 않습니다."),
+    HUB_CAN_NOT_FIND_HUBMANAGER(HttpStatus.BAD_REQUEST,4004,"해당 허브 매니저를 찾을 수 없습니다."),
     OUT_OF_STOCK(HttpStatus.CONFLICT,4004,"현재 해당 상품의 재고가 없습니다."),
 
 
@@ -52,7 +54,8 @@ public enum Code {
     /**
      * Delivery 5000번대
      */
-
+    DELIVERY_USER_REDIS_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 5010, "Redis에서 정보를 가져오는 중 오류가 발생했습니다."),
+    DELIVERY_USER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 5011, "배송 담당자를 찾을 수 없습니다."),
     /**
      * Product 6000번대
      */
