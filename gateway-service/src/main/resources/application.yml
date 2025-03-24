@@ -150,6 +150,30 @@ spring:
             - Path=/hub-service/v3/api-docs
           filters:
             - StripPrefix=1 # /hub-service/v3/api-docs 경로를 /v3/api-docs로 변경하여 전송
+        - id: store-service-swagger
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: product-service-swagger
+          uri: lb://product-service
+          predicates:
+              - Path=/product-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: order-service-swagger
+          uri: lb://order-service
+          predicates:
+            - Path=/order-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: slack-service-swagger
+          uri: lb://slack-service
+          predicates:
+            - Path=/slack-service/v3/api-docs
+          filters:
+            - StripPrefix=1
 
       discovery:
         locator:
@@ -184,4 +208,13 @@ springdoc:
         url: /delivery-service/v3/api-docs
       - name: hub-service
         url: /hub-service/v3/api-docs
+      - name: store-service
+        url: /store-service/v3/api-docs
+      - name: product-service
+        url: /product-service/v3/api-docs
+      - name: order-service
+        url: /order-service/v3/api-docs
+      - name: slack-service
+        url: /slack-service/v3/api-docs
+
     path: /swagger-ui.html
