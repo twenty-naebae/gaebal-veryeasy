@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gaebal_easy.client.slack.presentation.dto.SlackMessageInfoDTO;
 import com.gaebal_easy.client.slack.presentation.dto.SlackRequest;
 import com.gaebal_easy.client.slack.exception.GeminiException;
 
@@ -28,8 +29,10 @@ public class GeminiService {
 	@Value("${ai.api.key}")
 	private String apiKey;
 
-	public void generateAndSendDeadline(SlackRequest.GenerateDeadLineRequest requestDto, String slackUserId, UUID receiveId) {
-		String orderMessage = buildGeminiOrder(requestDto);
+	public void generateAndSendDeadline(SlackMessageInfoDTO slackMessageInfoDTO) {
+		UUID receiveId = slackMessageInfoDTO.getReceiveId();
+		String slackUserId = slackMessageInfoDTO.getSlackId();
+		String orderMessage = buildGeminiOrder(slackMessageInfoDTO);
 
 		// AI API에 보낼 payload 구성 (요청 JSON 구조)
 		Map<String, Object> payload = new HashMap<>();
@@ -55,7 +58,7 @@ public class GeminiService {
 		String deadline = extractDeadline(responseBody);
 
 		// Slack 메시지 형식으로 변환
-		String message = buildSlackMessage(requestDto, deadline);
+		String message = buildSlackMessage(slackMessageInfoDTO, deadline);
 
 		// Slack으로 메시지 전송
 		slackMessageService.saveMesage(receiveId, message);
@@ -63,7 +66,8 @@ public class GeminiService {
 	}
 
 	@NotNull
-	private static String buildSlackMessage(SlackRequest.GenerateDeadLineRequest requestDto, String deadline) {
+	private static String buildSlackMessage(SlackMessageInfoDTO requestDto, String deadline) {
+		String visitHubs = String.join(" ", requestDto.getVisitHub());
 		String message = String.format("주문 번호: %s\n" +
 				"주문자 정보: %s \n" +
 				"상품 정보: %s\n" +
@@ -73,19 +77,20 @@ public class GeminiService {
 				"도착지: %s\n" +
 				"배송담당자: %s \n\n" +
 				"위 내용을 기반으로 도출된 최종 발송 시한은 %s 입니다.",
-			requestDto.getOrderNumber(),
+			requestDto.getOrderId(),
 			requestDto.getCustomerName(),
-			requestDto.getProductInfo(),
-			requestDto.getRequestDetails(),
-			requestDto.getShippingAddress(),
-			requestDto.getTransitAddress(),
+			requestDto.getProductName(),
+			requestDto.getOrderRequest(),
+			requestDto.getDepartHub(),
+			visitHubs,
 			requestDto.getDestination(),
-			requestDto.getDeliveryManager(),
+			requestDto.getDeliveryManagerName(),
 			deadline);
 		return message;
 	}
 
-	private String buildGeminiOrder(SlackRequest.GenerateDeadLineRequest requestDto) {
+	private String buildGeminiOrder(SlackMessageInfoDTO requestDto) {
+		String visitHubs = String.join(" ", requestDto.getVisitHub());
 		return String.format(
 			"주문 번호: %s\n" +
 				"주문자 정보: %s\n" +
@@ -96,14 +101,14 @@ public class GeminiService {
 				"도착지: %s\n" +
 				"배송담당자: %s\n\n" +
 				"위 내용 기반으로 도출된 발송 시한을 날짜, 시간까지 생성해주세요.",
-			requestDto.getOrderNumber(),
+			requestDto.getOrderId(),
 			requestDto.getCustomerName(),
-			requestDto.getProductInfo(),
-			requestDto.getRequestDetails(),
-			requestDto.getShippingAddress(),
-			requestDto.getTransitAddress(),
+			requestDto.getProductName(),
+			requestDto.getOrderRequest(),
+			requestDto.getDepartHub(),
+			visitHubs,
 			requestDto.getDestination(),
-			requestDto.getDeliveryManager()
+			requestDto.getDeliveryManagerName()
 		);
 	}
 

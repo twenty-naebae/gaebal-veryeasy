@@ -5,7 +5,6 @@ server:
 spring:
   application:
     name: hub-service
-
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
@@ -15,7 +14,7 @@ spring:
   # Redis
   data:
     redis:
-      host: localhost
+      host:
       port: ${REDIS_PORT}
       username: default
       password: systempass
@@ -46,7 +45,7 @@ eureka:
 
 
 jwt:
-  secret: Adsfvabewryethadbgnq4ertjadfhjmetDHJarkmyshfzdjykmrtejkymhndgThJymhfngbfcsdsdfsdafasdfasd
+  secret: ${JWT_SECRET}
 
 management:
   zipkin:
