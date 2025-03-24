@@ -1,26 +1,17 @@
 package com.gaebal_easy.client.hub.application.service.consumer;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.gaebal_easy.client.hub.application.dto.CheckStokProductDto;
-import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
-import com.gaebal_easy.client.hub.domain.entity.HubProductList;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
 import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.OrderFailExceiption;
-import gaebal_easy.common.global.exception.OutOfStockException;
-import gaebal_easy.common.global.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

@@ -1,6 +1,6 @@
 package com.gaebal_easy.client.hub.presentation;
 
-import com.gaebal_easy.client.hub.application.dto.CheckStockDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
 import com.gaebal_easy.client.hub.application.service.HubService;
 import com.gaebal_easy.client.hub.presentation.dto.HubCreateRequestDto;
 import com.gaebal_easy.client.hub.presentation.dto.HubRequestDto;

@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.hub.application.dto;
+package com.gaebal_easy.client.hub.application.dto.checkStockDto;
 
 import lombok.*;
 

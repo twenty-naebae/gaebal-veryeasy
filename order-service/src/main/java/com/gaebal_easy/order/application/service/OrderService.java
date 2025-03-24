@@ -3,6 +3,7 @@ package com.gaebal_easy.order.application.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaebal_easy.order.application.dto.CreateOrderDto;
+import com.gaebal_easy.order.application.dto.OrderCreateKafkaDto;
 import com.gaebal_easy.order.application.dto.OrderResponse;
 import com.gaebal_easy.order.application.dto.UpdateOrderDto;
 import com.gaebal_easy.order.domain.entity.Order;
@@ -11,6 +12,8 @@ import com.gaebal_easy.order.domain.repository.OrderRepository;
 import com.gaebal_easy.order.presentation.dto.ProductDto;
 import com.gaebal_easy.order.presentation.dto.StockCheckRequest;
 import gaebal_easy.common.global.dto.ApiResponseData;
+import gaebal_easy.common.global.exception.Code;
+import gaebal_easy.common.global.exception.OutOfStockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -45,29 +48,37 @@ public class OrderService {
         return OrderResponse.from(order);
     }
 
-    public String createOrder(CreateOrderDto dto)  {
+    public OrderResponse createOrder(CreateOrderDto dto)  {
         // 재고확인
         Boolean enoughStock = checkStock(dto);
 
-        // 재고 충분
-        if(enoughStock){
-            // 주문 생성
-            Long totalPrice = calculateTotalPrice(dto);
-            Order order = Order.create(dto.getSupplier(), dto.getReceiver(), dto.getOrderRequest(), dto.getAddress(), totalPrice);
-
-            for(ProductDto product: dto.getProducts()){
-                OrderProduct orderProduct = OrderProduct.create(product.getProductId(), product.getQuantity());
-                order.addOrderProduct(orderProduct);
-
-            }
-            orderRepository.save(order);
+        // 재고 부족
+        if(!enoughStock){
+            throw new OutOfStockException(Code.OUT_OF_STOCK);
         }
+
+        // 재고 충분
+        // 주문 생성
+        Long totalPrice = calculateTotalPrice(dto);
+        Order order = Order.create(dto.getSupplier(), dto.getReceiver(), dto.getOrderRequest(), dto.getAddress(), totalPrice);
+
+        for(ProductDto product: dto.getProducts()){
+            OrderProduct orderProduct = OrderProduct.create(product.getProductId(), product.getQuantity());
+            order.addOrderProduct(orderProduct);
+        }
+        orderRepository.save(order);
 
         // 허브에 선점했던 재고 확정 처리 요청
         kafkaTemplate.send("confirm_stock", "product_list", dto.getProducts());
+        // 업체에 orderId, receiver, supplier 전송
+        kafkaTemplate.send("order_create","order", OrderCreateKafkaDto.builder()
+                .orderId(order.getId())
+                .supplier(dto.getSupplier())
+                .receiver(dto.getReceiver())
+                .build()
+        );
 
-
-        return "test";
+        return OrderResponse.from(order);
     }
 
     private static Long calculateTotalPrice(CreateOrderDto dto) {

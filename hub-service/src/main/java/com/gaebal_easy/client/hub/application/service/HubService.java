@@ -1,9 +1,9 @@
 package com.gaebal_easy.client.hub.application.service;
 
 import com.gaebal_easy.client.hub.application.dto.HubResponseDto;
-import com.gaebal_easy.client.hub.application.dto.CheckStokProductDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
-import com.gaebal_easy.client.hub.application.dto.CheckStockDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
 import com.gaebal_easy.client.hub.domain.entity.HubProductList;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;

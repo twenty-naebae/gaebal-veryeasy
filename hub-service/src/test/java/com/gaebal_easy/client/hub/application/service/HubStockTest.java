@@ -1,7 +1,7 @@
 package com.gaebal_easy.client.hub.application.service;
 
-import com.gaebal_easy.client.hub.application.dto.CheckStokProductDto;
-import com.gaebal_easy.client.hub.application.dto.CheckStockDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
