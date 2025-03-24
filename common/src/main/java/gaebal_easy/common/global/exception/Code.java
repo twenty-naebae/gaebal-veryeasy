@@ -60,6 +60,8 @@ public enum Code {
     /**
      * Store 8000번대
      */
+    STORE_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 8001, "해당 업체가 존재하지 않습니다."),
+
 
     /**
      * Slack 9000번대
@@ -71,7 +73,6 @@ public enum Code {
     SLACK_DM_CHANNEL_OPEN_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, 9005, "DM 채널을 열 수 없습니다."),
     GEMINI_PARSING_EXCEPTION(HttpStatus.NOT_FOUND, 9006, "발송 데드라인 생성 중 오류가 발생했습니다."),
     SLACK_MESSAGE_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 9007, "슬랙메시지가 존재하지 않습니다.");
-
     /**
      * Kafka 통신 10000번대
      */
