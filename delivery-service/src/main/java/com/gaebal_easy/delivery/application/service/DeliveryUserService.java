@@ -27,14 +27,12 @@ public class DeliveryUserService {
         try {
             // 소속이 있으면 StoreDeliveryUser
             if (deliveryUserInfoMessage.getGroup() != null) {
-                int nextOrder = sequenceManager.getNextStoreDeliveryOrder();
-                StoreDeliveryUser storeDeliveryUser = StoreDeliveryUser.of(deliveryUserInfoMessage.getUserId(), deliveryUserInfoMessage.getName(), deliveryUserInfoMessage.getSlackId(), deliveryUserInfoMessage.getGroup(), nextOrder);
+                StoreDeliveryUser storeDeliveryUser = StoreDeliveryUser.of(deliveryUserInfoMessage.getUserId(), deliveryUserInfoMessage.getName(), deliveryUserInfoMessage.getSlackId(), deliveryUserInfoMessage.getGroup());
                 storeDeliveryUserRepository.save(storeDeliveryUser);
                 redisDeliveryUserUtil.addToStoreDeliveryUserList(storeDeliveryUser.getUserId(), storeDeliveryUser.getHubId());
                 log.info("업체 배송 담당자 생성 : " + storeDeliveryUser.getName() + ", " + storeDeliveryUser.getHubId());
             } else {
-                int nextOrder = sequenceManager.getNextHubDeliveryOrder();
-                HubDeliveryUser hubDeliveryUser = HubDeliveryUser.of(deliveryUserInfoMessage.getUserId(), deliveryUserInfoMessage.getName(), deliveryUserInfoMessage.getSlackId(), nextOrder);
+                HubDeliveryUser hubDeliveryUser = HubDeliveryUser.of(deliveryUserInfoMessage.getUserId(), deliveryUserInfoMessage.getName(), deliveryUserInfoMessage.getSlackId());
                 hubDeliveryUserRepository.save(hubDeliveryUser);
                 redisDeliveryUserUtil.addToHubDeliveryUserList(hubDeliveryUser.getUserId());
                 log.info("허브 배송 담당자 생성 : " + hubDeliveryUser.getName());
