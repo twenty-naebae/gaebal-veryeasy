@@ -94,6 +94,26 @@ spring:
           filters:
             - name: AuthPermissionPreFilter
 
+        # Swagger UI 허용 설정
+        - id: user-service-swagger
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: delivery-service-swagger
+          uri: lb://delivery-service
+          predicates:
+            - Path=/delivery-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: hub-service-swagger
+          uri: lb://hub-service
+          predicates:
+            - Path=/hub-service/v3/api-docs
+          filters:
+            - StripPrefix=1 # /hub-service/v3/api-docs 경로를 /v3/api-docs로 변경하여 전송
+
       discovery:
         locator:
           enabled: true  # 서비스 디스커버리를 통해 동적으로 라우트를 생성하도록 설정
@@ -116,3 +136,15 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+# swagger 설정
+springdoc:
+  swagger-ui:
+    urls:
+      - name: user-service
+        url: /user-service/v3/api-docs
+      - name: delivery-service
+        url: /delivery-service/v3/api-docs
+      - name: hub-service
+        url: /hub-service/v3/api-docs
+    path: /swagger-ui.html
