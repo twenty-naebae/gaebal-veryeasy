@@ -4,9 +4,12 @@ import com.gaebal_easy.delivery.domain.entity.HubDeliveryUser;
 import com.gaebal_easy.delivery.domain.entity.StoreDeliveryUser;
 import com.gaebal_easy.delivery.domain.repository.HubDeliveryUserRepository;
 import com.gaebal_easy.delivery.domain.repository.StoreDeliveryUserRepository;
-import com.gaebal_easy.delivery.infrastructure.persistence.DeliverySequenceManager;
 import com.gaebal_easy.delivery.infrastructure.redis.RedisDeliveryUserUtil;
+import gaebal_easy.common.global.exception.Code;
+import gaebal_easy.common.global.exception.HubManagerNotFoundException;
+import gaebal_easy.common.global.message.DeliveryUserDeleteMessage;
 import gaebal_easy.common.global.message.DeliveryUserInfoMessage;
+import gaebal_easy.common.global.message.HubManagerDeleteMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +22,6 @@ public class DeliveryUserService {
 
     private final HubDeliveryUserRepository hubDeliveryUserRepository;
     private final StoreDeliveryUserRepository storeDeliveryUserRepository;
-    private final DeliverySequenceManager sequenceManager;
     private final RedisDeliveryUserUtil redisDeliveryUserUtil;
 
     @Transactional
@@ -42,5 +44,20 @@ public class DeliveryUserService {
             throw e;
         }
 
+    }
+
+    @Transactional
+    public void deleteDeliveryUser(DeliveryUserDeleteMessage deliveryUserDeleteMessage) {
+        storeDeliveryUserRepository.findByUserId(deliveryUserDeleteMessage.getUserId()).ifPresent(storeDeliveryUser -> {
+            storeDeliveryUserRepository.delete(storeDeliveryUser, deliveryUserDeleteMessage.getDeletedBy());
+            redisDeliveryUserUtil.removeStoreUserFromQueue(storeDeliveryUser.getHubId(),storeDeliveryUser.getUserId());
+            log.info("업체 배송 담당자 삭제 : " + storeDeliveryUser.getName() + ", " + storeDeliveryUser.getHubId());
+        });
+
+        hubDeliveryUserRepository.findByUserId(deliveryUserDeleteMessage.getUserId()).ifPresent(hubDeliveryUser -> {
+            hubDeliveryUserRepository.delete(hubDeliveryUser, deliveryUserDeleteMessage.getDeletedBy());
+            redisDeliveryUserUtil.removeHubUserFromQueue(hubDeliveryUser.getUserId());
+            log.info("허브 배송 담당자 삭제 : " + hubDeliveryUser.getName());
+        });
     }
 }

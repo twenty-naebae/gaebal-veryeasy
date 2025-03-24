@@ -1,5 +1,6 @@
 package com.gaebal_easy.delivery.domain.entity;
 
+import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)
 @Table(name = "p_hub_delivery_user")
-public class HubDeliveryUser {
+public class HubDeliveryUser extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

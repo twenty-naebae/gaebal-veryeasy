@@ -8,4 +8,6 @@ public interface HubDeliveryUserRepository {
     public HubDeliveryUser save(HubDeliveryUser hubDeliveryUser);
 
     Optional<HubDeliveryUser> findByUserId(Long userId);
+
+    void delete(HubDeliveryUser hubDeliveryUser, String deletedBy);
 }

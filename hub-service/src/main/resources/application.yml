@@ -14,10 +14,8 @@ spring:
   # Redis
   data:
     redis:
-      host:
+      host: ${REDIS_HOST} #sever : redis
       port: ${REDIS_PORT}
-      username: default
-      password: systempass
 
   # Kafka
   kafka:

@@ -22,4 +22,10 @@ public class HubDeliveryUserRepositoryImpl implements HubDeliveryUserRepository 
     public Optional<HubDeliveryUser> findByUserId(Long userId) {
         return hubDeliveryUserJpaRepository.findByUserId(userId);
     }
+
+    @Override
+    public void delete(HubDeliveryUser hubDeliveryUser, String deletedBy) {
+        hubDeliveryUser.delete(deletedBy);
+        hubDeliveryUserJpaRepository.save(hubDeliveryUser);
+    }
 }

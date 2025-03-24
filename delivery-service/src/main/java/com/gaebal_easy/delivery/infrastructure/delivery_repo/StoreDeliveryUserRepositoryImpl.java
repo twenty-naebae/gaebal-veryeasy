@@ -22,4 +22,10 @@ public class StoreDeliveryUserRepositoryImpl implements StoreDeliveryUserReposit
     public Optional<StoreDeliveryUser> findByUserId(Long userId) {
         return storeDeliveryUserJpaRepository.findByUserId(userId);
     }
+
+    @Override
+    public void delete(StoreDeliveryUser storeDeliveryUser, String deletedBy) {
+        storeDeliveryUser.delete(deletedBy);
+        storeDeliveryUserJpaRepository.save(storeDeliveryUser);
+    }
 }

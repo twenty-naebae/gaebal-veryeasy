@@ -8,4 +8,6 @@ public interface StoreDeliveryUserRepository {
     public StoreDeliveryUser save(StoreDeliveryUser storeDeliveryUser);
 
     Optional<StoreDeliveryUser> findByUserId(Long userId);
+
+    void delete(StoreDeliveryUser storeDeliveryUser, String deletedBy);
 }
