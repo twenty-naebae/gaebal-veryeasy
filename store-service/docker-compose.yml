@@ -1,0 +1,45 @@
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: store-mariadb
+    restart: always
+    environment:
+      MARIADB_DATABASE: store-database
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    networks:
+      - gaebal-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: store-backend
+    container_name: store-backend
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://store-mariadb:3306/store-database?useSSL=false
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      EUREKA_SERVER: ${EUREKA_SERVER}
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: ${ZIPKIN_URL}
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+      AI_API_KEY: ${AI_API_KEY}
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    networks:
+      - gaebal-network
+
+networks:
+  gaebal-network:
+    external: true
