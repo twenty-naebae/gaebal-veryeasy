@@ -94,6 +94,16 @@ spring:
           filters:
             - name: AuthPermissionPreFilter
 
+
+        # order-service
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order-service/api/**
+          filters:
+            - name: AuthPermissionPreFilter
+
+
       discovery:
         locator:
           enabled: true  # 서비스 디스커버리를 통해 동적으로 라우트를 생성하도록 설정

@@ -1,18 +1,21 @@
 package com.gaebal_easy.client.hub.presentation;
 
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
 import com.gaebal_easy.client.hub.application.service.HubService;
 import com.gaebal_easy.client.hub.presentation.dto.HubCreateRequestDto;
 import com.gaebal_easy.client.hub.presentation.dto.HubRequestDto;
 import gaebal_easy.common.global.dto.ApiResponseData;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/hub-service/api")
 @RequiredArgsConstructor
+@Slf4j
 public class HubController {
 
     private final HubService hubService;
@@ -49,6 +52,14 @@ public class HubController {
     @GetMapping("/hello")
     public ResponseEntity<?> hello() {
         return ResponseEntity.ok(ApiResponseData.success("Hello"));
+    }
+
+
+    @PostMapping("/products/stock")
+    public ResponseEntity<?> checkStock(@RequestBody CheckStockDto stockCheckDto) {
+        log.info("stockCheck {}", stockCheckDto.toString());
+        Boolean possibleStock = hubService.checkStock(stockCheckDto);
+        return ResponseEntity.ok(possibleStock);
     }
 
 
