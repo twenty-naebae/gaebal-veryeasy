@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 public class RedisDeliveryUserUtil {
 
     private final RedisTemplate<String, String> redisTemplate;
+    public static final String HUB_DELIVERY_LIST_KEY = "delivery:hub:list";
+    public static final String STORE_DELIVERY_LIST_KEY_PREFIX = "delivery:store:";
 
     /**
      * 라운드 로빈 방식으로 다음 인덱스를 가져온다. 배송담당자 할당을 위해 사용.
@@ -49,11 +51,26 @@ public class RedisDeliveryUserUtil {
 
     // 배송담당자 리스트에 추가
     public void addToHubDeliveryUserList(Long userId) {
-        redisTemplate.opsForList().rightPush("delivery:hub:list", String.valueOf(userId));
+        redisTemplate.opsForList().rightPush(HUB_DELIVERY_LIST_KEY, String.valueOf(userId));
     }
 
     public void addToStoreDeliveryUserList(Long userId,Integer hubId) {
-        redisTemplate.opsForList().rightPush("delivery:store:" + hubId + ":list", String.valueOf(userId));
+        redisTemplate.opsForList().rightPush(getStoreListKey(hubId), String.valueOf(userId));
+    }
+
+    public void removeHubUserFromQueue(Long userId) {
+        redisTemplate.opsForList().remove(HUB_DELIVERY_LIST_KEY, 0, String.valueOf(userId));
+        log.info("허브 배송담당자 Redis 큐에서 제거됨: userId={}", userId);
+    }
+
+    public void removeStoreUserFromQueue(Integer hubId, Long userId) {
+        String listKey = getStoreListKey(hubId);
+        redisTemplate.opsForList().remove(listKey, 0, String.valueOf(userId));
+        log.info("업체 배송담당자 Redis 큐에서 제거됨: hubId={}, userId={}", hubId, userId);
+    }
+
+    private String getStoreListKey(Integer hubId) {
+        return STORE_DELIVERY_LIST_KEY_PREFIX + hubId + ":list";
     }
 
 }
