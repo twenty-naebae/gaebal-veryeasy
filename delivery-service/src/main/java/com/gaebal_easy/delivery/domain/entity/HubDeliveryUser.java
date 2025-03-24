@@ -1,5 +1,6 @@
 package com.gaebal_easy.delivery.domain.entity;
 
+import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)
 @Table(name = "p_hub_delivery_user")
-public class HubDeliveryUser {
+public class HubDeliveryUser extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,16 +27,18 @@ public class HubDeliveryUser {
     @Column(nullable = false)
     private String slackId;
 
-    // 배송 순번
-    @Column(nullable = false, unique = true)
-    private Integer deliveryOrder;
-
-    public static HubDeliveryUser of(Long userId, String name, String slackId,Integer deliveryOrder) {
+    public static HubDeliveryUser of(Long userId, String name, String slackId) {
         return HubDeliveryUser.builder()
                 .userId(userId)
                 .name(name)
                 .slackId(slackId)
-                .deliveryOrder(deliveryOrder)
                 .build();
+    }
+
+    public void update(String name, String slackId) {
+        if(name != null)
+            this.name = name;
+        if(slackId != null)
+            this.slackId = slackId;
     }
 }

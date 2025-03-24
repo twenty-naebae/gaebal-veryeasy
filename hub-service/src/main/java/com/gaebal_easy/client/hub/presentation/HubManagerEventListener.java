@@ -27,17 +27,6 @@ public class HubManagerEventListener {
         }
     }
 
-    // todo - updatedBy 정보도 받아야함.
-    @KafkaListener(topics = "hub-manager-update", groupId = "geabal-group")
-    public void handleHubManagerUpdate(HubManagerUpdateMessage hubManagerUpdateMessage) {
-        try {
-            log.info("handleHubManagerUpdate : {}", hubManagerUpdateMessage);
-            hubManagerService.updateHubManager(hubManagerUpdateMessage);
-        } catch (Exception e) {
-            eventErrorHandler.handleEventError(e, hubManagerUpdateMessage, "hub-manager-update-error");
-        }
-    }
-
     @KafkaListener(topics = "hub-manager-delete", groupId = "geabal-group")
     public void handleHubManagerDelete(HubManagerDeleteMessage hubManagerDeleteMessage) {
         try {

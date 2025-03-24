@@ -13,13 +13,4 @@ public class UserUpdateRequest {
     @Nullable
     String password;
 
-    @Nullable
-    String slackId;
-
-    @Nullable
-    String name; //이름
-
-    @Nullable
-    String group; //소속
-
 }
