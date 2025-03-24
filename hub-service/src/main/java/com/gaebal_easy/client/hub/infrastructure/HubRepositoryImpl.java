@@ -28,4 +28,9 @@ public class HubRepositoryImpl implements HubRepository {
     }
 
     public List<Hub> findAll() {return hubJpaRepository.findAll();}
+
+    @Override
+    public Optional<Hub> findById(UUID hubId) {
+        return hubJpaRepository.findById(hubId);
+    }
 }

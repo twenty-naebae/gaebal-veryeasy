@@ -61,6 +61,11 @@ public class UserSecurityConfig {
                         .requestMatchers("/user-service/api/users").hasRole("MASTER")
                         .requestMatchers("/user-service/api/users/**").authenticated()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers( // swagger관련 url
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated())
                 .csrf((auth) -> auth.disable())
                 .formLogin((auth) -> auth.disable())

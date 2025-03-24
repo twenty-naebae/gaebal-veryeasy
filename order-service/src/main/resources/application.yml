@@ -4,8 +4,8 @@ server:
 spring:
   application:
     name: order-service
-  config:
-    import: optional:file:.env[.properties]
+#  config:
+#    import: optional:file:.env[.properties]
   # MariaDB
   datasource:
     url: ${DB_URL}
@@ -57,3 +57,11 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+springdoc:
+  default-produces-media-type: application/json
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true

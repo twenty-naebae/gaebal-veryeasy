@@ -64,4 +64,9 @@ public class UserController {
     public String test(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         return "test: "+ customUserDetails.getUsername();
     }
+
+    @GetMapping("/getRole/{managerId}")
+    public Role getUserRole(@PathVariable("managerId") Long managerId) {
+        return userService.getUserRole(managerId);
+    }
 }

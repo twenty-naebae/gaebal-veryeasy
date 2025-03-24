@@ -15,4 +15,6 @@ public interface HubRepository {
     Optional<Hub> findByHubLocation(HubLocation hubLocation);
 
     List<Hub> findAll();
+
+    Optional<Hub> findById(UUID hubId);
 }

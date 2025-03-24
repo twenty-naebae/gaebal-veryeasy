@@ -8,6 +8,8 @@ import gaebal_easy.common.global.enums.Role;
 import gaebal_easy.common.global.exception.CanNotAccessInfoException;
 import gaebal_easy.common.global.exception.CanNotFindUserException;
 import gaebal_easy.common.global.exception.Code;
+import gaebal_easy.common.global.message.DeliveryUserDeleteMessage;
+import gaebal_easy.common.global.message.DeliveryUserInfoMessage;
 import gaebal_easy.common.global.message.HubManagerDeleteMessage;
 import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import gaebal_easy.common.global.security.CustomUserDetails;
@@ -27,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final HubManagerEventService hubManagerEventService;
+    private final DeliveryUserEventService deliveryUserEventService;
 
     @Transactional
     public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
@@ -41,10 +44,8 @@ public class UserService {
         if(userUpdateRequest.getUsername() != null) {
             username = userUpdateRequest.getUsername();
         }
-        userRepository.update(user, userUpdateRequest.getUsername(), newPassword);
-        if(user.getRole().equals(Role.HUB_MANAGER)) {
-            hubManagerEventService.sendHubManagerUpdate(HubManagerUpdateMessage.of(userId, username, userUpdateRequest.getGroup()));
-        }
+
+        userRepository.update(user, username, newPassword);
     }
 
     @Transactional
@@ -54,7 +55,10 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new CanNotFindUserException());
         userRepository.delete(user, customUserDetails.getUserId());
         if(user.getRole().equals(Role.HUB_MANAGER)) {
-            hubManagerEventService.sendHubManagerDelete(HubManagerDeleteMessage.of(userId, customUserDetails.getUsername()));
+            hubManagerEventService.sendHubManagerDelete(HubManagerDeleteMessage.of(userId, customUserDetails.getUserId()));
+        }
+        else if(user.getRole().equals(Role.HUB_DELIVERY_USER)|| user.getRole().equals(Role.STORE_DELIVERY_USER)){
+            deliveryUserEventService.sendDeliveryUserDelete(DeliveryUserDeleteMessage.of(userId, customUserDetails.getUserId()));
         }
     }
 
@@ -82,5 +86,13 @@ public class UserService {
             throw new CanNotAccessInfoException(Code.CAN_NOT_ACCESS_USER_INFO);
         }
         return UserInfoResponse.of(user.getId(), user.getUsername(), user.getRole().toString());
+    }
+
+    @Transactional(readOnly = true)
+    public Role getUserRole(Long managerId) {
+        User user = userRepository.findById(managerId)
+            .orElseThrow(() -> new CanNotFindUserException());
+
+        return user.getRole();
     }
 }

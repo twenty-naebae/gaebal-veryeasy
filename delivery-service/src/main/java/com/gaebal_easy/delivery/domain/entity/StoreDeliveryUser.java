@@ -27,21 +27,24 @@ public class StoreDeliveryUser extends BaseTimeEntity {
     @Column(nullable = false)
     private String slackId;
 
-    // 배송 순번
-    @Column(nullable = false, unique = true)
-    private Integer deliveryOrder;
-
-
     @Column(nullable = false)
-    private Integer hubId;
+    private UUID hubId;
 
-    public static StoreDeliveryUser of(Long userId, String name, String slackId, String hubId, Integer deliveryOrder) {
+    public static StoreDeliveryUser of(Long userId, String name, String slackId, String hubId) {
         return StoreDeliveryUser.builder()
                 .userId(userId)
                 .name(name)
                 .slackId(slackId)
-                .hubId(Integer.parseInt(hubId))
-                .deliveryOrder(deliveryOrder)
+                .hubId(UUID.fromString(hubId))
                 .build();
+    }
+
+    public void update(String name, String slackId, String hubId ) {
+        if(name != null)
+            this.name = name;
+        if(slackId != null)
+            this.slackId = slackId;
+        if(hubId != null)
+            this.hubId = UUID.fromString(hubId);
     }
 }

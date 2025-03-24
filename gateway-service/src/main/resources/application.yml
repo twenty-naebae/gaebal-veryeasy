@@ -43,10 +43,22 @@ spring:
           predicates:
             - Path=/delivery-service/api/send
             - Method=GET
-        - id: hub-service
+
+        - id: hub-service  #TODO: order에 있는 hubclient 주소 로그인 없이 추가
           uri: lb://hub-service
           predicates:
             - Path=/hub-service/api/**
+        #store-service
+        - id: store-service-getList
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/api/getStores/**
+            - Method=GET
+        - id: store-service-search
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/api/search/**
+            - Method=GET
         # 로그인 필요한 요청(토큰 검증 필터 존재)
         - id: user-service # 라우트 식별자
           uri: lb://user-service  # 'user-service'라는 이름으로 로드 밸런싱된 서비스로 라우팅
@@ -60,10 +72,25 @@ spring:
             - Path=/slack-service/api/**
           filters:
             - name: AuthPermissionPreFilter
+        #store-service
         - id: store-service
           uri: lb://store-service
           predicates:
-            - Path=/store-service/api/**
+            - Path=/store-service/api/create/**
+          filters:
+            - name: AuthPermissionPreFilter
+
+        - id: store-service-update
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/api/update/**
+          filters:
+            - name: AuthPermissionPreFilter
+
+        - id: store-service-delete
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/api/delete/**
           filters:
             - name: AuthPermissionPreFilter
         - id: delivery-service
@@ -84,15 +111,16 @@ spring:
         - id: slack-service-get-messages
           uri: lb://slack-service
           predicates:
-            - Path=/slack-service/api/**
+            - Path=/slack-service/api/getSlack
           filters:
             - name: AuthPermissionPreFilter
-        - id: hub-service
-          uri: lb://hub-service
-          predicates:
-            - Path=/hub-service/api/**
-          filters:
-            - name: AuthPermissionPreFilter
+
+#        - id: hub-service
+#          uri: lb://hub-service
+#          predicates:
+#            - Path=/hub-service/api/**
+#          filters:
+#            - name: AuthPermissionPreFilter
 
 
         # order-service
@@ -103,6 +131,49 @@ spring:
 #          filters:
 #            - name: AuthPermissionPreFilter
 
+        # Swagger UI 허용 설정
+        - id: user-service-swagger
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: delivery-service-swagger
+          uri: lb://delivery-service
+          predicates:
+            - Path=/delivery-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: hub-service-swagger
+          uri: lb://hub-service
+          predicates:
+            - Path=/hub-service/v3/api-docs
+          filters:
+            - StripPrefix=1 # /hub-service/v3/api-docs 경로를 /v3/api-docs로 변경하여 전송
+        - id: store-service-swagger
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: product-service-swagger
+          uri: lb://product-service
+          predicates:
+              - Path=/product-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: order-service-swagger
+          uri: lb://order-service
+          predicates:
+            - Path=/order-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: slack-service-swagger
+          uri: lb://slack-service
+          predicates:
+            - Path=/slack-service/v3/api-docs
+          filters:
+            - StripPrefix=1
 
       discovery:
         locator:
@@ -126,3 +197,24 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+# swagger 설정
+springdoc:
+  swagger-ui:
+    urls:
+      - name: user-service
+        url: /user-service/v3/api-docs
+      - name: delivery-service
+        url: /delivery-service/v3/api-docs
+      - name: hub-service
+        url: /hub-service/v3/api-docs
+      - name: store-service
+        url: /store-service/v3/api-docs
+      - name: product-service
+        url: /product-service/v3/api-docs
+      - name: order-service
+        url: /order-service/v3/api-docs
+      - name: slack-service
+        url: /slack-service/v3/api-docs
+
+    path: /swagger-ui.html
