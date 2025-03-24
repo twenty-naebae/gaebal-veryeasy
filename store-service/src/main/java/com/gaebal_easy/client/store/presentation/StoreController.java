@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import com.gaebal_easy.client.store.presentation.dto.StoreRequest;
 import com.gaebal_easy.client.store.presentation.dto.StoreResponse;
 
 import gaebal_easy.common.global.dto.ApiResponseData;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,9 +35,10 @@ public class StoreController {
 	public ResponseEntity<ApiResponseData<StoreResponse.postStoreResponse>> postStore (
 		@RequestParam UUID hubId,
 		@RequestParam Long managerId,
-		@RequestBody StoreRequest.postStoreRequest request
+		@RequestBody StoreRequest.postStoreRequest request,
+		@RequestHeader("access") String access
 	) {
-		return ResponseEntity.ok(ApiResponseData.success(storeService.postStore(hubId, managerId, request)));
+		return ResponseEntity.ok(ApiResponseData.success(storeService.postStore(access, hubId, managerId, request)));
 	}
 	@PutMapping("/update")
 	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")

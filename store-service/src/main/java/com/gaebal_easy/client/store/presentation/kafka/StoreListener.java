@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gaebal_easy.client.store.application.service.KafkaProducerService;
 import com.gaebal_easy.client.store.application.service.StoreService;
 import com.gaebal_easy.client.store.presentation.dto.OrderCreateKafkaDto;
 
@@ -18,6 +19,7 @@ public class StoreListener {
 
 	private final ObjectMapper objectMapper;
 	private final StoreService storeService;
+	private final KafkaProducerService kafkaProducerService;
 
 	@KafkaListener(topics = "order_create", groupId = "store-group")
 	public void listen(String event) {

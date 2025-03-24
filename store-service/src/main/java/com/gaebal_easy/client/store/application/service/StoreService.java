@@ -51,9 +51,9 @@ public class StoreService {
 			.build();
 	}
 
-	public StoreResponse.postStoreResponse postStore(UUID hubId, Long managerId, StoreRequest.postStoreRequest request) {
-		Role managerRole = userServiceClient.getUserRole(managerId);
-		if(managerRole != Role.STORE_MANAGER) throw new StoreException.StoreManagerNotFoundException();
+	public StoreResponse.postStoreResponse postStore(String access, UUID hubId, Long managerId, StoreRequest.postStoreRequest request) {
+		// Role managerRole = userServiceClient.getUserRole(access, managerId);
+		// if(managerRole != Role.STORE_MANAGER) throw new StoreException.StoreManagerNotFoundException();
 		Store store = Store.create(hubId, managerId, request);
 		Store createdStore = storeRepository.save(store);
 		return StoreResponse.postStoreResponse.builder().id(createdStore.getId()).build();

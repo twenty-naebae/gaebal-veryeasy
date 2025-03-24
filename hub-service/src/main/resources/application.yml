@@ -14,7 +14,7 @@ spring:
   # Redis
   data:
     redis:
-      host:
+      host: localhost
       port: ${REDIS_PORT}
       username: default
       password: systempass

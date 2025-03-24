@@ -19,5 +19,5 @@ public class SearchedStoreDTO {
 	private UUID hubId;
 	private StoreType type;
 	private String address;
-	private UUID managerId;
+	private Long managerId;
 }
