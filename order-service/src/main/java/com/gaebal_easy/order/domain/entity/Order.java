@@ -19,9 +19,9 @@ import java.util.UUID;
 public class Order extends BaseTimeEntity {
 
     @Builder(access = AccessLevel.PROTECTED)
-    public Order(String supplier, String receiver, String orderRequest, Long totalPrice, String address) {
-        this.supplier = supplier;
-        this.receiver = receiver;
+    public Order(UUID supplier, UUID receiver, String orderRequest, Long totalPrice, String address) {
+        this.supplierId = supplier;
+        this.receiverId = receiver;
         this.orderRequest = orderRequest;
         this.totalPrice = totalPrice;
         this.address = address;
@@ -32,9 +32,9 @@ public class Order extends BaseTimeEntity {
     private UUID id;
 
     @Column(name = "supplier", nullable = false)
-    private String supplier;
+    private UUID supplierId;
     @Column(name = "recevier", nullable = false)
-    private String receiver;
+    private UUID receiverId;
     @Column(name = "order_request")
     private String orderRequest;
     @Column(name = "total_price", nullable = false)
@@ -56,7 +56,7 @@ public class Order extends BaseTimeEntity {
         }
     }
 
-    public static Order create(String supplier, String receiver, String orderRequest, String address, Long totalPrice){
+    public static Order create(UUID supplier, UUID receiver, String orderRequest, String address, Long totalPrice){
         return Order.builder()
                 .supplier(supplier)
                 .receiver(receiver)

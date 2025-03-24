@@ -48,7 +48,12 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponseData.success(OrderResponseDto.from(orderResponse)));
     }
 
+    @DeleteMapping("/orders/{id}")
+    public ResponseEntity<ApiResponseData<OrderResponseDto>> deleteOrder(@PathVariable UUID orderId) {
+        OrderResponse orderResponse = orderService.deleteOrder(orderId);
+        return ResponseEntity.ok(ApiResponseData.success(OrderResponseDto.from(orderResponse)));
 
+    }
 
 
 }

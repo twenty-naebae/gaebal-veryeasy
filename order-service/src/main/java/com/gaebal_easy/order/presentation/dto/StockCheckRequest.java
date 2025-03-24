@@ -14,6 +14,6 @@ import java.util.UUID;
 @Setter
 public class StockCheckRequest {
 
-    private List<ProductDto> products;
+    private List<ProductRequestDto> products;
     private UUID hubId;
 }

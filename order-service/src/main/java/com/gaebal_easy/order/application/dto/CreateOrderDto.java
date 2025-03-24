@@ -1,7 +1,6 @@
 package com.gaebal_easy.order.application.dto;
 
-import com.gaebal_easy.order.presentation.dto.CreateOrderRequest;
-import com.gaebal_easy.order.presentation.dto.ProductDto;
+import com.gaebal_easy.order.presentation.dto.ProductRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,20 +15,20 @@ import java.util.UUID;
 @Getter
 public class CreateOrderDto {
     private UUID hubId;
-    private List<ProductDto> products;
+    private List<ProductRequestDto> products;
     private String orderRequest;
-    private String receiver;
-    private String supplier;
+    private UUID receiverId;
+    private UUID supplierId;
     private String address;
 
 
-    public static CreateOrderDto create(UUID hubId, List<ProductDto> products, String orderRequest, String receiver, String supplier, String address) {
+    public static CreateOrderDto create(UUID hubId, List<ProductRequestDto> products, String orderRequest, UUID receiverId, UUID supplierId, String address) {
         return CreateOrderDto.builder()
                 .hubId(hubId)
                 .products(products)
                 .orderRequest(orderRequest)
-                .receiver(receiver)
-                .supplier(supplier)
+                .receiverId(receiverId)
+                .supplierId(supplierId)
                 .address(address).build();
     }
 }

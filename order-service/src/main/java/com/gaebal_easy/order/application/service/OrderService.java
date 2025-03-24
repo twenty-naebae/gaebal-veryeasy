@@ -1,7 +1,5 @@
 package com.gaebal_easy.order.application.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaebal_easy.order.application.dto.CreateOrderDto;
 import com.gaebal_easy.order.application.dto.OrderCreateKafkaDto;
 import com.gaebal_easy.order.application.dto.OrderResponse;
@@ -9,9 +7,8 @@ import com.gaebal_easy.order.application.dto.UpdateOrderDto;
 import com.gaebal_easy.order.domain.entity.Order;
 import com.gaebal_easy.order.domain.entity.OrderProduct;
 import com.gaebal_easy.order.domain.repository.OrderRepository;
-import com.gaebal_easy.order.presentation.dto.ProductDto;
+import com.gaebal_easy.order.presentation.dto.ProductRequestDto;
 import com.gaebal_easy.order.presentation.dto.StockCheckRequest;
-import gaebal_easy.common.global.dto.ApiResponseData;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.OutOfStockException;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +18,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,7 +28,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final HubClient hubClient;
     private final KafkaTemplate kafkaTemplate;
-    private final ObjectMapper objectMapper;
 
     public OrderResponse getOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow();
@@ -48,6 +42,11 @@ public class OrderService {
         return OrderResponse.from(order);
     }
 
+    // TODO: deleteOrder
+    public OrderResponse deleteOrder(UUID orderId) {
+        return null;
+    }
+
     public OrderResponse createOrder(CreateOrderDto dto)  {
         // 재고확인
         Boolean enoughStock = checkStock(dto);
@@ -60,9 +59,9 @@ public class OrderService {
         // 재고 충분
         // 주문 생성
         Long totalPrice = calculateTotalPrice(dto);
-        Order order = Order.create(dto.getSupplier(), dto.getReceiver(), dto.getOrderRequest(), dto.getAddress(), totalPrice);
+        Order order = Order.create(dto.getSupplierId(), dto.getReceiverId(), dto.getOrderRequest(), dto.getAddress(), totalPrice);
 
-        for(ProductDto product: dto.getProducts()){
+        for(ProductRequestDto product: dto.getProducts()){
             OrderProduct orderProduct = OrderProduct.create(product.getProductId(), product.getQuantity());
             order.addOrderProduct(orderProduct);
         }
@@ -73,8 +72,9 @@ public class OrderService {
         // 업체에 orderId, receiver, supplier 전송
         kafkaTemplate.send("order_create","order", OrderCreateKafkaDto.builder()
                 .orderId(order.getId())
-                .supplier(dto.getSupplier())
-                .receiver(dto.getReceiver())
+                .supplierId(dto.getSupplierId())
+                .receiverId(dto.getReceiverId())
+                .products(dto.getProducts())
                 .build()
         );
 
@@ -83,7 +83,7 @@ public class OrderService {
 
     private static Long calculateTotalPrice(CreateOrderDto dto) {
         Long totalPrice = 0L;
-        for(ProductDto product : dto.getProducts()){
+        for(ProductRequestDto product : dto.getProducts()){
             totalPrice+=(product.getPrice() * product.getQuantity());
         }
         return totalPrice;
@@ -101,4 +101,6 @@ public class OrderService {
 
         return (Boolean) responseEntity.getBody();
     }
+
+
 }

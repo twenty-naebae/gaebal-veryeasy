@@ -16,15 +16,15 @@ import java.util.UUID;
 public class CreateOrderRequest {
 
     private UUID hubId;
-    private List<ProductDto> products;
+    private List<ProductRequestDto> products;
     private String orderRequest;
-    private String receiver;
-    private String supplier;
+    private UUID receiverId;
+    private UUID supplierId;
     private String address;
 
 
     public CreateOrderDto toDto() {
-        return CreateOrderDto.create(this.hubId, this.products, this.orderRequest, this.receiver, this.supplier, this.address);
+        return CreateOrderDto.create(this.hubId, this.products, this.orderRequest, this.receiverId, this.supplierId, this.address);
     }
 
 }

@@ -1,7 +1,9 @@
 package com.gaebal_easy.order.application.dto;
 
+import com.gaebal_easy.order.presentation.dto.ProductRequestDto;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -12,6 +14,7 @@ import java.util.UUID;
 public class OrderCreateKafkaDto {
 
     private UUID orderId;
-    private String receiver;
-    private String supplier;
+    private UUID receiverId;
+    private UUID supplierId;
+    private List<ProductRequestDto> products;
 }
