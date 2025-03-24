@@ -5,6 +5,8 @@ import com.gaebal_easy.delivery.domain.repository.StoreDeliveryUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class StoreDeliveryUserRepositoryImpl implements StoreDeliveryUserRepository {
@@ -14,5 +16,10 @@ public class StoreDeliveryUserRepositoryImpl implements StoreDeliveryUserReposit
     @Override
     public StoreDeliveryUser save(StoreDeliveryUser storeDeliveryUser) {
         return storeDeliveryUserJpaRepository.save(storeDeliveryUser);
+    }
+
+    @Override
+    public Optional<StoreDeliveryUser> findByUserId(Long userId) {
+        return storeDeliveryUserJpaRepository.findByUserId(userId);
     }
 }

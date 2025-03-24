@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class RedisRoundRobinUtil {
+public class RedisDeliveryUserUtil {
 
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -46,4 +46,14 @@ public class RedisRoundRobinUtil {
 
         return finalIndex;
     }
+
+    // 배송담당자 리스트에 추가
+    public void addToHubDeliveryUserList(Long userId) {
+        redisTemplate.opsForList().rightPush("delivery:hub:list", String.valueOf(userId));
+    }
+
+    public void addToStoreDeliveryUserList(Long userId,Integer hubId) {
+        redisTemplate.opsForList().rightPush("delivery:store:" + hubId + ":list", String.valueOf(userId));
+    }
+
 }
