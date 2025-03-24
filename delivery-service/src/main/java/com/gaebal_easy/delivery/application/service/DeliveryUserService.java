@@ -5,6 +5,7 @@ import com.gaebal_easy.delivery.domain.entity.StoreDeliveryUser;
 import com.gaebal_easy.delivery.domain.repository.HubDeliveryUserRepository;
 import com.gaebal_easy.delivery.domain.repository.StoreDeliveryUserRepository;
 import com.gaebal_easy.delivery.infrastructure.redis.RedisDeliveryUserUtil;
+import com.gaebal_easy.delivery.presentation.dto.DeliveryUserInfoResponse;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.HubManagerNotFoundException;
 import gaebal_easy.common.global.message.DeliveryUserDeleteMessage;
@@ -12,6 +13,10 @@ import gaebal_easy.common.global.message.DeliveryUserInfoMessage;
 import gaebal_easy.common.global.message.HubManagerDeleteMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,4 +65,30 @@ public class DeliveryUserService {
             log.info("허브 배송 담당자 삭제 : " + hubDeliveryUser.getName());
         });
     }
+
+    @Transactional(readOnly = true)
+    public Page<DeliveryUserInfoResponse> getDeliveryUsers(String type, String sort, int page, int size) {
+
+        Sort sortType;
+        if(sort.equals("asc")) {
+            sortType = Sort.by(Sort.Order.asc("createdAt"));
+        } else {
+            sortType = Sort.by(Sort.Order.desc("createdAt"));
+        }
+        Pageable pageable = PageRequest.of(page, size, sortType);
+
+        if ("hub".equals(type)) {
+            Page<HubDeliveryUser> hubDeliveryUsers = hubDeliveryUserRepository.findAll(pageable);
+            Page<DeliveryUserInfoResponse> hubDeliveryUserInfoResponses = hubDeliveryUsers.map(deliveryUser -> DeliveryUserInfoResponse.of(
+                    deliveryUser.getId(), deliveryUser.getUserId(), deliveryUser.getName(), deliveryUser.getSlackId(), null));
+            return hubDeliveryUserInfoResponses;
+        }
+        else{
+            Page<StoreDeliveryUser> storeDeliveryUsers = storeDeliveryUserRepository.findAll(pageable);
+            Page<DeliveryUserInfoResponse> storeDeliveryUserInfoResponses = storeDeliveryUsers.map(deliveryUser -> DeliveryUserInfoResponse.of(
+                    deliveryUser.getId(), deliveryUser.getUserId(), deliveryUser.getName(), deliveryUser.getSlackId(), deliveryUser.getHubId()));
+            return storeDeliveryUserInfoResponses;
+        }
+    }
+
 }

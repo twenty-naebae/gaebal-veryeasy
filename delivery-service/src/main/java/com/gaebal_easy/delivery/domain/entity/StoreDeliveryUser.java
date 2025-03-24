@@ -28,14 +28,14 @@ public class StoreDeliveryUser extends BaseTimeEntity {
     private String slackId;
 
     @Column(nullable = false)
-    private Integer hubId;
+    private UUID hubId;
 
     public static StoreDeliveryUser of(Long userId, String name, String slackId, String hubId) {
         return StoreDeliveryUser.builder()
                 .userId(userId)
                 .name(name)
                 .slackId(slackId)
-                .hubId(Integer.parseInt(hubId))
+                .hubId(UUID.fromString(hubId))
                 .build();
     }
 }

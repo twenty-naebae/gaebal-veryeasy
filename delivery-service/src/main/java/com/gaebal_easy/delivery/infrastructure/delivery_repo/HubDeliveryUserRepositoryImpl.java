@@ -3,8 +3,11 @@ package com.gaebal_easy.delivery.infrastructure.delivery_repo;
 import com.gaebal_easy.delivery.domain.entity.HubDeliveryUser;
 import com.gaebal_easy.delivery.domain.repository.HubDeliveryUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,5 +30,10 @@ public class HubDeliveryUserRepositoryImpl implements HubDeliveryUserRepository 
     public void delete(HubDeliveryUser hubDeliveryUser, String deletedBy) {
         hubDeliveryUser.delete(deletedBy);
         hubDeliveryUserJpaRepository.save(hubDeliveryUser);
+    }
+
+    @Override
+    public Page<HubDeliveryUser> findAll(Pageable pageable) {
+        return hubDeliveryUserJpaRepository.findAll(pageable);
     }
 }

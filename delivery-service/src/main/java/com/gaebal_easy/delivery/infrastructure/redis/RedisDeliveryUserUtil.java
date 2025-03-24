@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -54,7 +56,7 @@ public class RedisDeliveryUserUtil {
         redisTemplate.opsForList().rightPush(HUB_DELIVERY_LIST_KEY, String.valueOf(userId));
     }
 
-    public void addToStoreDeliveryUserList(Long userId,Integer hubId) {
+    public void addToStoreDeliveryUserList(Long userId, UUID hubId) {
         redisTemplate.opsForList().rightPush(getStoreListKey(hubId), String.valueOf(userId));
     }
 
@@ -63,13 +65,13 @@ public class RedisDeliveryUserUtil {
         log.info("허브 배송담당자 Redis 큐에서 제거됨: userId={}", userId);
     }
 
-    public void removeStoreUserFromQueue(Integer hubId, Long userId) {
+    public void removeStoreUserFromQueue(UUID hubId, Long userId) {
         String listKey = getStoreListKey(hubId);
         redisTemplate.opsForList().remove(listKey, 0, String.valueOf(userId));
         log.info("업체 배송담당자 Redis 큐에서 제거됨: hubId={}, userId={}", hubId, userId);
     }
 
-    private String getStoreListKey(Integer hubId) {
+    private String getStoreListKey(UUID hubId) {
         return STORE_DELIVERY_LIST_KEY_PREFIX + hubId + ":list";
     }
 

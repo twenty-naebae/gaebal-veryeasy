@@ -3,6 +3,8 @@ package com.gaebal_easy.delivery.infrastructure.delivery_repo;
 import com.gaebal_easy.delivery.domain.entity.StoreDeliveryUser;
 import com.gaebal_easy.delivery.domain.repository.StoreDeliveryUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -27,5 +29,10 @@ public class StoreDeliveryUserRepositoryImpl implements StoreDeliveryUserReposit
     public void delete(StoreDeliveryUser storeDeliveryUser, String deletedBy) {
         storeDeliveryUser.delete(deletedBy);
         storeDeliveryUserJpaRepository.save(storeDeliveryUser);
+    }
+
+    @Override
+    public Page<StoreDeliveryUser> findAll(Pageable pageable) {
+        return storeDeliveryUserJpaRepository.findAll(pageable);
     }
 }
