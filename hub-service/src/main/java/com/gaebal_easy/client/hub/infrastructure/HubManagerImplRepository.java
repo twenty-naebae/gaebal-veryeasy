@@ -5,10 +5,11 @@ import com.gaebal_easy.client.hub.domain.entity.Hub;
 import com.gaebal_easy.client.hub.domain.entity.HubManager;
 import com.gaebal_easy.client.hub.domain.repository.HubManagerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -34,5 +35,10 @@ public class HubManagerImplRepository implements HubManagerRepository {
     public void delete(HubManager hubManager, String deletedBy) {
         hubManager.delete(deletedBy);
         hubManagerJpaRepository.save(hubManager);
+    }
+
+    @Override
+    public List<HubManager> findAllByFilter(Long hubId, Sort sortType) {
+        return hubManagerJpaRepository.findAllByFilter(hubId, sortType);
     }
 }
