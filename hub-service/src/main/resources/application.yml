@@ -14,7 +14,7 @@ spring:
   # Redis
   data:
     redis:
-      host: ${REDIS_HOST} #sever : redis
+      host: localhost
       port: ${REDIS_PORT}
 
   # Kafka

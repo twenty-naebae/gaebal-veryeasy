@@ -47,6 +47,7 @@ public enum Code {
     HUB_CAN_NOT_FIND_PRODUCT_IN_HUB(HttpStatus.BAD_REQUEST,4003,"허브에 해당 상품이 존재하지 않습니다."),
     HUB_CAN_NOT_FIND_HUBMANAGER(HttpStatus.BAD_REQUEST,4004,"해당 허브 매니저를 찾을 수 없습니다."),
     HUB_CAN_NOT_ACCESS_INFO(HttpStatus.FORBIDDEN,4030,"해당 허브 정보에 접근할 수 없습니다."),
+    OUT_OF_STOCK(HttpStatus.CONFLICT,4004,"현재 해당 상품의 재고가 없습니다."),
     /**
      * Delivery 5000번대
      */
@@ -61,10 +62,15 @@ public enum Code {
     /**
      * Order 7000번대
      */
+    ORDER_FAIL_EXCEIPTION(HttpStatus.BAD_REQUEST,7001,"주문 처리 중 에러가 발생했습니다."),
 
     /**
      * Store 8000번대
      */
+    STORE_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 8001, "해당 업체가 존재하지 않습니다."),
+    STORE_MANAGER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 8001, "해당 업체가 존재하지 않습니다."),
+
+
 
     /**
      * Slack 9000번대
@@ -76,7 +82,6 @@ public enum Code {
     SLACK_DM_CHANNEL_OPEN_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, 9005, "DM 채널을 열 수 없습니다."),
     GEMINI_PARSING_EXCEPTION(HttpStatus.NOT_FOUND, 9006, "발송 데드라인 생성 중 오류가 발생했습니다."),
     SLACK_MESSAGE_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 9007, "슬랙메시지가 존재하지 않습니다.");
-
     /**
      * Kafka 통신 10000번대
      */
