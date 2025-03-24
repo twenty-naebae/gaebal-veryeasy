@@ -19,7 +19,7 @@ public class HubProductListImpl implements HubProductListRepository {
     }
 
     @Override
-    public Optional<HubProductList> updateProductAmount(UUID id, Long amount) {
+    public Optional<HubProductList> refillProductAmount(UUID id, Long amount) {
         HubProductList hubProductList = hubProductListJpaRepository.findById(id).orElse(null);
 
         if (hubProductList != null) {

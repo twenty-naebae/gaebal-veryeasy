@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface HubProductListRepository {
     Optional<HubProductList> getProduct(UUID id);
-    Optional<HubProductList> updateProductAmount(UUID id, Long amount);
+    Optional<HubProductList> refillProductAmount(UUID id, Long amount);
 }
