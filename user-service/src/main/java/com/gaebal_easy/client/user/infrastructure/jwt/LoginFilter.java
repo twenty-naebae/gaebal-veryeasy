@@ -8,6 +8,7 @@ import com.gaebal_easy.client.user.domain.entity.RefreshToken;
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
 import com.gaebal_easy.client.user.presentation.dto.LoginRequest;
+import gaebal_easy.common.global.dto.ApiResponseData;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.RequiredArgumentException;
 import jakarta.servlet.FilterChain;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -108,8 +110,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     // 로그인 실패 시 실행되는 메소드
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                              AuthenticationException failed) {
-        response.setStatus((401));
+                                              AuthenticationException failed) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // 실패 응답 객체 생성
+        ResponseEntity<ApiResponseData<String>> responseBody = ResponseEntity.badRequest().body(ApiResponseData.failure(Code.ACCESS_DENIED_EXCEPTION.getCode(), "아이디 혹은 비밀번호를 다시 입력해주세요"));
+
+        // JSON 변환 후 출력
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.getWriter().write(objectMapper.writeValueAsString(responseBody.getBody()));
     }
 
     // 쿠키 생성 메소드

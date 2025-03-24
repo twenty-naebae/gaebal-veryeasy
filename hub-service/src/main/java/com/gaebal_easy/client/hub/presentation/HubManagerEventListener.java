@@ -3,6 +3,8 @@ package com.gaebal_easy.client.hub.presentation;
 import com.gaebal_easy.client.hub.application.service.EventErrorHandler;
 import com.gaebal_easy.client.hub.application.service.HubManagerService;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage;
+import gaebal_easy.common.global.message.HubManagerDeleteMessage;
+import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -15,13 +17,34 @@ public class HubManagerEventListener {
 
     private final HubManagerService hubManagerService;
     private final EventErrorHandler eventErrorHandler;
-    @KafkaListener(topics = "hub-manager-create", groupId = "hub-manager")
+    @KafkaListener(topics = "hub-manager-create", groupId = "gaebal-group")
     public void handleHubManagerInfo(HubManagerInfoMessage hubManagerInfoMessage) {
         try {
             log.info("handleHubManagerInfo : {}", hubManagerInfoMessage);
             hubManagerService.createHubManager(hubManagerInfoMessage);
         } catch (Exception e) {
             eventErrorHandler.handleEventError(e, hubManagerInfoMessage, "hub-manager-create-error");
+        }
+    }
+
+    // todo - updatedBy 정보도 받아야함.
+    @KafkaListener(topics = "hub-manager-update", groupId = "geabal-group")
+    public void handleHubManagerUpdate(HubManagerUpdateMessage hubManagerUpdateMessage) {
+        try {
+            log.info("handleHubManagerUpdate : {}", hubManagerUpdateMessage);
+            hubManagerService.updateHubManager(hubManagerUpdateMessage);
+        } catch (Exception e) {
+            eventErrorHandler.handleEventError(e, hubManagerUpdateMessage, "hub-manager-update-error");
+        }
+    }
+
+    @KafkaListener(topics = "hub-manager-delete", groupId = "geabal-group")
+    public void handleHubManagerDelete(HubManagerDeleteMessage hubManagerDeleteMessage) {
+        try {
+            log.info("handleHubManagerDelete : {}", hubManagerDeleteMessage);
+            hubManagerService.deleteHubManager(hubManagerDeleteMessage);
+        } catch (Exception e) {
+            eventErrorHandler.handleEventError(e, hubManagerDeleteMessage, "hub-manager-delete-error");
         }
     }
 }

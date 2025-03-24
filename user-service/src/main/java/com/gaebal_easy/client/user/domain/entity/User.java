@@ -35,4 +35,9 @@ public class User extends BaseTimeEntity {
         this.password = joinRequest.getPassword();
         this.role = joinRequest.getRole();
     }
+
+    public void update(String username, String newPassword) {
+        this.username = username;
+        this.password = newPassword;
+    }
 }
