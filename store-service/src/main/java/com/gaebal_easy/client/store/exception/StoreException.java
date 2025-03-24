@@ -13,4 +13,9 @@ public class StoreException extends BaseException {
 			super(Code.STORE_NOT_FOUND_EXCEPTION);
 		}
 	}
+	public static class StoreManagerNotFoundException extends StoreException {
+		public StoreManagerNotFoundException() {
+			super(Code.STORE_MANAGER_NOT_FOUND_EXCEPTION);
+		}
+	}
 }

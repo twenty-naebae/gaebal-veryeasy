@@ -63,6 +63,8 @@ public enum Code {
      * Store 8000번대
      */
     STORE_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 8001, "해당 업체가 존재하지 않습니다."),
+    STORE_MANAGER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 8001, "해당 업체가 존재하지 않습니다."),
+
 
 
     /**

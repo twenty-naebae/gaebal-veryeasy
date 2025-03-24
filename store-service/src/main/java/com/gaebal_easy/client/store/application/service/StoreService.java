@@ -14,6 +14,7 @@ import com.gaebal_easy.client.store.application.service.mapper.StoreMapper;
 import com.gaebal_easy.client.store.domain.entity.Store;
 import com.gaebal_easy.client.store.domain.repository.StoreRepository;
 import com.gaebal_easy.client.store.exception.StoreException;
+import com.gaebal_easy.client.store.presentation.UserServiceClient;
 import com.gaebal_easy.client.store.presentation.dto.OrderCreateKafkaDto;
 import com.gaebal_easy.client.store.presentation.dto.SearchedStoreDTO;
 import com.gaebal_easy.client.store.presentation.dto.StoreDTO;
@@ -21,6 +22,7 @@ import com.gaebal_easy.client.store.presentation.dto.StoreInfoKafkaDTO;
 import com.gaebal_easy.client.store.presentation.dto.StoreRequest;
 import com.gaebal_easy.client.store.presentation.dto.StoreResponse;
 
+import gaebal_easy.common.global.enums.Role;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class StoreService {
 	private final StoreRepository storeRepository;
 	private final KafkaProducerService kafkaProducerService;
+	private final UserServiceClient userServiceClient;
 
 	@Transactional(readOnly = true)
 	public StoreResponse.getStoreListResponse getStoreList(UUID hubId, int page, int size) {
@@ -49,6 +52,8 @@ public class StoreService {
 	}
 
 	public StoreResponse.postStoreResponse postStore(UUID hubId, Long managerId, StoreRequest.postStoreRequest request) {
+		Role managerRole = userServiceClient.getUserRole(managerId);
+		if(managerRole != Role.STORE_MANAGER) throw new StoreException.StoreManagerNotFoundException();
 		Store store = Store.create(hubId, managerId, request);
 		Store createdStore = storeRepository.save(store);
 		return StoreResponse.postStoreResponse.builder().id(createdStore.getId()).build();
