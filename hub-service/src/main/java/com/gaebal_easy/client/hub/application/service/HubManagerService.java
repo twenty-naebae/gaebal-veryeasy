@@ -7,11 +7,13 @@ import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import com.gaebal_easy.client.hub.domain.repository.HubManagerRepository;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoResposne;
+import gaebal_easy.common.global.exception.CanNotAccessInfoException;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.HubManagerNotFoundException;
 import gaebal_easy.common.global.exception.HubNotFoundException;
 import gaebal_easy.common.global.message.HubManagerDeleteMessage;
 import gaebal_easy.common.global.message.HubManagerUpdateMessage;
+import gaebal_easy.common.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -59,8 +61,25 @@ public class HubManagerService {
             userInfoResponses.add(HubManagerInfoResposne.of(hubManager.getId(),hubManager.getUserId(),hubManager.getName(),hubManager.getHub().getId()));
         }
         return userInfoResponses;
+    }
 
+    @Transactional(readOnly = true)
+    public HubManagerInfoResposne getHubManagerInfo(CustomUserDetails customUserDetails, Long userId) {
 
+        HubManager hubManager = hubManagerRepository.findByUserId(userId)
+                .orElseThrow(() -> new HubManagerNotFoundException(Code.HUB_CAN_NOT_FIND_HUBMANAGER));
+
+        // 마스터가 아닌 경우 해당 유저의 정보만 조회 가능
+        if(!customUserDetails.getRole().equals("MASTER") && !customUserDetails.getUserId().equals(hubManager.getUserId().toString())) {
+            throw new CanNotAccessInfoException(Code.HUB_CAN_NOT_ACCESS_INFO);
+        }
+
+        return HubManagerInfoResposne.of(
+                hubManager.getId(),
+                hubManager.getUserId(),
+                hubManager.getName(),
+                hubManager.getHub().getId()
+        );
     }
 
     // Hubname으로 HubLocation 찾기

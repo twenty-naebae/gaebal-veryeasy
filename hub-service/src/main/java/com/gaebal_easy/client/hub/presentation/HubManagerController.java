@@ -4,13 +4,12 @@ import com.gaebal_easy.client.hub.application.service.HubManagerService;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoResposne;
 import gaebal_easy.common.global.dto.ApiResponseData;
 import gaebal_easy.common.global.enums.Role;
+import gaebal_easy.common.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +27,12 @@ public class HubManagerController {
             @RequestParam(required = false) Long hubId
     ){
         return ResponseEntity.ok(ApiResponseData.success(hubManagerService.getAllHubManagerInfo(hubId,sort), "허브 관리자 정보 조회에 성공하였습니다."));
+    }
+
+    // 특정 허브 관리자 상세 조회
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ApiResponseData<HubManagerInfoResposne>> getHubManagerInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long userId) {
+        HubManagerInfoResposne response = hubManagerService.getHubManagerInfo(customUserDetails,userId);
+        return ResponseEntity.ok(ApiResponseData.success(response, "허브 관리자 상세 정보 조회 성공"));
     }
 }
