@@ -2,6 +2,7 @@ package com.gaebal_easy.client.hub.presentation;
 
 import com.gaebal_easy.client.hub.application.service.HubManagerService;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoResposne;
+import com.gaebal_easy.client.hub.presentation.dto.HubManagerUpdateRequest;
 import gaebal_easy.common.global.dto.ApiResponseData;
 import gaebal_easy.common.global.enums.Role;
 import gaebal_easy.common.global.security.CustomUserDetails;
@@ -34,5 +35,13 @@ public class HubManagerController {
     public ResponseEntity<ApiResponseData<HubManagerInfoResposne>> getHubManagerInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long userId) {
         HubManagerInfoResposne response = hubManagerService.getHubManagerInfo(customUserDetails,userId);
         return ResponseEntity.ok(ApiResponseData.success(response, "허브 관리자 상세 정보 조회 성공"));
+    }
+
+    // 허브 관리자 정보 수정
+    @PatchMapping("/users")
+    @PreAuthorize("hasRole('MASTER')")
+    public ResponseEntity<ApiResponseData<String>> updateHubManager(@RequestBody HubManagerUpdateRequest request) {
+        hubManagerService.updateHubManager(request);
+        return ResponseEntity.ok(ApiResponseData.success(null,"허브 관리자 정보가 성공적으로 수정되었습니다."));
     }
 }

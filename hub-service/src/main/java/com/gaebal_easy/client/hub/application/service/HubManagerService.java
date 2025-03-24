@@ -7,6 +7,7 @@ import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import com.gaebal_easy.client.hub.domain.repository.HubManagerRepository;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoResposne;
+import com.gaebal_easy.client.hub.presentation.dto.HubManagerUpdateRequest;
 import gaebal_easy.common.global.exception.CanNotAccessInfoException;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.HubManagerNotFoundException;
@@ -80,6 +81,19 @@ public class HubManagerService {
                 hubManager.getName(),
                 hubManager.getHub().getId()
         );
+
+    }
+
+    // 허브 매니저 정보 수정(허브 매니저 이름, 허브 변경)
+    @Transactional
+    public void updateHubManager(HubManagerUpdateRequest request) {
+        HubManager hubManager = hubManagerRepository.findByUserId(request.getUserId())
+                .orElseThrow(() -> new HubManagerNotFoundException(Code.HUB_CAN_NOT_FIND_HUBMANAGER));
+
+        Hub newHub = hubRepository.findById(request.getHubId())
+                .orElseThrow(() -> new HubNotFoundException(Code.HUB_NOT_FOUND));
+
+        hubManagerRepository.update(hubManager, request.getName(), newHub);
     }
 
     // Hubname으로 HubLocation 찾기
