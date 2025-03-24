@@ -58,7 +58,7 @@ public class HubMovementService {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 NaverRouteResponse response = objectMapper.readValue(json, NaverRouteResponse.class);
-                int distance = response.getRoute().getTrafast().get(0).getSummary().getDistance();
+                double distance = response.getRoute().getTrafast().get(0).getSummary().getDistance();
                 int duration = response.getRoute().getTrafast().get(0).getSummary().getDuration();
                 hubDirectRepository.save(new HubDirectMovementInfo(hubDirectMovementInfo.getId(),hubDirectMovementInfo.getDepart(),hubDirectMovementInfo.getArrive(),duration,distance));
                 System.out.println("거리: " + distance + "m");

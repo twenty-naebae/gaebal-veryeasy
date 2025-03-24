@@ -17,4 +17,15 @@ public class HubProductListImpl implements HubProductListRepository {
     public Optional<HubProduct> getProduct(UUID id) {
         return hubProductListJpaRepository.findById(id);
     }
+
+    @Override
+    public Optional<HubProductList> updateProductAmount(UUID id, Long amount) {
+        HubProductList hubProductList = hubProductListJpaRepository.findById(id).orElse(null);
+
+        if (hubProductList != null) {
+            hubProductList.updateAmount(amount);
+            hubProductListJpaRepository.save(hubProductList);
+        }
+        return Optional.ofNullable(hubProductList);
+    }
 }

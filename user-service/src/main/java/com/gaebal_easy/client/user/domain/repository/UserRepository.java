@@ -1,8 +1,10 @@
 package com.gaebal_easy.client.user.domain.repository;
 
 import com.gaebal_easy.client.user.domain.entity.User;
-import org.springframework.stereotype.Repository;
+import gaebal_easy.common.global.enums.Role;
+import org.springframework.data.domain.Sort;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -14,4 +16,12 @@ public interface UserRepository {
     User findByUsername(String username);
 
     Optional<User> findById(Long userId);
+
+    void update(User user, String username, String newPassword);
+
+    void delete(User user, String deletedBy);
+
+    void rollbackDelete(User user, String errorLocation);
+
+    List<User> findAllByFilter(Role role, Sort sortType);
 }

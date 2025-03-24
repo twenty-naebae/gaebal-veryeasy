@@ -1,12 +1,14 @@
 package com.gaebal_easy.client.hub.domain.repository;
 
-import com.gaebal_easy.client.hub.domain.entity.HubProduct;
+import com.gaebal_easy.client.hub.domain.entity.HubProductList;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface HubProductListRepository {
-    Optional<HubProduct> getProduct(UUID id);
+    Optional<HubProductList> getProduct(UUID id);
+    Optional<HubProductList> updateProductAmount(UUID id, Long amount);
 }

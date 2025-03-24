@@ -44,6 +44,10 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+naver:
+  direction5:
+    client-id: ${Client_ID}
+    client-secret: ${Client_Secret}
 
 jwt:
   secret: Adsfvabewryethadbgnq4ertjadfhjmetDHJarkmyshfzdjykmrtejkymhndgThJymhfngbfcsdsdfsdafasdfasd

@@ -82,11 +82,14 @@ spring:
         - id: hub-service
           uri: lb://hub-service
           predicates:
-            - Path=/slack-service/api/**
-          filters:
-            - name: AuthPermissionPreFilter
             - Path=/hub-service/api/**
-
+#          filters:
+#            - name: AuthPermissionPreFilter
+#            - Path=/hub-service/api/**
+        - id: delivery-service
+          uri: lb://delivery-service
+          predicates:
+            - Path=/delivery-service/api/**
       discovery:
         locator:
           enabled: true  # 서비스 디스커버리를 통해 동적으로 라우트를 생성하도록 설정

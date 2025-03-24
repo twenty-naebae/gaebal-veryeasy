@@ -1,5 +1,6 @@
 package com.gaebal_easy.client.hub.application.service;
 
+import com.gaebal_easy.client.hub.application.dto.HubLocationDto;
 import com.gaebal_easy.client.hub.application.dto.HubResponseDto;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
@@ -13,6 +14,7 @@ import gaebal_easy.common.global.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -35,6 +37,17 @@ public class HubService {
         // TODO : 유저네임 넘겨주기, 이미 삭제된 허브가 아닌지 판별 deletedAtIsNotNull
         hub.delete("deleted by");
         hubRepository.save(hub);
+    }
+
+    public HubLocationDto getCoordinate(String hubName) {
+        List<Hub> hubList = hubRepository.findAll();
+        HubLocationDto hubLocationDto = new HubLocationDto();
+        for(Hub hub : hubList){
+            if(hub.getHubLocation().getName().equals(hubName)) {
+                hubLocationDto = new HubLocationDto(hub.getHubLocation().getLatitude(), hub.getHubLocation().getLongitude());
+            }
+        }
+        return hubLocationDto;
     }
 
     public HubResponseDto requireHub(UUID id) {

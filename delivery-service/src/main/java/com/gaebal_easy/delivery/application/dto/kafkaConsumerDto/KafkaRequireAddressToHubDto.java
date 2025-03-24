@@ -13,7 +13,6 @@ public class KafkaRequireAddressToHubDto {
     private UUID orderId;
     private String supplyStoreHubName;
     private String receiptStoreHubName;
-    private String orderer;
     private String productName;
     private String receiptStoreAddress;
     private String supplyStoreName;

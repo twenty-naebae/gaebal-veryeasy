@@ -17,7 +17,6 @@ public class KafkaOrderStoreInfoDto {
     private UUID receiptStoreHubId;
     private String receiptStoreName;
     private String receiptStoreAddress;
-    private String orderer;
     private String productName;
     private long amount;
 }

@@ -28,7 +28,6 @@ public class KafkaRequireAddressToHubDto {
                 .orderId(kafkaOrderStoreInfoDto.getOrderId())
                 .supplyStoreHubName(supplier.getHubLocation().getName())
                 .receiptStoreHubName(receiver.getHubLocation().getName())
-                .orderer(kafkaOrderStoreInfoDto.getOrderer())
                 .productName(kafkaOrderStoreInfoDto.getProductName())
                 .receiptStoreAddress(receiver.getHubLocation().getAddress())
                 .supplyStoreName(kafkaOrderStoreInfoDto.getSupplyStoreName())
