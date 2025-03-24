@@ -1,13 +1,12 @@
 server:
-  port: ${SERVER_PORT}
+  port: 19096
   address: 0.0.0.0
 
 spring:
   application:
     name: delivery-service
-
   datasource:
-    url: jdbc:mariadb://mariadb:3311/delivery-database?useSSL=false
+    url: ${DB_URL}?useSSL=false
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
@@ -27,9 +26,11 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      retries: 5 # 메시지 전송 실패시 재시도 횟수 5회.
     consumer:
-      auto-offset-reset: earliest  # 컨슈머가 처음 시작할 때 어떤 오프셋부터 읽을지 설정 (earliest: 가장 오래된 메시지부터, latest: 최신 메시지부터)
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
 
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
@@ -50,7 +51,7 @@ naver:
     client-secret: ${Client_Secret}
 
 jwt:
-  secret: Adsfvabewryethadbgnq4ertjadfhjmetDHJarkmyshfzdjykmrtejkymhndgThJymhfngbfcsdsdfsdafasdfasd
+  secret: ${JWT_SECRET}
 
 management:
   zipkin:
@@ -59,3 +60,11 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+springdoc:
+  default-produces-media-type: application/json
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true

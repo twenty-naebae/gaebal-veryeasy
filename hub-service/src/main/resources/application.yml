@@ -16,8 +16,6 @@ spring:
     redis:
       host: redis
       port: ${REDIS_PORT}
-      username: default
-      password: systempass
 
   # Kafka
   kafka:
@@ -61,3 +59,11 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+springdoc:
+  default-produces-media-type: application/json
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true

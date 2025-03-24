@@ -42,6 +42,8 @@ dependencies {
 	// Common패키지
 	implementation project(':common')
 
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0' // gateway는 webflux기반이라 해당 ui 사용해야함. Swaggger 의존성
+
 }
 
 dependencyManagement {

@@ -56,6 +56,10 @@ ai:
   api:
     key: ${AI_API_KEY}
 
-
-
-
+springdoc:
+  default-produces-media-type: application/json
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
