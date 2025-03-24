@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.store.presentation;
+package com.gaebal_easy.client.store.presentation.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

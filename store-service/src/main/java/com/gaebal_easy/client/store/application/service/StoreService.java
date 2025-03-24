@@ -10,11 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gaebal_easy.client.store.application.service.mapper.StoreMapper;
+import com.gaebal_easy.client.store.presentation.mapper.StoreMapper;
 import com.gaebal_easy.client.store.domain.entity.Store;
 import com.gaebal_easy.client.store.domain.repository.StoreRepository;
 import com.gaebal_easy.client.store.exception.StoreException;
-import com.gaebal_easy.client.store.presentation.UserServiceClient;
+import com.gaebal_easy.client.store.presentation.client.UserServiceClient;
 import com.gaebal_easy.client.store.presentation.dto.OrderCreateKafkaDto;
 import com.gaebal_easy.client.store.presentation.dto.SearchedStoreDTO;
 import com.gaebal_easy.client.store.presentation.dto.StoreDTO;
