@@ -26,11 +26,12 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://hub-mariadb:3306/hub-database?useSSL=false
-      SPRING_DATASOURCE_USERNAME: gaebal
+      DB_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_URL: ${KAFKA_URL}
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_URL}
       REDIS_HOST: redis
       REDIS_PORT: 6379
       EUREKA_SERVER: http://eureka-server:19090/eureka

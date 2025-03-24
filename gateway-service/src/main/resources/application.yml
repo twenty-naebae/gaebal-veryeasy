@@ -43,10 +43,21 @@ spring:
           predicates:
             - Path=/delivery-service/api/send
             - Method=GET
-        - id: hub-service
+        - id: hub-service  #TODO: order에 있는 hubclient 주소 로그인 없이 추가
           uri: lb://hub-service
           predicates:
             - Path=/hub-service/api/**
+        #store-service
+        - id: store-service-getList
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/api/getStores/**
+            - Method=GET
+        - id: store-service-search
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/api/search/**
+            - Method=GET
         # 로그인 필요한 요청(토큰 검증 필터 존재)
         - id: user-service # 라우트 식별자
           uri: lb://user-service  # 'user-service'라는 이름으로 로드 밸런싱된 서비스로 라우팅
@@ -60,13 +71,33 @@ spring:
             - Path=/slack-service/api/**
           filters:
             - name: AuthPermissionPreFilter
+        #store-service
         - id: store-service
           uri: lb://store-service
           predicates:
-            - Path=/store-service/api/**
+            - Path=/store-service/api/create/**
           filters:
             - name: AuthPermissionPreFilter
 
+        - id: store-service-update
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/api/update/**
+          filters:
+            - name: AuthPermissionPreFilter
+
+        - id: store-service-delete
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/api/delete/**
+          filters:
+            - name: AuthPermissionPreFilter
+        - id: delivery-service
+          uri: lb://delivery-service
+          predicates:
+              - Path=/delivery-service/api/**
+          filters:
+              - name: AuthPermissionPreFilter
 
         # product-service
         - id: product-service
@@ -78,18 +109,28 @@ spring:
 
         - id: slack-service-get-messages
           uri: lb://slack-service
-
-        - id: hub-service
-          uri: lb://hub-service
           predicates:
-            - Path=/hub-service/api/**
+            - Path=/slack-service/api/getSlack
+          filters:
+            - name: AuthPermissionPreFilter
+
+#        - id: hub-service
+#          uri: lb://hub-service
+#          predicates:
+#            - Path=/hub-service/api/**
 #          filters:
 #            - name: AuthPermissionPreFilter
-#            - Path=/hub-service/api/**
-        - id: delivery-service
-          uri: lb://delivery-service
+
+
+        # order-service
+        - id: order-service
+          uri: lb://order-service
           predicates:
-            - Path=/delivery-service/api/**
+            - Path=/order-service/api/**
+          filters:
+            - name: AuthPermissionPreFilter
+
+
       discovery:
         locator:
           enabled: true  # 서비스 디스커버리를 통해 동적으로 라우트를 생성하도록 설정

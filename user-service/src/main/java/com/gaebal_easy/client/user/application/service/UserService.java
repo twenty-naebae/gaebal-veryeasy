@@ -83,4 +83,12 @@ public class UserService {
         }
         return UserInfoResponse.of(user.getId(), user.getUsername(), user.getRole().toString());
     }
+
+    @Transactional(readOnly = true)
+    public Role getUserRole(Long managerId) {
+        User user = userRepository.findById(managerId)
+            .orElseThrow(() -> new CanNotFindUserException());
+
+        return user.getRole();
+    }
 }

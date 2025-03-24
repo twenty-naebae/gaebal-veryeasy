@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gaebal_easy.client.slack.domain.entity.SlackMessage;
 import com.gaebal_easy.client.slack.domain.repository.SlackMessageRepository;
@@ -26,6 +27,7 @@ import com.slack.api.methods.request.conversations.ConversationsOpenRequest;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.conversations.ConversationsOpenResponse;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -82,7 +84,7 @@ public class SlackMessageService {
 		slackMessageRepository.save(slackMessage);
 
 	}
-
+	@Transactional(readOnly = true)
 	public SlackResponse.GetSlackMessagesResponse getMessages(UUID receiveId, int page, int size) {
 		if (size != 10 && size != 30 && size != 50) {
 			size = 10;

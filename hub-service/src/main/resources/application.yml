@@ -51,7 +51,6 @@ eureka:
     fetch-registry: true
 
 
-
 jwt:
   secret: ${JWT_SECRET}
 
