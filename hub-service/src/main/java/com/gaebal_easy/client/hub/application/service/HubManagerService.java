@@ -6,6 +6,7 @@ import com.gaebal_easy.client.hub.domain.enums.HubLocation;
 import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import com.gaebal_easy.client.hub.domain.repository.HubManagerRepository;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage;
+import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoResposne;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.HubManagerNotFoundException;
 import gaebal_easy.common.global.exception.HubNotFoundException;
@@ -13,8 +14,12 @@ import gaebal_easy.common.global.message.HubManagerDeleteMessage;
 import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -37,6 +42,25 @@ public class HubManagerService {
         // 허브 매니저 찾기
         HubManager hubManager = hubManagerRepository.findByUserId(hubManagerDeleteMessage.getUserId()).orElseThrow(() -> new HubManagerNotFoundException(Code.HUB_CAN_NOT_FIND_HUBMANAGER));
         hubManagerRepository.delete(hubManager, hubManagerDeleteMessage.getDeletedBy());
+    }
+
+    @Transactional(readOnly = true)
+    public List<HubManagerInfoResposne> getAllHubManagerInfo(Long hubId,String sort) {
+        Sort sortType;
+        if(sort.equals("asc")) {
+            sortType = Sort.by(Sort.Order.asc("createdAt"));
+        } else {
+            sortType = Sort.by(Sort.Order.desc("createdAt"));
+        }
+
+        List<HubManager> hubManagers = hubManagerRepository.findAllByFilter(hubId, sortType);
+        List<HubManagerInfoResposne> userInfoResponses = new ArrayList<>();
+        for(HubManager hubManager : hubManagers) {
+            userInfoResponses.add(HubManagerInfoResposne.of(hubManager.getId(),hubManager.getUserId(),hubManager.getName(),hubManager.getHub().getId()));
+        }
+        return userInfoResponses;
+
+
     }
 
     // Hubname으로 HubLocation 찾기

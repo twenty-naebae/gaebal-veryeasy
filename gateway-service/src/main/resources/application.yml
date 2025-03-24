@@ -43,10 +43,10 @@ spring:
           predicates:
             - Path=/delivery-service/api/send
             - Method=GET
-        - id: hub-service
-          uri: lb://hub-service
-          predicates:
-            - Path=/hub-service/api/**
+#        - id: hub-service
+#          uri: lb://hub-service
+#          predicates:
+#            - Path=/hub-service/api/**
         # 로그인 필요한 요청(토큰 검증 필터 존재)
         - id: user-service # 라우트 식별자
           uri: lb://user-service  # 'user-service'라는 이름으로 로드 밸런싱된 서비스로 라우팅
