@@ -6,6 +6,7 @@ import com.gaebal_easy.delivery.domain.repository.HubDeliveryUserRepository;
 import com.gaebal_easy.delivery.domain.repository.StoreDeliveryUserRepository;
 import com.gaebal_easy.delivery.infrastructure.redis.RedisDeliveryUserUtil;
 import com.gaebal_easy.delivery.presentation.dto.DeliveryUserInfoResponse;
+import gaebal_easy.common.global.exception.CanNotFindUserException;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.HubManagerNotFoundException;
 import gaebal_easy.common.global.message.DeliveryUserDeleteMessage;
@@ -91,4 +92,14 @@ public class DeliveryUserService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public DeliveryUserInfoResponse getDeliveryUser(Long userId, String type) {
+        if("hub".equals(type)){
+            HubDeliveryUser hubDeliveryUser = hubDeliveryUserRepository.findByUserId(userId).orElseThrow(() -> new CanNotFindUserException(Code.DELIVERY_USER_NOT_FOUND_EXCEPTION));
+            return DeliveryUserInfoResponse.of(hubDeliveryUser.getId(), hubDeliveryUser.getUserId(), hubDeliveryUser.getName(), hubDeliveryUser.getSlackId(), null);
+        } else {
+            StoreDeliveryUser storeDeliveryUser = storeDeliveryUserRepository.findByUserId(userId).orElseThrow(() -> new CanNotFindUserException(Code.DELIVERY_USER_NOT_FOUND_EXCEPTION));
+            return DeliveryUserInfoResponse.of(storeDeliveryUser.getId(), storeDeliveryUser.getUserId(), storeDeliveryUser.getName(), storeDeliveryUser.getSlackId(), storeDeliveryUser.getHubId());
+        }
+    }
 }
