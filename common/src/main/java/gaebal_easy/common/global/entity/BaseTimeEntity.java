@@ -79,4 +79,12 @@ public abstract class BaseTimeEntity {
         }
         return "ANONYMOUS";
     }
+
+    public void rollbackDelete(String updatedBy) {
+        this.isDeleted = false;
+        this.deletedBy = null;
+        this.deletedAt = null;
+        this.updatedBy = updatedBy;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

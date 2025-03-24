@@ -6,12 +6,14 @@ spring:
   application:
     name: delivery-service
   datasource:
-    url: jdbc:mariadb://delivery-mariadb:3306/delivery-database?useSSL=false
+    url: ${DB_URL}?useSSL=false
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
 
   kafka:
-    bootstrap-servers: kafka:9092
+    url: ${KAFKA_URL}
+    bootstrap-servers: ${KAFKA_URL}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -24,11 +26,11 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
   data:
     redis:
-      host: redis
+      host: ${REDIS_HOST} #sever : redis
       port: 6379
 
 eureka:

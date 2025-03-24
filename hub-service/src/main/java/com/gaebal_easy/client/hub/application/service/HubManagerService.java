@@ -7,7 +7,10 @@ import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import com.gaebal_easy.client.hub.domain.repository.HubManagerRepository;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage;
 import gaebal_easy.common.global.exception.Code;
+import gaebal_easy.common.global.exception.HubManagerNotFoundException;
 import gaebal_easy.common.global.exception.HubNotFoundException;
+import gaebal_easy.common.global.message.HubManagerDeleteMessage;
+import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,12 +23,36 @@ public class HubManagerService {
 
     private final HubManagerRepository hubManagerRepository;
     private final HubRepository hubRepository;
+    //todo - 허브 이름 대신 hubId를 받는 방식으로 변경
     @Transactional
     public void createHubManager(HubManagerInfoMessage hubManagerInfoMessage) {
         Hub hub = getHub(getHubLocation(hubManagerInfoMessage.getGroup()));
         HubManager hubManager = HubManager.of(hubManagerInfoMessage.getUserId(),hubManagerInfoMessage.getName(),hub);
         hubManagerRepository.save(hubManager);
         log.info("허브 매니저 생성 : " + hubManager.getHub().getHubLocation() + ", " + hubManager.getName());
+    }
+
+    @Transactional
+    public void updateHubManager(HubManagerUpdateMessage hubManagerUpdateMessage) {
+        // 새로운 허브 찾기
+        Hub newHub = getHub(getHubLocation(hubManagerUpdateMessage.getGroup()));
+
+        // 허브 매니저 찾기
+        HubManager hubManager = hubManagerRepository.findByUserId(hubManagerUpdateMessage.getUserId()).orElseThrow(() -> new HubManagerNotFoundException(Code.HUB_CAN_NOT_FIND_HUBMANAGER));
+        // 허브 매니저 업데이트
+
+        String hubManagerName = hubManager.getName();
+        if(hubManagerUpdateMessage.getName()!=null){
+            hubManagerName = hubManagerUpdateMessage.getName();
+        }
+        hubManagerRepository.update(hubManager, hubManagerName,newHub);
+    }
+
+    @Transactional
+    public void deleteHubManager(HubManagerDeleteMessage hubManagerDeleteMessage) {
+        // 허브 매니저 찾기
+        HubManager hubManager = hubManagerRepository.findByUserId(hubManagerDeleteMessage.getUserId()).orElseThrow(() -> new HubManagerNotFoundException(Code.HUB_CAN_NOT_FIND_HUBMANAGER));
+        hubManagerRepository.delete(hubManager, hubManagerDeleteMessage.getDeletedBy());
     }
 
     // Hubname으로 HubLocation 찾기
@@ -41,5 +68,6 @@ public class HubManagerService {
     private Hub getHub(HubLocation hubLocation) {
         return hubRepository.findByHubLocation(hubLocation).orElseThrow(() -> new HubNotFoundException(Code.HUB_NOT_FOUND));
     }
+
 
 }
