@@ -35,4 +35,10 @@ public class StoreDeliveryUserRepositoryImpl implements StoreDeliveryUserReposit
     public Page<StoreDeliveryUser> findAll(Pageable pageable) {
         return storeDeliveryUserJpaRepository.findAll(pageable);
     }
+
+    @Override
+    public void update(StoreDeliveryUser storeDeliveryUser, String name, String slackId, String hubId) {
+        storeDeliveryUser.update(name, slackId, hubId);
+        storeDeliveryUserJpaRepository.save(storeDeliveryUser);
+    }
 }

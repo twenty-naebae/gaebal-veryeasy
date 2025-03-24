@@ -36,4 +36,10 @@ public class HubDeliveryUserRepositoryImpl implements HubDeliveryUserRepository 
     public Page<HubDeliveryUser> findAll(Pageable pageable) {
         return hubDeliveryUserJpaRepository.findAll(pageable);
     }
+
+    @Override
+    public void update(HubDeliveryUser hubDeliveryUser,String name, String slackId) {
+        hubDeliveryUser.update(name, slackId);
+        hubDeliveryUserJpaRepository.save(hubDeliveryUser);
+    }
 }

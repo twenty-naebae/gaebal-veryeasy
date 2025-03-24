@@ -52,6 +52,8 @@ public enum Code {
      */
     DELIVERY_USER_REDIS_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 5010, "Redis에서 정보를 가져오는 중 오류가 발생했습니다."),
     DELIVERY_USER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 5011, "배송 담당자를 찾을 수 없습니다."),
+    DELIVERY_CAN_NOT_ACCESS_USER_INFO(HttpStatus.FORBIDDEN,5012 , "해당 배송담당자 정보에 접근할 수 없습니다." ),
+
     /**
      * Product 6000번대
      */

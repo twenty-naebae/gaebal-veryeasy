@@ -34,4 +34,11 @@ public class HubDeliveryUser extends BaseTimeEntity {
                 .slackId(slackId)
                 .build();
     }
+
+    public void update(String name, String slackId) {
+        if(name != null)
+            this.name = name;
+        if(slackId != null)
+            this.slackId = slackId;
+    }
 }

@@ -14,4 +14,6 @@ public interface StoreDeliveryUserRepository {
     void delete(StoreDeliveryUser storeDeliveryUser, String deletedBy);
 
     Page<StoreDeliveryUser> findAll(Pageable pageable);
+
+    void update(StoreDeliveryUser storeDeliveryUser, String name, String slackId, String hubId);
 }

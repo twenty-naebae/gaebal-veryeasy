@@ -6,12 +6,15 @@ import com.gaebal_easy.delivery.domain.repository.HubDeliveryUserRepository;
 import com.gaebal_easy.delivery.domain.repository.StoreDeliveryUserRepository;
 import com.gaebal_easy.delivery.infrastructure.redis.RedisDeliveryUserUtil;
 import com.gaebal_easy.delivery.presentation.dto.DeliveryUserInfoResponse;
+import com.gaebal_easy.delivery.presentation.dto.DeliveryUserUpdateRequest;
+import gaebal_easy.common.global.exception.CanNotAccessInfoException;
 import gaebal_easy.common.global.exception.CanNotFindUserException;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.HubManagerNotFoundException;
 import gaebal_easy.common.global.message.DeliveryUserDeleteMessage;
 import gaebal_easy.common.global.message.DeliveryUserInfoMessage;
 import gaebal_easy.common.global.message.HubManagerDeleteMessage;
+import gaebal_easy.common.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -93,13 +96,26 @@ public class DeliveryUserService {
     }
 
     @Transactional(readOnly = true)
-    public DeliveryUserInfoResponse getDeliveryUser(Long userId, String type) {
+    public DeliveryUserInfoResponse getDeliveryUser(Long userId, String type, CustomUserDetails customUserDetails) {
+        if(!customUserDetails.getUserId().equals(userId.toString()) && !customUserDetails.getRole().equals("MASTER")) {
+            throw new CanNotAccessInfoException(Code.DELIVERY_CAN_NOT_ACCESS_USER_INFO);
+        }
         if("hub".equals(type)){
             HubDeliveryUser hubDeliveryUser = hubDeliveryUserRepository.findByUserId(userId).orElseThrow(() -> new CanNotFindUserException(Code.DELIVERY_USER_NOT_FOUND_EXCEPTION));
             return DeliveryUserInfoResponse.of(hubDeliveryUser.getId(), hubDeliveryUser.getUserId(), hubDeliveryUser.getName(), hubDeliveryUser.getSlackId(), null);
         } else {
             StoreDeliveryUser storeDeliveryUser = storeDeliveryUserRepository.findByUserId(userId).orElseThrow(() -> new CanNotFindUserException(Code.DELIVERY_USER_NOT_FOUND_EXCEPTION));
             return DeliveryUserInfoResponse.of(storeDeliveryUser.getId(), storeDeliveryUser.getUserId(), storeDeliveryUser.getName(), storeDeliveryUser.getSlackId(), storeDeliveryUser.getHubId());
+        }
+    }
+
+    public void updateDeliveryUser(Long userId, DeliveryUserUpdateRequest deliveryUserUpdateRequest, String type) {
+        if("hub".equals(type)){
+            HubDeliveryUser hubDeliveryUser = hubDeliveryUserRepository.findByUserId(userId).orElseThrow(() -> new CanNotFindUserException(Code.DELIVERY_USER_NOT_FOUND_EXCEPTION));
+            hubDeliveryUserRepository.update(hubDeliveryUser, deliveryUserUpdateRequest.getName(), deliveryUserUpdateRequest.getSlackId());
+        } else {
+            StoreDeliveryUser storeDeliveryUser = storeDeliveryUserRepository.findByUserId(userId).orElseThrow(() -> new CanNotFindUserException(Code.DELIVERY_USER_NOT_FOUND_EXCEPTION));
+            storeDeliveryUserRepository.update(storeDeliveryUser,deliveryUserUpdateRequest.getName(), deliveryUserUpdateRequest.getSlackId(), deliveryUserUpdateRequest.getHubId());
         }
     }
 }
