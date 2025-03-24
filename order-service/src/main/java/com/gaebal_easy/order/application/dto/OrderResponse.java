@@ -13,8 +13,8 @@ import java.util.UUID;
 public class OrderResponse {
 
     private UUID id;
-    private String supplier;
-    private String receiver;
+    private UUID supplier;
+    private UUID receiver;
     private String orderRequest;
     private Long totalPrice;
     private String address;
@@ -22,8 +22,8 @@ public class OrderResponse {
     public static OrderResponse from(Order order){
         return OrderResponse.builder()
                 .id(order.getId())
-                .supplier(order.getSupplier())
-                .receiver(order.getReceiver())
+                .supplier(order.getSupplierId())
+                .receiver(order.getReceiverId())
                 .orderRequest(order.getOrderRequest())
                 .totalPrice(order.getTotalPrice())
                 .address(order.getAddress())

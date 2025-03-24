@@ -15,8 +15,8 @@ import java.util.UUID;
 public class OrderResponseDto {
 
     private UUID id;
-    private String supplier;
-    private String receiver;
+    private UUID supplier;
+    private UUID receiver;
     private String orderRequest;
     private Long totalPrice;
     private String address;
