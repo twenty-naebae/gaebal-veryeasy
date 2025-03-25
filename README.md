@@ -13,21 +13,18 @@
 확장 가능성을 고려하여 유연하고 확장성 있는 아키텍처 기반으로 작성되었습니다. 
 <br />
 
-## ⚙ 기술 스택
-
-### Back-end
-<div>
-<img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/postman?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/redis?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/slack?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/springcloud?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/swagger?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/zipkin?raw=true" width="80">
+🛠 Tech Stack
+<div align="center" style="background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 6px 8px rgba(0,0,0,0.15); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 100px;">
+    <img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/postman.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/redis.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/slack.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/springcloud.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/swagger.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
 </div>
-
 ### Tools
 <div>
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" width="80">
