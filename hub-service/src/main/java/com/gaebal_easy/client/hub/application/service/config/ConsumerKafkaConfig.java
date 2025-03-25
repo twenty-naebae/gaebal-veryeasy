@@ -2,6 +2,7 @@ package com.gaebal_easy.client.hub.application.service.config;
 
 import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.KafkaOrderStoreInfoDto;
 import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.KafkaStoreCreateDto;
+import com.gaebal_easy.client.hub.application.dto.kafkaProducerDto.KafkaRequireAddressToHubDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -54,12 +55,12 @@ public class ConsumerKafkaConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, KafkaOrderStoreInfoDto> orderStoreInfoConsumerFactory() {
-        return createConsumerFactory(KafkaOrderStoreInfoDto.class);
+    public ConsumerFactory<String, KafkaRequireAddressToHubDto> orderStoreInfoConsumerFactory() {
+        return createConsumerFactory(KafkaRequireAddressToHubDto.class);
     }
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, KafkaOrderStoreInfoDto> orderStoreInfoKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, KafkaOrderStoreInfoDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, KafkaRequireAddressToHubDto> orderStoreInfoKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, KafkaRequireAddressToHubDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(orderStoreInfoConsumerFactory());
         factory.setCommonErrorHandler(errorHandler());
         return factory;
