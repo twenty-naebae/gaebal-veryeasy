@@ -1,9 +1,10 @@
 package com.gaebal_easy.client.hub.application.service;
 
+import com.gaebal_easy.client.hub.application.dto.HubLocationDto;
 import com.gaebal_easy.client.hub.application.dto.HubResponseDto;
-import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
 import com.gaebal_easy.client.hub.domain.entity.HubProductList;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
@@ -31,7 +32,6 @@ public class HubService {
     private final RedissonClient redissonClient;
     private final CacheManager cacheManager;
 
-
     public ProductResponseDto getProduct(UUID productId, UUID hubId) {
         Hub hub = getHub(hubId);
         HubProductList hubProductList = getHubProductList(productId);
@@ -47,6 +47,17 @@ public class HubService {
         hubRepository.save(hub);
     }
 
+    public HubLocationDto getCoordinate(String hubName) {
+        List<Hub> hubList = hubRepository.findAll();
+        HubLocationDto hubLocationDto = new HubLocationDto();
+        for(Hub hub : hubList){
+            if(hub.getHubLocation().getName().equals(hubName)) {
+                hubLocationDto = new HubLocationDto(hub.getHubLocation().getLatitude(), hub.getHubLocation().getLongitude());
+            }
+        }
+        return hubLocationDto;
+    }
+
     public HubResponseDto requireHub(UUID id) {
         Hub hub = getHub(id);
         return HubResponseDto.of(hub);
@@ -58,9 +69,6 @@ public class HubService {
     private HubProductList getHubProductList(UUID id){
         return hubProductListRepository.getProduct(id).orElseThrow(() -> new ProductNotFoundException(Code.HUB_PRODUCT_NOT_FOUND));
     }
-
-
-
     @Transactional
     public Boolean checkStock(CheckStockDto stockCheckDto){
         Map<UUID, Long> productQuantities = new HashMap<>();

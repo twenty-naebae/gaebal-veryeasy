@@ -49,6 +49,11 @@ public enum Code {
     HUB_CAN_NOT_FIND_HUBMANAGER(HttpStatus.BAD_REQUEST,4004,"해당 허브 매니저를 찾을 수 없습니다."),
     HUB_CAN_NOT_ACCESS_INFO(HttpStatus.FORBIDDEN,4030,"해당 허브 정보에 접근할 수 없습니다."),
     OUT_OF_STOCK(HttpStatus.CONFLICT,4004,"현재 해당 상품의 재고가 없습니다."),
+
+
+
+    HUB_CAN_NOT_FIND_HUB_NAME(HttpStatus.BAD_REQUEST,4004,"허브 이름이 유효하지 않습니다."),
+
     /**
      * Delivery 5000번대
      */

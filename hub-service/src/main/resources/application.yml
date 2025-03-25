@@ -14,7 +14,7 @@ spring:
   # Redis
   data:
     redis:
-      host: localhost
+      host: redis
       port: ${REDIS_PORT}
 
   # Kafka
@@ -33,6 +33,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+naver:
+  direction5:
+    client-id: ${Client_ID}
+    client-secret: ${Client_Secret}
+
+
 
 eureka:
   client:

@@ -15,9 +15,7 @@ public class StoreCreateAssignProducer {
     private final KafkaTemplate<String, KafkaStoreCreateAssignDto> storeCreateAssignKafkaTemplate;
 
     public void sendHubAssignedEvent(UUID hubId, UUID storeId) {
-        System.out.println("이벤트 재발행 됐나?");
         KafkaStoreCreateAssignDto event = new KafkaStoreCreateAssignDto(hubId, storeId);
         storeCreateAssignKafkaTemplate.send(TOPIC, event);
-        System.out.println("Kafka 이벤트 발행: " + event);
     }
 }

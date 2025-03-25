@@ -11,6 +11,15 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
 
+  # Redis
+  data:
+    redis:
+      host: redis
+      port: ${REDIS_PORT}
+      username: default
+      password: systempass
+
+  # Kafka
   kafka:
     url: ${KAFKA_URL}
     bootstrap-servers: ${KAFKA_URL}
@@ -28,10 +37,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  data:
-    redis:
-      host: ${REDIS_HOST} #sever : redis
-      port: 6379
 
 eureka:
   client:
@@ -39,6 +44,11 @@ eureka:
       defaultZone: ${EUREKA_SERVER}
     register-with-eureka: true
     fetch-registry: true
+
+naver:
+  direction5:
+    client-id: ${Client_ID}
+    client-secret: ${Client_Secret}
 
 jwt:
   secret: ${JWT_SECRET}
