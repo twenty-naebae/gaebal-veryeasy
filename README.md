@@ -17,15 +17,15 @@
 
 ### Back-end
 <div>
-<img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/postman?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/redis?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/slack?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/springcloud?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/swagger?raw=true" width="80">
-<img src="https://github.com/kim946509/img/blob/main/zipkin?raw=true" width="80">
+   <img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="80">
+   <img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="80">
+   <img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="80">
+   <img src="https://github.com/kim946509/img/blob/main/postman.png?raw=true" width="80">
+   <img src="https://github.com/kim946509/img/blob/main/redis.png?raw=true" width="80">
+   <img src="https://github.com/kim946509/img/blob/main/slack.png?raw=true" width="80">
+   <img src="https://github.com/kim946509/img/blob/main/springcloud.png?raw=true" width="80">
+   <img src="https://github.com/kim946509/img/blob/main/swagger.png?raw=true" width="80">
+   <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="80">
 </div>
 
 ### Tools
@@ -37,9 +37,6 @@
 <br />
 
 ## 🛠️ 프로젝트 아키텍쳐
-![no-image](https://github.com/sparata-noteam/img/blob/main/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202025-02-25%20%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB%2011.19.28.png)
-
-## 서버 아키텍쳐
 ![image](https://github.com/user-attachments/assets/23ca4060-4c0a-4ff9-816e-3bdf8594edcb)
 <br />
 
