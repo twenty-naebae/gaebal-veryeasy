@@ -1,6 +1,7 @@
 package com.gaebal_easy.client.hub.presentation;
 
 import com.gaebal_easy.client.hub.application.dto.HubDirectDto;
+import com.gaebal_easy.client.hub.application.dto.HubLocationDto;
 import com.gaebal_easy.client.hub.application.dto.HubRouteDto;
 import com.gaebal_easy.client.hub.application.service.HubDirectRedisService;
 import com.gaebal_easy.client.hub.application.service.HubMovementService;
@@ -57,11 +58,11 @@ public class HubController {
     }
 
     @GetMapping("/direct")
-    public ResponseEntity<?> getDirectHub(@RequestParam String depart,
+    public HubDirectDto getDirectHub(@RequestParam String depart,
                                         @RequestParam String arrive) {
         HubDirectDto hubDirectDto = hubDirectRedisService.getDirectRedis(depart,arrive);
-        if(hubDirectDto!=null) return ResponseEntity.ok(ApiResponseData.success(hubDirectDto));
-        return ResponseEntity.ok(ApiResponseData.success(hubMovementService.getDirectHub(depart, arrive)));
+        if(hubDirectDto!=null) return hubDirectDto;
+        return hubMovementService.getDirectHub(depart, arrive);
     }
 
     @GetMapping("/route")
@@ -73,8 +74,8 @@ public class HubController {
     }
 
     @GetMapping("/coordinate")
-    public ResponseEntity<?> getCoordinate(@RequestParam String hubName) {
-        return ResponseEntity.ok(ApiResponseData.success(hubService.getCoordinate(hubName)));
+    public HubLocationDto getCoordinate(@RequestParam String hubName) {
+        return hubService.getCoordinate(hubName);
     }
 
     @GetMapping("/hello")
@@ -90,5 +91,10 @@ public class HubController {
         return ResponseEntity.ok(possibleStock);
     }
 
-
+    @GetMapping("/route-feign")
+    public HubRouteDto getRouteForFeign(@RequestParam String depart, @RequestParam String arrive) {
+        HubRouteDto hubRouteDto = hubRouteRedisService.getRouteRedis(depart,arrive);
+        if(hubRouteDto!=null) return hubRouteDto;
+        return hubMovementService.getHubRoute(depart, arrive);
+    }
 }
