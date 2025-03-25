@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -26,6 +28,40 @@ class HubStockTest {
 
     @Autowired
     CacheManager cacheManager;
+
+    @Autowired
+    RedisTemplate<String, String> redisTemplate;
+
+    @Test
+    @DisplayName("싱글스레드")
+    @Transactional
+    void singleThredTest() throws InterruptedException {
+        int thred =100;
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        ops.set("test","0");
+
+        ExecutorService executor = Executors.newFixedThreadPool(thred);
+        CountDownLatch latch = new CountDownLatch(thred);
+
+        for (int i = 0; i < thred; i++) {
+            executor.submit(() -> {
+                try {
+                    ops.increment("test");
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        Cache stockCache = cacheManager.getCache("stock");
+
+        Assertions.assertThat(ops.get("test")).isEqualTo("100");
+
+    }
+
+
+
 
 
     @Test
