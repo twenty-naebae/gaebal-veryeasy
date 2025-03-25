@@ -104,7 +104,7 @@ public class StoreService {
 			.supplierId(supplierId)
 			.products(orderRequest.getProducts())
 			.receiverHubId(receiverStore.getHubId())
-			.supplierHubId(receiverStore.getHubId())
+			.supplierHubId(supplierStore.getHubId())
 			.receiverName(receiverStore.getName())
 			.receiverAddress(receiverStore.getAddress())
 			.supplierName(supplierStore.getName())
