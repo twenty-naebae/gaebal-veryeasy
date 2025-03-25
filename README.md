@@ -16,16 +16,55 @@
 ## ⚙ 기술 스택
 
 ### Back-end
-<div>
-   <img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="80">
-   <img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="80">
-   <img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="80">
-   <img src="https://github.com/kim946509/img/blob/main/postman.png?raw=true" width="80">
-   <img src="https://github.com/kim946509/img/blob/main/redis.png?raw=true" width="80">
-   <img src="https://github.com/kim946509/img/blob/main/slack.png?raw=true" width="80">
-   <img src="https://github.com/kim946509/img/blob/main/springcloud.png?raw=true" width="80">
-   <img src="https://github.com/kim946509/img/blob/main/swagger.png?raw=true" width="80">
-   <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="80">
+<div align="center">
+    <table>
+        <tr>
+            <td align="center" width="100">
+                <img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
+                <br>Kafka
+            </td>
+            <td align="center" width="100">
+                <img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
+                <br>MariaDB
+            </td>
+        </tr>
+        <tr>
+            <td align="center" width="100">
+                <img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
+                <br>OpenFeign
+            </td>
+            <td align="center" width="100">
+                <img src="https://github.com/kim946509/img/blob/main/postman.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
+                <br>Postman
+            </td>
+        </tr>
+        <tr>
+            <td align="center" width="100">
+                <img src="https://github.com/kim946509/img/blob/main/redis.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
+                <br>Redis
+            </td>
+            <td align="center" width="100">
+                <img src="https://github.com/kim946509/img/blob/main/slack.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
+                <br>Slack
+            </td>
+        </tr>
+        <tr>
+            <td align="center" width="100">
+                <img src="https://github.com/kim946509/img/blob/main/springcloud.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
+                <br>Spring Cloud
+            </td>
+            <td align="center" width="100">
+                <img src="https://github.com/kim946509/img/blob/main/swagger.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
+                <br>Swagger
+            </td>
+        </tr>
+        <tr>
+            <td align="center" width="100" colspan="2">
+                <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
+                <br>Zipkin
+            </td>
+        </tr>
+    </table>
 </div>
 
 ### Tools
@@ -52,4 +91,4 @@
 |:---:|:---:|:---:|:---:|
 |역할1|역할2|역할3|역할4|
 | ![](https://github.com/kim946509.png?size=120) | ![](https://github.com/kdh610.png?size=120) | ![](https://github.com/Leewon2.png?size=120)|![](https://github.com/pkl0912.png?size=120) |
-|[김대연](https://github.com/asqwklop12)|[김도훈](https://github.com/Leewon2)|[이훤희](https://github.com/kim946509)|[박경린](https://github.com/pkl0912)|
+|[김대연](https://github.com/asqwklop12)|[김도훈](https://github.com/Leewon2)|[이원희](https://github.com/kim946509)|[박경린](https://github.com/pkl0912)|
