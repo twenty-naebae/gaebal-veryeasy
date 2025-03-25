@@ -30,11 +30,10 @@ public class StoreController {
 	@PostMapping("/create")
 	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")
 	public ResponseEntity<ApiResponseData<StoreResponse.postStoreResponse>> postStore (
-		@RequestParam UUID hubId,
 		@RequestParam Long managerId,
 		@RequestBody StoreRequest.postStoreRequest request
 	) {
-		return ResponseEntity.ok(ApiResponseData.success(storeService.postStore(hubId, managerId, request)));
+		return ResponseEntity.ok(ApiResponseData.success(storeService.postStore(managerId, request)));
 	}
 	@PutMapping("/update")
 	@PreAuthorize("hasAnyRole('MASTER', 'HUB_MANAGER')")

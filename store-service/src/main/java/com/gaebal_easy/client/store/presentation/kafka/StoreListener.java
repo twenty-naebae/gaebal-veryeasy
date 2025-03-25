@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaebal_easy.client.store.application.service.KafkaProducerService;
 import com.gaebal_easy.client.store.application.service.StoreService;
+import com.gaebal_easy.client.store.presentation.dto.KafkaStoreCreateAssignDto;
 import com.gaebal_easy.client.store.presentation.dto.OrderCreateKafkaDto;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,19 @@ public class StoreListener {
 
 			storeService.getStoreInfo(orderCreateKafkaDto);
 			log.info("Received message from Kafka: {}", orderCreateKafkaDto);
+		} catch (JsonProcessingException e) {
+			log.error("Error deserializing Kafka message", e);
+		}
+	}
+
+	@KafkaListener(topics = "hub_store_create_assign", groupId = "store-hug-group")
+	public void listenHub(String event) {
+
+		try {
+			KafkaStoreCreateAssignDto kafkaStoreCreateAssignDto = objectMapper.readValue(event, KafkaStoreCreateAssignDto.class);
+
+			storeService.addStoreHubInfo(kafkaStoreCreateAssignDto);
+			log.info("Received message from Kafka: {}", kafkaStoreCreateAssignDto);
 		} catch (JsonProcessingException e) {
 			log.error("Error deserializing Kafka message", e);
 		}
