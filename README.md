@@ -13,60 +13,19 @@
 확장 가능성을 고려하여 유연하고 확장성 있는 아키텍처 기반으로 작성되었습니다. 
 <br />
 
-## ⚙ 기술 스택
+🛠 Tech Stack
+<div align="center" style="background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 6px 8px rgba(0,0,0,0.15); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 100px;">
+    <img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/postman.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/redis.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/slack.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/springcloud.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/swagger.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
 
-### Back-end
-<div align="center">
-    <table>
-        <tr>
-            <td align="center" width="100">
-                <img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
-                <br>Kafka
-            </td>
-            <td align="center" width="100">
-                <img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
-                <br>MariaDB
-            </td>
-        </tr>
-        <tr>
-            <td align="center" width="100">
-                <img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
-                <br>OpenFeign
-            </td>
-            <td align="center" width="100">
-                <img src="https://github.com/kim946509/img/blob/main/postman.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
-                <br>Postman
-            </td>
-        </tr>
-        <tr>
-            <td align="center" width="100">
-                <img src="https://github.com/kim946509/img/blob/main/redis.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
-                <br>Redis
-            </td>
-            <td align="center" width="100">
-                <img src="https://github.com/kim946509/img/blob/main/slack.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
-                <br>Slack
-            </td>
-        </tr>
-        <tr>
-            <td align="center" width="100">
-                <img src="https://github.com/kim946509/img/blob/main/springcloud.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
-                <br>Spring Cloud
-            </td>
-            <td align="center" width="100">
-                <img src="https://github.com/kim946509/img/blob/main/swagger.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
-                <br>Swagger
-            </td>
-        </tr>
-        <tr>
-            <td align="center" width="100" colspan="2">
-                <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="60" height="60" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px;">
-                <br>Zipkin
-            </td>
-        </tr>
-    </table>
 </div>
-
 ### Tools
 <div>
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" width="80">
