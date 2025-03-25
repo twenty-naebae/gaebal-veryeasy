@@ -11,6 +11,8 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +26,13 @@ import java.util.stream.Collectors;
 public class RefillStockConsumer {
     private final HubRepository hubRepository;
     private final HubProductListRepository hubProductListRepository;
-    private final RedissonClient redissonClient;
-    private final CacheManager cacheManager;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @KafkaListener(groupId = "refill", topics = "refill_stock")
     public void confirmStock(List<Map<String, Object>> productsAsMap){
 
         try {
-            log.info("Confirm stock product: {}", productsAsMap);
+            log.info("리필 Confirm stock product: {}", productsAsMap);
 
             // Map을 DTO로 변환
             List<CheckStokProductDto> products = productsAsMap.stream()
@@ -45,8 +46,10 @@ public class RefillStockConsumer {
                     .collect(Collectors.toList());
 
             // 비즈니스 로직 처리
+            ValueOperations<String, String> ops = redisTemplate.opsForValue();
             for(CheckStokProductDto product : products){
                 hubProductListRepository.refillProductAmount(product.getProductId(), 10000L);
+                redisTemplate.delete("stock:" + product.getProductId());
             }
 
 

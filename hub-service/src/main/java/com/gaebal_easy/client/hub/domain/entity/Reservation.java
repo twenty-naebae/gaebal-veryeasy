@@ -15,7 +15,10 @@ import java.util.UUID;
 public class Reservation extends BaseTimeEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    private UUID reservationId;
 
     @Column(name = "order_id")
     private UUID orderId;

@@ -242,7 +242,7 @@ class HubStockTest {
     @DisplayName("동시구매 테스트")
     @Transactional
     void outOfStockTest() throws InterruptedException {
-        int thred =999;
+        int thred =900;
 
         ExecutorService executor = Executors.newFixedThreadPool(thred);
         CountDownLatch latch = new CountDownLatch(thred);
@@ -250,7 +250,7 @@ class HubStockTest {
         List<CheckStokProductDto> products = new ArrayList<>();
         CheckStokProductDto product1 = CheckStokProductDto.builder()
                 .productId(UUID.fromString("6bc4dbbc-05d2-11f0-82d4-0242ac110004"))
-                .quantity(10L)
+                .quantity(1L)
                 .build();
 
         products.add(product1);

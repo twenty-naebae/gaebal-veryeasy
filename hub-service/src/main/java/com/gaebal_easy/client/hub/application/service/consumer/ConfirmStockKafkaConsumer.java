@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ConfirmStockConsumer {
+public class ConfirmStockKafkaConsumer {
     private final HubRepository hubRepository;
     private final HubProductListRepository hubProductListRepository;
     private final RedissonClient redissonClient;
@@ -58,7 +58,6 @@ public class ConfirmStockConsumer {
                 List<UUID> sortedProductIds = new ArrayList<>(productQuantities.keySet());
                 Collections.sort(sortedProductIds);
 
-
                 for(UUID productId : sortedProductIds){
                     RLock lock = redissonClient.getLock("key:"+productId.toString());
                     locks.add(lock);
@@ -73,29 +72,10 @@ public class ConfirmStockConsumer {
                 log.info("락 획득");
 
                 for(UUID productId : sortedProductIds){
-                    Long stock=0L;
-                    Long preemption=0L;
 
-                    // 캐시에 해당 상품의 선점 재고 확인
-                    Cache stockCache = cacheManager.getCache("stock");
-                    Cache preemtionCache = cacheManager.getCache("preemption");
+                    hubProductListRepository.decreseRealStock(productId, productQuantities.get(productId));
 
 
-                    if(preemtionCache.get("reserved:"+productId.toString(), String.class)!=null){
-                        log.info("캐싱 Hit!!!");
-                        preemption = Long.parseLong(preemtionCache.get("reserved:"+productId.toString(), String.class));
-                        Long confirmStock = preemption - productQuantities.get(productId);
-                        preemtionCache.put("reserved:"+productId.toString(), confirmStock);
-
-                        stock = Long.parseLong(stockCache.get(productId.toString(), String.class));
-                        Long realStock = stock - productQuantities.get(productId);
-                        stockCache.put(productId.toString(), realStock);
-
-                        if(confirmStock==0L){
-                            hubProductListRepository.refillProductAmount(productId,realStock);
-
-                        }
-                    }
                 }
                 log.info("재고 확정 처리!!!!!!!!!!");
             } catch (InterruptedException e) {

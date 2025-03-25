@@ -38,7 +38,7 @@ public class HubService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final ReservationRepository reservationRepository;
-    private final KafkaTemplate kafkaTemplate;
+    private final KafkaTemplate<String,String> kafkaTemplate;
 
     public ProductResponseDto getProduct(UUID productId, UUID hubId) {
         Hub hub = getHub(hubId);
@@ -97,12 +97,19 @@ public class HubService {
 
             // 재고 부족
             if (tempStock < 0) {
+                isEnoughStock = false;
                 // stock 캐시 롤백
                 for(int j=0; j<i+1;j++){
                     CheckStokProductDto rollbackProduct = stockCheckDto.getProducts().get(i);
                     UUID rollBakcProductId = rollbackProduct.getProductId();
+
                     ops.increment("stock:" + rollBakcProductId.toString(), rollbackProduct.getQuantity());
+                    log.info("stock 캐시 롤백 {} ++{}", rollBakcProductId, rollbackProduct.getQuantity());
                 }
+
+                // order create 보상 트랜잭션
+                log.info("Order 보상 트랜잭션 요청 {}", stockCheckDto.getOrderId().toString());
+                kafkaTemplate.send("out_of_stock","order-service", stockCheckDto.getOrderId().toString());
 
                 // reservation 테이블 롤백
                 throw new OutOfStockException(Code.OUT_OF_STOCK);
@@ -111,80 +118,13 @@ public class HubService {
 
             // 예약 저장
             Reservation reservation = Reservation.builder()
-                    .id(reservationId)
+                    .reservationId(reservationId)
                     .orderId(stockCheckDto.getOrderId())
                     .productId(productId)
                     .quantity(product.getQuantity())
                     .build();
             reservationRepository.save(reservation);
-
-
-
         }
-
-//            Long stock=0L;
-//            Long preemption=0L;
-//            // 먼저 캐시에 해당 상품의 재고 확인
-//            Cache stockCache = cacheManager.getCache("stock");
-//            Cache preemtionCache = cacheManager.getCache("preemption");
-//
-//            if(preemtionCache.get("reserved:"+productId.toString(), String.class)==null) {
-//                preemption = 0L;
-//            }
-//
-//            // 캐싱 Hit
-//            if(stockCache.get(productId.toString(), String.class) != null){
-//                log.info("캐싱 Hit!!!");
-//                stock = Long.parseLong(stockCache.get(productId.toString(), String.class));
-//
-//                // 재고가 요청보다 부족
-//                if( stock-preemption < productQuantities.get(productId)){
-//                    isEnoughStock = false;
-//                    throw new OutOfStockException(Code.OUT_OF_STOCK);
-//                }
-//            }
-//            else {
-//                // 캐싱 Miss
-//                log.info("캐싱 Miss!!!");
-//                ProductResponseDto findProduct = getProduct(productId, stockCheckDto.getHubId());
-//
-//                stock = findProduct.getAmount();
-//
-//                if( stock-preemption < productQuantities.get(productId)){
-//                    isEnoughStock = false;
-//                    throw new OutOfStockException(Code.OUT_OF_STOCK);
-//                }
-//                stockCache.put(productId.toString(), stock);
-//            }
-
-//        }
-//
-//
-//        } catch (InterruptedException e) {
-//            throw new OrderFailExceiption(Code.ORDER_FAIL_EXCEIPTION);
-//        }finally {
-//            if(isEnoughStock){
-//                Cache reservationCache = cacheManager.getCache("reservation");
-//                Cache preemptionCache = cacheManager.getCache("preemption");
-//
-//                // 예약정보 캐시 저장
-//                String reservationId = UUID.randomUUID().toString();
-//                reservationCache.put(reservationId, stockCheckDto);
-//
-//                // 선점 재고 수량 캐시 저장
-//                for(CheckStokProductDto p : stockCheckDto.getProducts()){
-//                    Long cnt = 0L;
-//                    if(preemptionCache.get("reserved:" + p.getProductId().toString()) != null){
-//                        cnt = Long.parseLong(preemptionCache.get("reserved:" + p.getProductId().toString(), String.class));
-//                    }
-//                    preemptionCache.put("reserved:"+p.getProductId().toString(), cnt + p.getQuantity());
-//                    log.info("상품: {}, 선점 수: {}",p.getProductId(), cnt+p.getQuantity());
-//                }
-//                log.info("예약정보 저장, 선점 저장");
-//            }
-//
-//        }
-
 
         return isEnoughStock;
     }
