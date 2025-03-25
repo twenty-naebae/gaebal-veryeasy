@@ -22,5 +22,5 @@ public class VisitHub {
     private HubMovementInfo hubMovementInfo;
 
     @Column(nullable = false)
-    private UUID hubId;
+    private String hubName;
 }

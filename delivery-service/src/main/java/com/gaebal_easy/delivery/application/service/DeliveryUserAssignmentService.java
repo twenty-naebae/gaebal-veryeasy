@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class DeliveryUserAssignmentService {
@@ -37,7 +39,7 @@ public class DeliveryUserAssignmentService {
     }
 
     // 업체 배송담당자 할당
-    public StoreDeliveryUser assignStoreDeliveryUser(Long hubId) {
+    public StoreDeliveryUser assignStoreDeliveryUser(UUID hubId) {
         String listKey = "delivery:store:" + hubId + ":list";
         String indexKey = "delivery:store:" + hubId + ":index";
 

@@ -53,7 +53,7 @@ public class OrderService {
 
         // 재고 부족
         if(!enoughStock){
-            throw new OutOfStockException(Code.OUT_OF_STOCK);
+            kafkaTemplate.send("refill_stock", "product_list", dto.getProducts());
         }
 
         // 재고 충분

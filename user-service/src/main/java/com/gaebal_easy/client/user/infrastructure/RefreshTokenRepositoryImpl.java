@@ -1,5 +1,6 @@
 package com.gaebal_easy.client.user.infrastructure;
 
+import com.gaebal_easy.client.user.application.service.RefreshTokenService;
 import com.gaebal_easy.client.user.domain.entity.RefreshToken;
 import com.gaebal_easy.client.user.domain.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,11 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     //기존 리프레시 토큰을 삭제하는 메서드.
     public boolean deleteRefreshToken(String refresh){
         refreshTokenJpaRepository.deleteByRefresh(refresh);
+        return true;
+    }
+
+    public boolean deleteRefreshToken(RefreshToken refresh){
+        refreshTokenJpaRepository.delete(refresh);
         return true;
     }
 
