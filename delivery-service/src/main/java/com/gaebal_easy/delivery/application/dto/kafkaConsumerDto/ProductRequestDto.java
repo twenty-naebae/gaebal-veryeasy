@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.store.presentation.dto;
+package com.gaebal_easy.delivery.application.dto.kafkaConsumerDto;
 
 import java.util.UUID;
 

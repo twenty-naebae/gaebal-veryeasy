@@ -1,12 +1,12 @@
 package com.gaebal_easy.client.hub.infrastructure;
 
-import com.gaebal_easy.client.hub.domain.entity.HubProduct;
+import com.gaebal_easy.client.hub.domain.entity.HubProductList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 @Repository
-public interface HubProductListJpaRepository extends JpaRepository<HubProduct, UUID> {
+public interface HubProductListJpaRepository extends JpaRepository<HubProductList, UUID> {
 
 }

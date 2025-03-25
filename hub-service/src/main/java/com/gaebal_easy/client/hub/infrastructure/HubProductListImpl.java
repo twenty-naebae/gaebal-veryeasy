@@ -1,6 +1,6 @@
 package com.gaebal_easy.client.hub.infrastructure;
 
-import com.gaebal_easy.client.hub.domain.entity.HubProduct;
+import com.gaebal_easy.client.hub.domain.entity.HubProductList;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,7 +14,7 @@ public class HubProductListImpl implements HubProductListRepository {
 
     private final HubProductListJpaRepository hubProductListJpaRepository;
 
-    public Optional<HubProduct> getProduct(UUID id) {
+    public Optional<HubProductList> getProduct(UUID id) {
         return hubProductListJpaRepository.findById(id);
     }
 

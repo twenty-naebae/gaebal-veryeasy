@@ -25,7 +25,7 @@ public class Hub extends BaseTimeEntity {
     private HubLocation hubLocation;
 
     @OneToMany(mappedBy = "hub", cascade = CascadeType.ALL)
-    private final List<HubProduct> hubProductList = new ArrayList<>();
+    private final List<HubProductList> hubProductList = new ArrayList<>();
 
     @OneToMany(mappedBy = "hub", cascade = CascadeType.ALL)
     private final List<HubManager> hubManagers = new ArrayList<>();

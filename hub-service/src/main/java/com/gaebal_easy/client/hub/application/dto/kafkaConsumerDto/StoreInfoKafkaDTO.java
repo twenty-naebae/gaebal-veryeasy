@@ -1,13 +1,9 @@
-package com.gaebal_easy.client.store.presentation.dto;
+package com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto;
+
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Setter

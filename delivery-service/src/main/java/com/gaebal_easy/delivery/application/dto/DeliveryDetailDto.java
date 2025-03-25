@@ -23,7 +23,7 @@ public class DeliveryDetailDto {
     private double expectedDistance;
     private int realTime;
     private double realDistance;
-    private UUID hubDeliveryPersonId;
+    private String hubDeliveryPersonId;
     public static DeliveryDetailDto of(DeliveryDetail deliveryDetail) {
         return DeliveryDetailDto.builder()
                 .status(deliveryDetail.getDeliveryStatus())

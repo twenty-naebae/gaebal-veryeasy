@@ -18,7 +18,7 @@ public class DeliveryDto {
     private String departHubName;
     private String arriveHubName;
     private String receiver;
-    private UUID deliveryPersonId;
+    private String deliveryPersonId;
     private int totalTime;
     private double totalDist;
     public static DeliveryDto of(Delivery delivery) {

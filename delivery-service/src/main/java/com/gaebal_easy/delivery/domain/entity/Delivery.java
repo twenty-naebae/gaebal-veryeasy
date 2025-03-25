@@ -41,7 +41,7 @@ public class Delivery extends BaseTimeEntity {
     @Column(nullable = false)
     private String arriveAddress;
 
-    private UUID deliveryPersonId;
+    private String deliveryPersonId;
 
     private int totalTime;
     private double totalDist;
@@ -50,7 +50,7 @@ public class Delivery extends BaseTimeEntity {
         this.deliveryStatus = status;
     }
 
-    public static Delivery of(HubRouteDto hubRouteDto, KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto) {
+    public static Delivery of(HubRouteDto hubRouteDto, KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto, StoreDeliveryUser storeDeliveryUser) {
         return Delivery.builder()
                 .orderId(kafkaRequireAddressToHubDto.getOrderId())
                 .deliveryStatus(DeliveryStatus.MOVE_TO_HUB)
@@ -58,7 +58,7 @@ public class Delivery extends BaseTimeEntity {
                 .arriveStoreName(kafkaRequireAddressToHubDto.getReceiptStoreName())
                 .arriveHubName(kafkaRequireAddressToHubDto.getReceiptStoreHubName())
                 .arriveAddress(kafkaRequireAddressToHubDto.getReceiptStoreAddress())
-                // TODO : 여기에 deliveryPersonId 들어가야함
+                .deliveryPersonId(storeDeliveryUser.getSlackId())
                 .totalTime(hubRouteDto.getTotalRequiredTime())
                 .totalDist(hubRouteDto.getTotalDistance())
                 .build();

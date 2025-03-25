@@ -44,12 +44,12 @@ public class DeliveryDetail extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    private UUID hubDeliveryPersonId;
+    private String hubDeliveryPersonId;
     public void updateStatus(DeliveryStatus status){
         this.deliveryStatus = status;
     }
 
-    public static DeliveryDetail of(HubDirectDto realHubDirectDto, HubDirectDto expectedHubDirectDto, int seq, UUID orderId) {
+    public static DeliveryDetail of(HubDeliveryUser hubDeliveryUser,HubDirectDto realHubDirectDto, HubDirectDto expectedHubDirectDto, int seq, UUID orderId) {
         return DeliveryDetail.builder()
                 .orderId(orderId)
                 .departHubName(realHubDirectDto.getDepartName())
@@ -60,7 +60,7 @@ public class DeliveryDetail extends BaseTimeEntity {
                 .realDistance(realHubDirectDto.getDistance())
                 .sequence(seq)
                 .deliveryStatus(DeliveryStatus.MOVE_TO_HUB)
-                // TODO : hubDeliveryPersonID 넣어야함
+                .hubDeliveryPersonId(hubDeliveryUser.getSlackId())
                 .build();
     }
 }

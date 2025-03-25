@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "p_hub_product_list")
-public class HubProduct extends BaseTimeEntity {
+public class HubProductList extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
