@@ -92,7 +92,7 @@ public class ConfirmStockConsumer {
                         stockCache.put(productId.toString(), realStock);
 
                         if(confirmStock==0L){
-                            hubProductListRepository.updateProductAmount(productId,realStock);
+                            hubProductListRepository.refillProductAmount(productId,realStock);
 
                         }
                     }

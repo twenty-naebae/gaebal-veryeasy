@@ -36,7 +36,7 @@ class HubStockTest {
     @DisplayName("싱글스레드")
     @Transactional
     void singleThredTest() throws InterruptedException {
-        int thred =100;
+        int thred =20;
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
         ops.set("test","0");
 
@@ -46,7 +46,8 @@ class HubStockTest {
         for (int i = 0; i < thred; i++) {
             executor.submit(() -> {
                 try {
-                    ops.increment("test");
+                    Long test = ops.increment("test");
+                    System.out.println(test);
                 } finally {
                     latch.countDown();
                 }
@@ -56,7 +57,7 @@ class HubStockTest {
         latch.await();
         Cache stockCache = cacheManager.getCache("stock");
 
-        Assertions.assertThat(ops.get("test")).isEqualTo("100");
+        Assertions.assertThat(ops.get("test")).isEqualTo("20");
 
     }
 

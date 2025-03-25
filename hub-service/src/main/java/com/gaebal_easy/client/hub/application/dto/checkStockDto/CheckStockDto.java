@@ -14,4 +14,5 @@ import java.util.UUID;
 public class CheckStockDto implements Serializable {
     private List<CheckStokProductDto> products;
     private UUID hubId;
+    private UUID orderId;
 }

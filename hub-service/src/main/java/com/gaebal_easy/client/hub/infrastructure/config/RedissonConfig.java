@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Configuration;
 public class RedissonConfig {
 
     private static final String REDISSON_HOST_PREFIX = "redis://";
-    @Value("")
 
     @Bean
     public RedissonClient redissonClient() {
         Config config = new Config();
-        config.useSingleServer().setAddress(REDISSON_HOST_PREFIX + "redis:6379").setPassword("systempass");
+//        config.useSingleServer().setAddress(REDISSON_HOST_PREFIX + "redis:6379");
+        config.useSingleServer().setAddress(REDISSON_HOST_PREFIX + "localhost:6379").setPassword("systempass");
         return Redisson.create(config);
     }
 
