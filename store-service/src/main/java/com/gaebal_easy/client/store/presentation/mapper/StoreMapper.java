@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.store.application.service.mapper;
+package com.gaebal_easy.client.store.presentation.mapper;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,6 +3,7 @@ package com.gaebal_easy.client.store.application.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.checkerframework.checker.units.qual.K;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,11 +11,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gaebal_easy.client.store.application.service.mapper.StoreMapper;
+import com.gaebal_easy.client.store.presentation.dto.KafkaStoreCreateAssignDto;
+import com.gaebal_easy.client.store.presentation.dto.KafkaStoreCreateDto;
+import com.gaebal_easy.client.store.presentation.mapper.StoreMapper;
 import com.gaebal_easy.client.store.domain.entity.Store;
 import com.gaebal_easy.client.store.domain.repository.StoreRepository;
 import com.gaebal_easy.client.store.exception.StoreException;
-import com.gaebal_easy.client.store.presentation.UserServiceClient;
+import com.gaebal_easy.client.store.presentation.client.UserServiceClient;
 import com.gaebal_easy.client.store.presentation.dto.OrderCreateKafkaDto;
 import com.gaebal_easy.client.store.presentation.dto.SearchedStoreDTO;
 import com.gaebal_easy.client.store.presentation.dto.StoreDTO;
@@ -51,11 +54,12 @@ public class StoreService {
 			.build();
 	}
 
-	public StoreResponse.postStoreResponse postStore(String access, UUID hubId, Long managerId, StoreRequest.postStoreRequest request) {
-		// Role managerRole = userServiceClient.getUserRole(access, managerId);
-		// if(managerRole != Role.STORE_MANAGER) throw new StoreException.StoreManagerNotFoundException();
-		Store store = Store.create(hubId, managerId, request);
+	public StoreResponse.postStoreResponse postStore(Long managerId, StoreRequest.postStoreRequest request) {
+		Role managerRole = userServiceClient.getUserRole(managerId);
+		if(managerRole != Role.STORE_MANAGER) throw new StoreException.StoreManagerNotFoundException();
+		Store store = Store.create(managerId, request);
 		Store createdStore = storeRepository.save(store);
+		kafkaProducerService.sendStoreCreate(new KafkaStoreCreateDto(createdStore.getId(), createdStore.getAddress()));
 		return StoreResponse.postStoreResponse.builder().id(createdStore.getId()).build();
 	}
 
@@ -73,6 +77,7 @@ public class StoreService {
 		storeRepository.deleteById(storeId);
 	}
 
+	@Transactional(readOnly = true)
 	public StoreResponse.getSearchedStoreListResponse getSearchedStoreList(StoreRequest.searchStoreRequest request, int page, int size) {
 		if (size != 10 && size != 30 && size != 50) {
 			size = 10;
@@ -105,5 +110,9 @@ public class StoreService {
 			.supplierName(supplierStore.getName())
 			.build();
 		kafkaProducerService.sendStoreInfo(storeInfoKafkaDTO);
+	}
+	public void addStoreHubInfo(KafkaStoreCreateAssignDto kafkaStoreCreateAssignDto){
+		Store store = getStore(kafkaStoreCreateAssignDto.getStoreId());
+		store.updateHubId(kafkaStoreCreateAssignDto.getHubId());
 	}
 }
