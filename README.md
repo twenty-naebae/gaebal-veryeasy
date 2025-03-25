@@ -24,6 +24,7 @@
     <img src="https://github.com/kim946509/img/blob/main/springcloud.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
     <img src="https://github.com/kim946509/img/blob/main/swagger.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
     <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+
 </div>
 ### Tools
 <div>
@@ -34,9 +35,6 @@
 <br />
 
 ## 🛠️ 프로젝트 아키텍쳐
-![no-image](https://github.com/sparata-noteam/img/blob/main/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202025-02-25%20%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB%2011.19.28.png)
-
-## 서버 아키텍쳐
 ![image](https://github.com/user-attachments/assets/23ca4060-4c0a-4ff9-816e-3bdf8594edcb)
 <br />
 
@@ -52,4 +50,4 @@
 |:---:|:---:|:---:|:---:|
 |역할1|역할2|역할3|역할4|
 | ![](https://github.com/kim946509.png?size=120) | ![](https://github.com/kdh610.png?size=120) | ![](https://github.com/Leewon2.png?size=120)|![](https://github.com/pkl0912.png?size=120) |
-|[김대연](https://github.com/asqwklop12)|[김도훈](https://github.com/Leewon2)|[이훤희](https://github.com/kim946509)|[박경린](https://github.com/pkl0912)|
+|[김대연](https://github.com/asqwklop12)|[김도훈](https://github.com/Leewon2)|[이원희](https://github.com/kim946509)|[박경린](https://github.com/pkl0912)|
