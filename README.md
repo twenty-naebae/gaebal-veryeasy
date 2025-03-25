@@ -15,15 +15,15 @@
 
 🛠 Tech Stack
 <div align="center" style="background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 6px 8px rgba(0,0,0,0.15); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 100px;">
-    <img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
-    <img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
-    <img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
-    <img src="https://github.com/kim946509/img/blob/main/postman.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
-    <img src="https://github.com/kim946509/img/blob/main/redis.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
-    <img src="https://github.com/kim946509/img/blob/main/slack.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
-    <img src="https://github.com/kim946509/img/blob/main/springcloud.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
-    <img src="https://github.com/kim946509/img/blob/main/swagger.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
-    <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="180" height="180" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/kafka.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/mariadb.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/openfeign.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/postman.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/redis.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/slack.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/springcloud.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/swagger.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
+    <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
 
 </div>
 ### Tools
