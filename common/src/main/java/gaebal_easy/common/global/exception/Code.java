@@ -39,6 +39,7 @@ public enum Code {
     CAN_NOT_FIND_USER(HttpStatus.BAD_REQUEST,3004 , "해당 유저를 찾을 수 없습니다." ),
     CAN_NOT_ACCESS_USER_INFO(HttpStatus.FORBIDDEN,3005 , "해당 유저 정보에 접근할 수 없습니다." ),
     USER_ALREADY_USERNAME_EXCEPTION(HttpStatus.BAD_REQUEST, 3006, "해당 유저네임이 이미 존재합니다."),
+    USER_INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 3007, "유효하지 않은 토큰입니다."),
     /**
      * Hub 4000번대
      */
