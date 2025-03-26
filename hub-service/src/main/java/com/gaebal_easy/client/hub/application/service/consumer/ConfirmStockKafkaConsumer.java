@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ConfirmStockKafkaConsumer {
-    private final HubRepository hubRepository;
+
     private final HubProductListRepository hubProductListRepository;
     private final RedissonClient redissonClient;
-    private final CacheManager cacheManager;
+
 
     @KafkaListener(groupId = "stock", topics = "confirm_stock")
     public void confirmStock(List<Map<String, Object>> productsAsMap){

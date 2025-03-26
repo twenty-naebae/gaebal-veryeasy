@@ -1,6 +1,7 @@
 package com.gaebal_easy.client.hub.presentation;
 
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockResponse;
 import com.gaebal_easy.client.hub.application.service.HubService;
 import com.gaebal_easy.client.hub.presentation.dto.HubCreateRequestDto;
 import com.gaebal_easy.client.hub.presentation.dto.HubRequestDto;
@@ -58,8 +59,8 @@ public class HubController {
     @PostMapping("/products/stock")
     public ResponseEntity<?> checkStock(@RequestBody CheckStockDto stockCheckDto) {
         log.info("stockCheck {}", stockCheckDto.toString());
-        Boolean possibleStock = hubService.checkStock(stockCheckDto);
-        return ResponseEntity.ok(possibleStock);
+        CheckStockResponse checkStockResponse = hubService.checkStock(stockCheckDto);
+        return ResponseEntity.ok(checkStockResponse);
     }
 
 

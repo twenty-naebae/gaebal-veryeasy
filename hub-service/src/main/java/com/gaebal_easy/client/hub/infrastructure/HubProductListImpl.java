@@ -5,6 +5,7 @@ import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class HubProductListImpl implements HubProductListRepository {
 
     private final HubProductListJpaRepository hubProductListJpaRepository;
@@ -25,6 +27,7 @@ public class HubProductListImpl implements HubProductListRepository {
         HubProductList hubProductList = hubProductListJpaRepository.findById(id).orElse(null);
 
         if (hubProductList != null) {
+            log.info("재고 리필 {}", amount);
             hubProductList.updateAmount(amount);
             hubProductListJpaRepository.save(hubProductList);
         }

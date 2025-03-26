@@ -1,19 +1,18 @@
 package com.gaebal_easy.order.application.service;
 
-import com.gaebal_easy.order.application.dto.CreateOrderDto;
-import com.gaebal_easy.order.application.dto.CreateOrderKafkaDto;
-import com.gaebal_easy.order.application.dto.OrderResponse;
-import com.gaebal_easy.order.application.dto.UpdateOrderDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gaebal_easy.order.application.dto.*;
 import com.gaebal_easy.order.application.service.kafka.consumer.CheckStockResponseConsumer;
 import com.gaebal_easy.order.application.service.kafka.consumer.RollbackOrderKafkaConsumer;
 import com.gaebal_easy.order.domain.entity.Order;
 import com.gaebal_easy.order.domain.entity.OrderProduct;
+import com.gaebal_easy.order.domain.enums.ReservationState;
 import com.gaebal_easy.order.domain.repository.OrderRepository;
 import com.gaebal_easy.order.infrastructure.kafka.producer.CheckStockKafkaProducer;
 import com.gaebal_easy.order.presentation.dto.ProductRequestDto;
-import com.gaebal_easy.order.application.dto.CheckStockDto;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.OrderFailExceiption;
+import gaebal_easy.common.global.exception.OrderNotFoundException;
 import gaebal_easy.common.global.exception.OutOfStockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,7 @@ public class OrderService {
     private final CheckStockResponseConsumer checkStockResponseConsumer;
 
     public OrderResponse getOrder(UUID orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
+        Order order = orderRepository.findById(orderId).orElseThrow(() ->new OrderNotFoundException(Code.ORDER_NOT_FOUND_EXCEIPTION));
         return OrderResponse.from(order);
     }
 
@@ -77,28 +76,35 @@ public class OrderService {
         // 재고확인 FeignClient order -> hub
         Boolean isEnough = true;
         try {
-             isEnough = (Boolean) hubClient.checkStock(CheckStockDto.builder()
+            Object obj = hubClient.checkStock(CheckStockDto.builder()
                     .hubId(dto.getHubId())
                     .orderId(order.getId())
                     .products(dto.getProducts())
                     .build()).getBody();
 
-            log.info("재고 확인 결과: {}", isEnough);
-            if(isEnough) {
-                // 허브에 선점했던 재고 확정 처리 요청
+            ObjectMapper objectMapper = new ObjectMapper();
+            CheckStockResponse response = objectMapper.convertValue(obj, CheckStockResponse.class);
+            log.info("재고 확인 결과: {}", response.toString());
+
+            if(!response.getState().equals(ReservationState.OUT_OF_STOCK)) {
+                // 허브에 선점했던 재고 확정 처리 요청. Kafka: Order -> Hub
                 kafkaTemplate.send("confirm_stock", "product_list", dto.getProducts());
 
-                // 업체에 orderId, receiver, supplier 전송
+                // 업체에 orderId, receiver, supplier 전송. Kafka: Order -> Store
                 kafkaTemplate.send("order_create", "order", CreateOrderKafkaDto.builder()
                         .orderId(order.getId())
                         .supplierId(dto.getSupplierId())
                         .receiverId(dto.getReceiverId())
                         .products(dto.getProducts())
                         .build());
+                if(response.getState().equals(ReservationState.RE_FILL)){
+                    kafkaTemplate.send("refill_stock","refill",  objectMapper.writeValueAsString(response));
+                }
             }
 
+
         }catch(Exception e){
-            kafkaTemplate.send("refill_stock", "product_list", dto.getProducts());
+
             throw new OrderFailExceiption(Code.ORDER_FAIL_EXCEIPTION);
         }
         return OrderResponse.from(order);

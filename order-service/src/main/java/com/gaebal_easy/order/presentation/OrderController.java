@@ -35,8 +35,10 @@ public class OrderController {
 
 
     @GetMapping("/orders/{id}")
-    public ResponseEntity<ApiResponseData<OrderResponseDto>> getOrder(@PathVariable UUID orderId) {
+    public ResponseEntity<ApiResponseData<OrderResponseDto>> getOrder(@PathVariable("id") UUID orderId) {
+        log.info(orderId.toString());
         OrderResponse orderResponse = orderService.getOrder(orderId);
+        log.info(orderResponse.toString());
         return ResponseEntity.ok(ApiResponseData.success(OrderResponseDto.from(orderResponse)));
 
     }

@@ -128,8 +128,8 @@ spring:
           uri: lb://order-service
           predicates:
             - Path=/order-service/api/**
-          filters:
-            - name: AuthPermissionPreFilter
+#          filters:
+#            - name: AuthPermissionPreFilter
 
         # Swagger UI 허용 설정
         - id: user-service-swagger

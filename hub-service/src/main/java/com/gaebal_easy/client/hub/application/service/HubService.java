@@ -1,21 +1,22 @@
 package com.gaebal_easy.client.hub.application.service;
 
 import com.gaebal_easy.client.hub.application.dto.HubResponseDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockResponse;
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.ReservationDto;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
 import com.gaebal_easy.client.hub.domain.entity.HubProductList;
 import com.gaebal_easy.client.hub.domain.entity.Reservation;
+import com.gaebal_easy.client.hub.domain.enums.ReservationState;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
 import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import com.gaebal_easy.client.hub.domain.repository.ReservationRepository;
 import gaebal_easy.common.global.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -70,13 +70,14 @@ public class HubService {
 
 
     @Transactional
-    public Boolean checkStock(CheckStockDto stockCheckDto){
+    public CheckStockResponse checkStock(CheckStockDto stockCheckDto){
 
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
-        boolean isEnoughStock = true;
+        ArrayList<ReservationDto> reservations = new ArrayList<>();
+        ReservationState stockState = ReservationState.RESERVE;
         UUID reservationId = UUID.randomUUID();
-            
+
         for(int i=0; i<stockCheckDto.getProducts().size(); i++) {
             CheckStokProductDto product = stockCheckDto.getProducts().get(i);
             UUID productId = product.getProductId();
@@ -91,16 +92,32 @@ public class HubService {
                 ops.set("stock:" +productId, stock.toString());
             }
 
+            // 예약 생성
+            Reservation reservation = Reservation.builder()
+                    .reservationId(reservationId)
+                    .orderId(stockCheckDto.getOrderId())
+                    .productId(productId)
+                    .quantity(product.getQuantity())
+                    .state(ReservationState.RESERVE)
+                    .build();
+
 
             // 재고 감소
             Long tempStock = ops.decrement("stock:" + productId.toString(), product.getQuantity());
 
+            log.info("product {}, 재고 {}",productId, tempStock);
+            if(tempStock == 0) {
+                log.info("재고 리필");
+                stockState = ReservationState.RE_FILL;
+                reservations.add(ReservationDto.from(reservation));
+                reservation.changeState(ReservationState.RE_FILL);
+            }
             // 재고 부족
-            if (tempStock < 0) {
-                isEnoughStock = false;
+            else if (tempStock < 0) {
+                log.info("재고 부족");
                 // stock 캐시 롤백
                 for(int j=0; j<i+1;j++){
-                    CheckStokProductDto rollbackProduct = stockCheckDto.getProducts().get(i);
+                    CheckStokProductDto rollbackProduct = stockCheckDto.getProducts().get(j);
                     UUID rollBakcProductId = rollbackProduct.getProductId();
 
                     ops.increment("stock:" + rollBakcProductId.toString(), rollbackProduct.getQuantity());
@@ -116,17 +133,16 @@ public class HubService {
 
             }
 
-            // 예약 저장
-            Reservation reservation = Reservation.builder()
-                    .reservationId(reservationId)
-                    .orderId(stockCheckDto.getOrderId())
-                    .productId(productId)
-                    .quantity(product.getQuantity())
-                    .build();
+
             reservationRepository.save(reservation);
+
+
         }
 
-        return isEnoughStock;
+        return CheckStockResponse.builder()
+                .reservations(reservations)
+                .state(stockState)
+                .build();
     }
 
 
