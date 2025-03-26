@@ -6,7 +6,7 @@ spring:
   application:
     name: delivery-service
   datasource:
-    url: jdbc:mariadb://delivery-mariadb:3306/delivery-database?useSSL=false
+    url: ${DB_URL}
     username: deliveryUser
     password: 19890422pkl!
     driver-class-name: org.mariadb.jdbc.Driver
@@ -47,8 +47,8 @@ eureka:
 
 naver:
   direction5:
-    client-id: ${Client_ID}
-    client-secret: ${Client_Secret}
+    client-id: ${CLIENT_ID}
+    client-secret: ${CLIENT_SECRET}
 
 jwt:
   secret: ${JWT_SECRET}

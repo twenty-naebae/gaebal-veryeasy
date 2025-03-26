@@ -26,7 +26,7 @@ services:
     env_file:
       - .env
     environment:
-      DB_URL: jdbc:mariadb://hub-mariadb:3306/hub-database?useSSL=false
+      DB_URL: ${DB_URL}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
@@ -36,8 +36,8 @@ services:
       REDIS_PORT: 6379
       EUREKA_SERVER: http://eureka-server:19090/eureka
       MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
-      CLIENT_ID: ${Client_ID}
-      CLIENT_SECRET: ${Client_Secret}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_Secret}
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     networks:

@@ -36,8 +36,8 @@ spring:
 
 naver:
   direction5:
-    client-id: xiaa6iqavs
-    client-secret: v94QtnEuR0JAyMG1rISkJLC2DVSyHZZJdSbTZmtJ
+    client-id: ${CLIENT_ID}
+    client-secret: ${CLIENT_SECRET}
 
 
 

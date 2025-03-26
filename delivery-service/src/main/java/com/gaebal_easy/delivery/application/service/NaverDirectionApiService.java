@@ -13,11 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class NaverDirectionApiService {
-    // @Value("${naver.direction5.client-id}")
-    // private String clientId;
+    @Value("${naver.direction5.client-id}")
+    private String clientId;
     //
-    // @Value("${naver.direction5.client-secret}")
-    // private String clientSecret;
+    @Value("${naver.direction5.client-secret")
+    private String clientSecret;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
