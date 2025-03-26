@@ -40,7 +40,7 @@
 
 ## 🤔 기술적 이슈와 해결 과정
 - MSA에 SWAGGER 추가
-   - [스웨거 적용]([https://agongstory.tistory.com/](https://agongstory.tistory.com/51))
+   - [스웨거 적용](https://agongstory.tistory.com/51)
 
 
 <br />
