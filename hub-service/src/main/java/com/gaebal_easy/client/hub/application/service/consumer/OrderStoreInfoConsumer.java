@@ -25,7 +25,6 @@ public class OrderStoreInfoConsumer {
 
     @KafkaListener(topics = "store-order-info", groupId = "hub_group", containerFactory = "orderStoreInfoKafkaListenerContainerFactory")
     public void orderStoreInfo(StoreInfoKafkaDTO storeInfoKafkaDTO) {
-
         Hub supplier = hubRepository.getHub(storeInfoKafkaDTO.getSupplierHubId()).orElseThrow(() -> new NullPointerException("허브가 없습니다."));
         Hub receiver = hubRepository.getHub(storeInfoKafkaDTO.getReceiverHubId()).orElseThrow(() -> new NullPointerException("허브가 없습니다."));
         KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto = KafkaRequireAddressToHubDto.of(supplier, receiver, storeInfoKafkaDTO);

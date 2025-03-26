@@ -51,10 +51,14 @@ public class HubService {
         List<Hub> hubList = hubRepository.findAll();
         HubLocationDto hubLocationDto = new HubLocationDto();
         for(Hub hub : hubList){
-            if(hub.getHubLocation().getName().equals(hubName)) {
+            String fourHubName = hub.getHubLocation().getName().substring(0,4);
+            log.info("!!!!!!!!!fourHubName:!!!!!!!!! " + fourHubName);
+            log.info("!!!!!!!!!hubName:!!!!!!!!! " + hubName);
+            if(fourHubName.equals(hubName)) {
                 hubLocationDto = new HubLocationDto(hub.getHubLocation().getLatitude(), hub.getHubLocation().getLongitude());
             }
         }
+        log.info("hubLocationDto:!!!!!!!!! " + hubLocationDto.getLatitude() + " " + hubLocationDto.getLongitude());
         return hubLocationDto;
     }
 

@@ -1,10 +1,16 @@
 package com.gaebal_easy.client.hub.application.service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import com.gaebal_easy.client.hub.application.dto.HubRouteDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HubRouteRedisService {
@@ -16,7 +22,11 @@ public class HubRouteRedisService {
     }
 
     public HubRouteDto getRouteRedis(String depart, String arrive){
-        String key = KEY_PREFIX + depart + ":" + arrive;
-        return redisTemplate.opsForValue().get(key);
+        String encodedKey = KEY_PREFIX
+            + URLEncoder.encode(depart, StandardCharsets.UTF_8)
+            + ":"
+            + URLEncoder.encode(arrive, StandardCharsets.UTF_8);
+        log.info("Encoded!!!!!!!!!!!!!"+encodedKey);
+        return redisTemplate.opsForValue().get(encodedKey);
     }
 }

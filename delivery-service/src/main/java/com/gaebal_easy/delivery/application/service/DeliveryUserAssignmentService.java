@@ -9,11 +9,13 @@ import gaebal_easy.common.global.exception.CanNotFindUserException;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.DeliveryUserRedisException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DeliveryUserAssignmentService {
@@ -30,11 +32,13 @@ public class DeliveryUserAssignmentService {
 
         Long index = redisDeliveryUserUtil.getNextIndex(listKey, indexKey);
         String userIdStr = redisTemplate.opsForList().index(listKey, index);
+        log.info("!!!!!!!!!!!!!!!!!!!assignHubDeliveryUser: userId=" + userIdStr);
         if (userIdStr == null) {
             throw new DeliveryUserRedisException(Code.DELIVERY_USER_REDIS_EXCEPTION, "허브 배송담당자 리스트에서 인덱스 값을 가져오지 못했습니다.");
         }
 
         Long userId = Long.valueOf(userIdStr);
+        log.info("!!!!!!!!!!!!!!!!!!!assignHubDeliveryUser: userId=" + userId);
         return hubDeliveryUserRepository.findByUserId(userId).orElseThrow(() -> new CanNotFindUserException(Code.DELIVERY_USER_NOT_FOUND_EXCEPTION));
     }
 

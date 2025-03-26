@@ -14,6 +14,8 @@ import com.gaebal_easy.delivery.domain.repository.DeliveryDetailRepository;
 import gaebal_easy.common.global.exception.CanNotFindHubNameException;
 import gaebal_easy.common.global.exception.Code;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DeliveryDetailService {
 
     private final DeliveryDetailRepository deliveryDetailRepository;
@@ -57,7 +60,7 @@ public class DeliveryDetailService {
         HubLocationDto arriveLocation = hubClient.getCoordinate(arrive);
         String json = naverDirectionApiService.getDirection(departLocation.getLongitude(), departLocation.getLatitude(),
                 arriveLocation.getLongitude(), arriveLocation.getLatitude());
-
+        log.info("Naver JSON response = {}", json);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             NaverRouteResponse response = objectMapper.readValue(json, NaverRouteResponse.class);
