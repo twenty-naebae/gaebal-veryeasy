@@ -26,7 +26,7 @@
     <img src="https://github.com/kim946509/img/blob/main/zipkin.png?raw=true" width="100" height="100" style="transition: transform 0.3s ease;">
 
 </div>
-### Tools
+Tools
 <div>
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Notion.png?raw=true" width="80">
@@ -40,7 +40,7 @@
 
 ## 🤔 기술적 이슈와 해결 과정
 - MSA에 SWAGGER 추가
-   - [스웨거 적용]([https://agongstory.tistory.com/](https://agongstory.tistory.com/51))
+   - [스웨거 적용](https://agongstory.tistory.com/51)
 
 
 <br />
@@ -48,6 +48,6 @@
 ## 💁‍♂️ 프로젝트 팀원
 |Leader|Member|Member|Member|
 |:---:|:---:|:---:|:---:|
-|역할1|역할2|역할3|역할4|
+|유저,배송담당자|상품,주문|허브,배송|슬랙,업체|
 | ![](https://github.com/kim946509.png?size=120) | ![](https://github.com/kdh610.png?size=120) | ![](https://github.com/Leewon2.png?size=120)|![](https://github.com/pkl0912.png?size=120) |
 |[김대연](https://github.com/asqwklop12)|[김도훈](https://github.com/Leewon2)|[이원희](https://github.com/kim946509)|[박경린](https://github.com/pkl0912)|
