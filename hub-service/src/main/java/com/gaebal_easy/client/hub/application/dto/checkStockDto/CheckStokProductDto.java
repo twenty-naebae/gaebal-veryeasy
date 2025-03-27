@@ -13,6 +13,7 @@ import java.util.UUID;
 public class CheckStokProductDto implements Serializable {
 
     private UUID productId;
+    private String productName;
     private Long quantity;
     private Long price;
 }

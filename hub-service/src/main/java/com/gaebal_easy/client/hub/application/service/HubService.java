@@ -2,20 +2,27 @@ package com.gaebal_easy.client.hub.application.service;
 
 import com.gaebal_easy.client.hub.application.dto.HubLocationDto;
 import com.gaebal_easy.client.hub.application.dto.HubResponseDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockResponse;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.ReservationDto;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
 import com.gaebal_easy.client.hub.domain.entity.HubProductList;
+import com.gaebal_easy.client.hub.domain.entity.Reservation;
+import com.gaebal_easy.client.hub.domain.enums.ReservationState;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
 import com.gaebal_easy.client.hub.domain.repository.HubRepository;
+import com.gaebal_easy.client.hub.domain.repository.ReservationRepository;
 import gaebal_easy.common.global.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +38,10 @@ public class HubService {
     private final HubProductListRepository hubProductListRepository;
     private final RedissonClient redissonClient;
     private final CacheManager cacheManager;
+
+    private final RedisTemplate<String, String> redisTemplate;
+    private final ReservationRepository reservationRepository;
+    private final KafkaTemplate<String,String> kafkaTemplate;
 
     public ProductResponseDto getProduct(UUID productId, UUID hubId) {
         Hub hub = getHub(hubId);
@@ -74,106 +85,79 @@ public class HubService {
         return hubProductListRepository.getProduct(id).orElseThrow(() -> new ProductNotFoundException(Code.HUB_PRODUCT_NOT_FOUND));
     }
     @Transactional
-    public Boolean checkStock(CheckStockDto stockCheckDto){
-        Map<UUID, Long> productQuantities = new HashMap<>();
-        ArrayList<RLock> locks = new ArrayList<>();
-        boolean isEnoughStock = true;
+    public CheckStockResponse checkStock(CheckStockDto stockCheckDto){
 
-        for(CheckStokProductDto product : stockCheckDto.getProducts()){
-            productQuantities.put(product.getProductId(), product.getQuantity());
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        ArrayList<ReservationDto> reservations = new ArrayList<>();
+        ReservationState stockState = ReservationState.RESERVE;
+        UUID reservationId = UUID.randomUUID();
+
+        for(int i=0; i<stockCheckDto.getProducts().size(); i++) {
+            CheckStokProductDto product = stockCheckDto.getProducts().get(i);
+            UUID productId = product.getProductId();
+            String cacheStock = ops.get("stock:" + productId);
+
+            if (cacheStock == null) {
+                // 캐싱 Miss
+                log.info("캐싱 Miss!!!");
+                ProductResponseDto findProduct = getProduct(productId, stockCheckDto.getHubId());
+                Long stock = findProduct.getAmount();
+
+                ops.set("stock:" +productId, stock.toString());
+            }
+
+            // 예약 생성
+            Reservation reservation = Reservation.builder()
+                    .reservationId(reservationId)
+                    .orderId(stockCheckDto.getOrderId())
+                    .productId(productId)
+                    .quantity(product.getQuantity())
+                    .state(ReservationState.RESERVE)
+                    .build();
+
+
+            // 재고 감소
+            Long tempStock = ops.decrement("stock:" + productId.toString(), product.getQuantity());
+
+            log.info("product {}, 재고 {}",productId, tempStock);
+            if(tempStock == 0) {
+                log.info("재고 리필");
+                stockState = ReservationState.RE_FILL;
+                reservations.add(ReservationDto.from(reservation));
+                reservation.changeState(ReservationState.RE_FILL);
+            }
+            // 재고 부족
+            else if (tempStock < 0) {
+                log.info("재고 부족");
+                // stock 캐시 롤백
+                for(int j=0; j<i+1;j++){
+                    CheckStokProductDto rollbackProduct = stockCheckDto.getProducts().get(j);
+                    UUID rollBakcProductId = rollbackProduct.getProductId();
+
+                    ops.increment("stock:" + rollBakcProductId.toString(), rollbackProduct.getQuantity());
+                    log.info("stock 캐시 롤백 {} ++{}", rollBakcProductId, rollbackProduct.getQuantity());
+                }
+
+                // order create 보상 트랜잭션
+                log.info("Order 보상 트랜잭션 요청 {}", stockCheckDto.getOrderId().toString());
+                kafkaTemplate.send("out_of_stock","order-service", stockCheckDto.getOrderId().toString());
+
+                // reservation 테이블 롤백
+                throw new OutOfStockException(Code.OUT_OF_STOCK);
+
+            }
+
+
+            reservationRepository.save(reservation);
+
+
         }
 
-        // 모든 상품에 대한 락 획득 시도
-        try{
-            // 상품 ID 기준으로 정렬하여 데드락 방지
-            List<UUID> sortedProductIds = new ArrayList<>(productQuantities.keySet());
-            Collections.sort(sortedProductIds);
-
-
-            for(UUID productId : sortedProductIds){
-                RLock lock = redissonClient.getLock("key:"+productId.toString());
-                locks.add(lock);
-                // 락 획득 시도
-                boolean available = lock.tryLock(10, 5, TimeUnit.SECONDS);
-
-                if (!available){
-                    log.info("Lock {} 획득 실패", "key:"+productId.toString());
-                    throw new IllegalStateException("Lock을 획득할 수 없습니다.");
-                }
-
-            }
-
-
-            for(UUID productId : sortedProductIds){
-                Long stock=0L;
-                Long preemption=0L;
-                // 먼저 캐시에 해당 상품의 재고 확인
-                Cache stockCache = cacheManager.getCache("stock");
-                Cache preemtionCache = cacheManager.getCache("preemption");
-
-                if(preemtionCache.get("reserved:"+productId.toString(), String.class)==null) {
-                    preemption = 0L;
-                }
-
-                // 캐싱 Hit
-                if(stockCache.get(productId.toString(), String.class) != null){
-                    log.info("캐싱 Hit!!!");
-                    stock = Long.parseLong(stockCache.get(productId.toString(), String.class));
-
-                    // 재고가 요청보다 부족
-                    if( stock-preemption < productQuantities.get(productId)){
-                        isEnoughStock = false;
-                        throw new OutOfStockException(Code.OUT_OF_STOCK);
-                    }
-                }
-                else {
-                    // 캐싱 Miss
-                    log.info("캐싱 Miss!!!");
-                    ProductResponseDto findProduct = getProduct(productId, stockCheckDto.getHubId());
-
-                    stock = findProduct.getAmount();
-
-                    if( stock-preemption < productQuantities.get(productId)){
-                        isEnoughStock = false;
-                        throw new OutOfStockException(Code.OUT_OF_STOCK);
-                    }
-                    stockCache.put(productId.toString(), stock);
-                }
-
-            }
-
-
-        } catch (InterruptedException e) {
-            throw new OrderFailExceiption(Code.ORDER_FAIL_EXCEIPTION);
-        }finally {
-            if(isEnoughStock){
-                Cache reservationCache = cacheManager.getCache("reservation");
-                Cache preemptionCache = cacheManager.getCache("preemption");
-
-                // 예약정보 캐시 저장
-                String reservationId = UUID.randomUUID().toString();
-                reservationCache.put(reservationId, stockCheckDto);
-
-                // 선점 재고 수량 캐시 저장
-                for(CheckStokProductDto p : stockCheckDto.getProducts()){
-                    Long cnt = 0L;
-                    if(preemptionCache.get("reserved:" + p.getProductId().toString()) != null){
-                        cnt = Long.parseLong(preemptionCache.get("reserved:" + p.getProductId().toString(), String.class));
-                    }
-                    preemptionCache.put("reserved:"+p.getProductId().toString(), cnt + p.getQuantity());
-                    log.info("상품: {}, 선점 수: {}",p.getProductId(), cnt+p.getQuantity());
-                }
-                log.info("예약정보 저장, 선점 저장");
-            }
-
-            // 획득한 모든 락 해제
-            for (RLock lock : locks) {
-                lock.unlock();
-            }
-        }
-
-
-        return isEnoughStock;
+        return CheckStockResponse.builder()
+                .reservations(reservations)
+                .state(stockState)
+                .build();
     }
 
 

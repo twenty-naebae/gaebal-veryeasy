@@ -11,7 +11,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderCreateKafkaDto {
+public class CreateOrderKafkaDto {
 
     private UUID orderId;
     private UUID receiverId;
