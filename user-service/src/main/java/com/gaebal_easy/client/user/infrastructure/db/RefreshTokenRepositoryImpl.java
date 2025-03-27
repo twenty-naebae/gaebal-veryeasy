@@ -1,6 +1,5 @@
-package com.gaebal_easy.client.user.infrastructure;
+package com.gaebal_easy.client.user.infrastructure.db;
 
-import com.gaebal_easy.client.user.application.service.RefreshTokenService;
 import com.gaebal_easy.client.user.domain.entity.RefreshToken;
 import com.gaebal_easy.client.user.domain.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;

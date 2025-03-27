@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.user.infrastructure;
+package com.gaebal_easy.client.user.infrastructure.db;
 
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
