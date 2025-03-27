@@ -1,4 +1,4 @@
-package com.gaebal_easy.delivery.infrastructure.delivery_repo;
+package com.gaebal_easy.delivery.infrastructure.db;
 
 import com.gaebal_easy.delivery.domain.entity.Delivery;
 import com.gaebal_easy.delivery.domain.repository.DeliveryRepository;
