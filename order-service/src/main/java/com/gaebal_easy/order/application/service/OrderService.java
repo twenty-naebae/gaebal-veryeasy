@@ -2,26 +2,20 @@ package com.gaebal_easy.order.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaebal_easy.order.application.dto.*;
-import com.gaebal_easy.order.application.service.kafka.consumer.CheckStockResponseConsumer;
-import com.gaebal_easy.order.application.service.kafka.consumer.RollbackOrderKafkaConsumer;
 import com.gaebal_easy.order.domain.entity.Order;
 import com.gaebal_easy.order.domain.entity.OrderProduct;
 import com.gaebal_easy.order.domain.enums.ReservationState;
 import com.gaebal_easy.order.domain.repository.OrderRepository;
-import com.gaebal_easy.order.infrastructure.kafka.producer.CheckStockKafkaProducer;
 import com.gaebal_easy.order.presentation.dto.ProductRequestDto;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.OrderFailExceiption;
 import gaebal_easy.common.global.exception.OrderNotFoundException;
-import gaebal_easy.common.global.exception.OutOfStockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,9 +26,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final HubClient hubClient;
     private final KafkaTemplate kafkaTemplate;
-    private final CheckStockKafkaProducer stockCheckKafkaProducer;
-    private final RollbackOrderKafkaConsumer kafkaConsumer;
-    private final CheckStockResponseConsumer checkStockResponseConsumer;
 
     public OrderResponse getOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() ->new OrderNotFoundException(Code.ORDER_NOT_FOUND_EXCEIPTION));
@@ -49,10 +40,6 @@ public class OrderService {
         return OrderResponse.from(order);
     }
 
-    // TODO: deleteOrder
-    public OrderResponse deleteOrder(UUID orderId) {
-        return null;
-    }
 
     public OrderResponse createOrder(CreateOrderDto dto)  {
         // 주문 생성
@@ -66,15 +53,7 @@ public class OrderService {
         orderRepository.save(order);
 
 
-        // 재고확인 Kafka order -> hub
-//        stockCheckKafkaProducer.checkStock(CheckStockDto.builder()
-//                        .hubId(dto.getHubId())
-//                        .orderId(order.getId())
-//                        .products(dto.getProducts())
-//                        .build());
-
         // 재고확인 FeignClient order -> hub
-        Boolean isEnough = true;
         try {
             Object obj = hubClient.checkStock(CheckStockDto.builder()
                     .hubId(dto.getHubId())
@@ -119,17 +98,6 @@ public class OrderService {
     }
 
 
-    public Boolean checkStock(CreateOrderDto dto) {
-        CheckStockDto stockCheck = CheckStockDto.builder()
-                .products(dto.getProducts())
-                .hubId(dto.getHubId())
-                .build();
-
-        ResponseEntity<?> responseEntity = hubClient.checkStock(stockCheck);
-        log.info("Check stock: {}", responseEntity.getBody());
-
-        return (Boolean) responseEntity.getBody();
-    }
 
 
 }
