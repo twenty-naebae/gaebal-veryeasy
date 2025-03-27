@@ -69,6 +69,7 @@ public enum Code {
      * Order 7000번대
      */
     ORDER_FAIL_EXCEIPTION(HttpStatus.BAD_REQUEST,7001,"주문 처리 중 에러가 발생했습니다."),
+    ORDER_NOT_FOUND_EXCEIPTION(HttpStatus.BAD_REQUEST,7002,"해당 주문이 존재하지 않습니다."),
 
     /**
      * Store 8000번대

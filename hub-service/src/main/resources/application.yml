@@ -36,8 +36,8 @@ spring:
 
 naver:
   direction5:
-    client-id: ${Client_ID}
-    client-secret: ${Client_Secret}
+    client-id: ${CLIENT_ID}
+    client-secret: ${CLIENT_SECRET}
 
 
 

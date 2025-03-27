@@ -60,7 +60,7 @@ public class UserSecurityConfig {
         http
 //                .securityMatcher("/user-service/api/login")
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user-service/api/signup", "/user-service/api/login").permitAll()
+                        .requestMatchers("/user-service/api/signup", "/user-service/api/login", "/user-service/api/getRole/**").permitAll()
                         .requestMatchers("/user-service/api/users").hasRole("MASTER")
                         .requestMatchers("/user-service/api/users/**").authenticated()
                         .requestMatchers("/error").permitAll()

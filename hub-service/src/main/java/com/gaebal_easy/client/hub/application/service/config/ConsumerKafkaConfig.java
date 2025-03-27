@@ -2,6 +2,8 @@ package com.gaebal_easy.client.hub.application.service.config;
 
 import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.KafkaOrderStoreInfoDto;
 import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.KafkaStoreCreateDto;
+import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.StoreInfoKafkaDTO;
+import com.gaebal_easy.client.hub.application.dto.kafkaProducerDto.KafkaRequireAddressToHubDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -36,7 +38,7 @@ public class ConsumerKafkaConfig {
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
-        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, KafkaStoreCreateDto.class);
+        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, StoreInfoKafkaDTO.class);
         configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
         return new DefaultKafkaConsumerFactory<>(configProps);
@@ -54,12 +56,12 @@ public class ConsumerKafkaConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, KafkaOrderStoreInfoDto> orderStoreInfoConsumerFactory() {
-        return createConsumerFactory(KafkaOrderStoreInfoDto.class);
+    public ConsumerFactory<String, StoreInfoKafkaDTO> orderStoreInfoConsumerFactory() {
+        return createConsumerFactory(StoreInfoKafkaDTO.class);
     }
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, KafkaOrderStoreInfoDto> orderStoreInfoKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, KafkaOrderStoreInfoDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, StoreInfoKafkaDTO> orderStoreInfoKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, StoreInfoKafkaDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(orderStoreInfoConsumerFactory());
         factory.setCommonErrorHandler(errorHandler());
         return factory;

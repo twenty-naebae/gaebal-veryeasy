@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 public class RedissonConfig {
 
     private static final String REDISSON_HOST_PREFIX = "redis://";
-    @Value("")
 
     @Bean
     public RedissonClient redissonClient() {

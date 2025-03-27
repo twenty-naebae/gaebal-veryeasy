@@ -26,8 +26,8 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://delivery-mariadb:3306/delivery-database?useSSL=false
-      SPRING_DATASOURCE_USERNAME: gaebal
+      DB_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: deliveryUser
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
@@ -35,6 +35,8 @@ services:
       REDIS_PORT: 6379
       EUREKA_SERVER: http://eureka-server:19090/eureka
       MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     networks:

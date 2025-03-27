@@ -38,7 +38,6 @@ public class Store extends BaseTimeEntity {
 	@Enumerated(value = EnumType.STRING)
 	private StoreType type;
 
-	@Column(nullable = false)
 	private UUID hubId;
 
 	private String address;
@@ -46,11 +45,10 @@ public class Store extends BaseTimeEntity {
 	@Column(nullable = false)
 	private Long managerId;
 
-	public static Store create(UUID hubId, Long managerId, StoreRequest.postStoreRequest request) {
+	public static Store create(Long managerId, StoreRequest.postStoreRequest request) {
 		return Store.builder()
 			.name(request.getName())
 			.type(request.getType())
-			.hubId(hubId)
 			.address(request.getAddress())
 			.managerId(managerId)
 			.build();
@@ -62,6 +60,10 @@ public class Store extends BaseTimeEntity {
 		this.hubId = request.getHubId();
 		this.address = request.getAddress();
 		this.managerId = request.getManagerId();
+	}
+
+	public void updateHubId(UUID hubId) {
+		this.hubId = hubId;
 	}
 
 }

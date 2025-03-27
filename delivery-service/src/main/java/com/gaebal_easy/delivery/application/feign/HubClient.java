@@ -4,16 +4,15 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "hub-service", url = "http://hub-backend:19095")
+@FeignClient(name = "hub-service", contextId = "hubDeliveryClient")
 public interface HubClient {
-
-    @GetMapping("/hub-service/api/route")
-    HubRouteDto getRoute(@RequestParam("depart") String depart,
-                         @RequestParam("arrive") String arrive);
-    @GetMapping("/hub-service/api/direct")
+    @GetMapping("hub-service/api/route-feign")
+    HubRouteDto getHubRoute(@RequestParam("depart") String depart,
+        @RequestParam("arrive") String arrive);
+    @GetMapping("hub-service/api/direct")
     HubDirectDto getDirectHub(@RequestParam("depart") String depart,
                          @RequestParam("arrive") String arrive);
 
-    @GetMapping("/hub-service/api/coordinate")
+    @GetMapping("hub-service/api/coordinate")
     HubLocationDto getCoordinate(@RequestParam("hubName") String hubName);
 }

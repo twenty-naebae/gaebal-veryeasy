@@ -6,9 +6,9 @@ spring:
   application:
     name: delivery-service
   datasource:
-    url: ${DB_URL}?useSSL=false
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+    username: deliveryUser
+    password: 19890422pkl!
     driver-class-name: org.mariadb.jdbc.Driver
 
   # Redis
@@ -16,13 +16,13 @@ spring:
     redis:
       host: redis
       port: ${REDIS_PORT}
-      username: default
-      password: systempass
+#      username: default
+#      password: systempass
 
   # Kafka
   kafka:
-    url: ${KAFKA_URL}
-    bootstrap-servers: ${KAFKA_URL}
+    url: ${KAFKA_BOOTSTRAP_SERVERS}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -47,8 +47,8 @@ eureka:
 
 naver:
   direction5:
-    client-id: ${Client_ID}
-    client-secret: ${Client_Secret}
+    client-id: ${CLIENT_ID}
+    client-secret: ${CLIENT_SECRET}
 
 jwt:
   secret: ${JWT_SECRET}
