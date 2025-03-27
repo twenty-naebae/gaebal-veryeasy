@@ -5,11 +5,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockResponse;
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.ReservationDto;
 import com.gaebal_easy.client.hub.application.service.HubService;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
 import com.gaebal_easy.client.hub.domain.entity.HubProductList;
 import com.gaebal_easy.client.hub.domain.entity.Reservation;
+import com.gaebal_easy.client.hub.domain.enums.ReservationState;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
 import com.gaebal_easy.client.hub.domain.repository.HubRepository;
 import com.gaebal_easy.client.hub.domain.repository.ReservationRepository;
@@ -26,6 +29,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -48,6 +52,8 @@ public class CheckStockKafkaConsumer {
 
             ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
+            ArrayList<ReservationDto> reservations = new ArrayList<>();
+            ReservationState stockState = ReservationState.RESERVE;
             UUID reservationId = UUID.randomUUID();
 
             for(int i=0; i<stockCheckDto.getProducts().size(); i++) {
@@ -64,39 +70,60 @@ public class CheckStockKafkaConsumer {
                     ops.set("stock:" +productId, stock.toString());
                 }
 
+                // 예약 생성
+                Reservation reservation = Reservation.builder()
+                        .reservationId(reservationId)
+                        .orderId(stockCheckDto.getOrderId())
+                        .productId(productId)
+                        .quantity(product.getQuantity())
+                        .state(ReservationState.RESERVE)
+                        .build();
+
 
                 // 재고 감소
                 Long tempStock = ops.decrement("stock:" + productId.toString(), product.getQuantity());
 
+                log.info("product {}, 재고 {}",productId, tempStock);
+                if(tempStock == 0) {
+                    log.info("재고 리필");
+                    stockState = ReservationState.RE_FILL;
+                    reservations.add(ReservationDto.from(reservation));
+                    reservation.changeState(ReservationState.RE_FILL);
+                }
                 // 재고 부족
-                if (tempStock < 0) {
+                else if (tempStock < 0) {
+                    log.info("재고 부족");
                     // stock 캐시 롤백
                     for(int j=0; j<i+1;j++){
-                        CheckStokProductDto rollbackProduct = stockCheckDto.getProducts().get(i);
+                        CheckStokProductDto rollbackProduct = stockCheckDto.getProducts().get(j);
                         UUID rollBakcProductId = rollbackProduct.getProductId();
+
                         ops.increment("stock:" + rollBakcProductId.toString(), rollbackProduct.getQuantity());
+                        log.info("stock 캐시 롤백 {} ++{}", rollBakcProductId, rollbackProduct.getQuantity());
                     }
 
-                    // order create 롤백 보상 트랜잭션
-                    kafkaTemplate.send("out_of_stock","order-service", stockCheckDto.getOrderId());
+                    // order create 보상 트랜잭션
+                    log.info("Order 보상 트랜잭션 요청 {}", stockCheckDto.getOrderId().toString());
+                    kafkaTemplate.send("out_of_stock","order-service", stockCheckDto.getOrderId().toString());
 
                     // reservation 테이블 롤백
                     throw new OutOfStockException(Code.OUT_OF_STOCK);
+
                 }
 
-                // 예약 저장
-                Reservation reservation = Reservation.builder()
-                        .id(reservationId)
-                        .orderId(stockCheckDto.getOrderId())
-                        .productId(productId)
-                        .quantity(product.getQuantity())
-                        .build();
-                reservationRepository.save(reservation);
 
-                kafkaTemplate.send("check_stock_response", "check", isEnoughStock);
+                reservationRepository.save(reservation);
 
 
             }
+
+
+            kafkaTemplate.send("check_stock_response", "check",objectMapper.writeValueAsString(CheckStockResponse.builder()
+                    .reservations(reservations)
+                    .state(stockState)
+                    .build()));
+
+
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
