@@ -50,4 +50,4 @@ Tools
 |:---:|:---:|:---:|:---:|
 |유저,배송담당자|상품,주문|허브,배송|슬랙,업체|
 | ![](https://github.com/kim946509.png?size=120) | ![](https://github.com/kdh610.png?size=120) | ![](https://github.com/Leewon2.png?size=120)|![](https://github.com/pkl0912.png?size=120) |
-|[김대연](https://github.com/asqwklop12)|[김도훈](https://github.com/Leewon2)|[이원희](https://github.com/kim946509)|[박경린](https://github.com/pkl0912)|
+|[김대연](https://github.com/asqwklop12)|[김도훈](https://github.com/kdh610)|[이원희](https://github.com/Leewon2)|[박경린](https://github.com/pkl0912)|
