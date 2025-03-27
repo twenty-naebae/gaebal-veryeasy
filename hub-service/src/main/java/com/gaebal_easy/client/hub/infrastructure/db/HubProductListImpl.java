@@ -1,9 +1,7 @@
-package com.gaebal_easy.client.hub.infrastructure;
+package com.gaebal_easy.client.hub.infrastructure.db;
 
 import com.gaebal_easy.client.hub.domain.entity.HubProductList;
 import com.gaebal_easy.client.hub.domain.repository.HubProductListRepository;
-import gaebal_easy.common.global.exception.Code;
-import gaebal_easy.common.global.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

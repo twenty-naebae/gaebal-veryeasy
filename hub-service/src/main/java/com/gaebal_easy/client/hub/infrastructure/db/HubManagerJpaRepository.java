@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.hub.infrastructure;
+package com.gaebal_easy.client.hub.infrastructure.db;
 
 import com.gaebal_easy.client.hub.domain.entity.HubManager;
 import org.springframework.data.domain.Sort;

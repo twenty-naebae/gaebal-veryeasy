@@ -1,4 +1,4 @@
-package com.gaebal_easy.product.infrastructure;
+package com.gaebal_easy.product.infrastructure.db;
 
 import com.gaebal_easy.product.domain.entity.Product;
 import com.gaebal_easy.product.presentation.dto.SearchProductRequest;
