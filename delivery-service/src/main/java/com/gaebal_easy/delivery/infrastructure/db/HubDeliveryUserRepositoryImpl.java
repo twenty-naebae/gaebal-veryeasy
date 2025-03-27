@@ -1,4 +1,4 @@
-package com.gaebal_easy.delivery.infrastructure.delivery_repo;
+package com.gaebal_easy.delivery.infrastructure.db;
 
 import com.gaebal_easy.delivery.domain.entity.HubDeliveryUser;
 import com.gaebal_easy.delivery.domain.repository.HubDeliveryUserRepository;
@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
