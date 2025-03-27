@@ -34,29 +34,29 @@ public class KafkaConfig {
      * Kafka Producer Factory 설정
      * 객체를 JSON 형식으로 직렬화하여 Kafka에 전송
      */
-//    @Bean
-//    public <T> ProducerFactory<String, T> producerFactory() {
-//        Map<String, Object> configProps = new HashMap<>();
-//        // Kafka 서버 주소 설정
-//        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl);
-//        // 키 직렬화 설정 (String 타입)
-//        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-//        // 값 직렬화 설정 (JSON 타입)
-//        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-//        // 모든 복제본이 메시지를 받았을 때만 성공으로 간주
-//        configProps.put(ProducerConfig.ACKS_CONFIG, "all");
-//
-//        return new DefaultKafkaProducerFactory<>(configProps);
-//    }
+    @Bean
+    public <T> ProducerFactory<String, T> producerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        // Kafka 서버 주소 설정
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl);
+        // 키 직렬화 설정 (String 타입)
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        // 값 직렬화 설정 (JSON 타입)
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        // 모든 복제본이 메시지를 받았을 때만 성공으로 간주
+        configProps.put(ProducerConfig.ACKS_CONFIG, "all");
+
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
 
     /**
      * Kafka Template 설정
      * 제네릭 타입을 사용하여 다양한 객체 타입을 지원
      */
-//    @Bean
-//    public <T> KafkaTemplate<String, T> kafkaTemplate() {
-//        return new KafkaTemplate<>(producerFactory());
-//    }
+    @Bean
+    public <T> KafkaTemplate<String, T> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
+    }
 
     /**
      * Kafka Consumer Factory 설정

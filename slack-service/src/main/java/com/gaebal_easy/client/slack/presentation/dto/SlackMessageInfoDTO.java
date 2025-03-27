@@ -26,4 +26,3 @@ public class SlackMessageInfoDTO {
 	private String deliveryManagerName;    // 배송 담당자 이름
 
 }
-

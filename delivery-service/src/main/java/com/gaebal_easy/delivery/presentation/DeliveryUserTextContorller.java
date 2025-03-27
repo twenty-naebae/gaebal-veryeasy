@@ -20,8 +20,8 @@ public class DeliveryUserTextContorller {
     @GetMapping("/test")
     public void assignMentDeliveryUser(){
         HubDeliveryUser hubDeliveryUser = deliveryUserAssignmentService.assignHubDeliveryUser();
-        StoreDeliveryUser storeDeliveryUser = deliveryUserAssignmentService.assignStoreDeliveryUser(1L);
+//        StoreDeliveryUser storeDeliveryUser = deliveryUserAssignmentService.assignStoreDeliveryUser(1L);
         log.info("Assigned hub delivery user id: " + hubDeliveryUser.getId());
-        log.info("Assigned store delivery user id: " + storeDeliveryUser.getId());
+//        log.info("Assigned store delivery user id: " + storeDeliveryUser.getId());
     }
 }

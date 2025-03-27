@@ -1,8 +1,10 @@
 package com.gaebal_easy.client.user.infrastructure.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gaebal_easy.client.user.application.service.LogoutService;
 import com.gaebal_easy.client.user.application.service.RefreshTokenService;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
+import com.gaebal_easy.client.user.infrastructure.jwt.CustomLogoutFilter;
 import com.gaebal_easy.client.user.infrastructure.jwt.JWTUtil;
 import com.gaebal_easy.client.user.infrastructure.jwt.LoginFilter;
 import gaebal_easy.common.global.enums.Role;
@@ -16,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -27,15 +30,15 @@ public class UserSecurityConfig {
     private final ObjectMapper objectMapper;
     private final RefreshTokenService refreshTokenService;
     private final GlobalSecurityContextFilter globalSecurityContextFilter;
-//    private final LogoutService logoutService;
+    private final LogoutService logoutService;
 
     public UserSecurityConfig(AuthenticationConfiguration authenticationConfiguration,
                               JWTUtil jwtUtil,
                               RefreshTokenService refreshTokenService,
                               UserRepository userRepository,
                               ObjectMapper objectMapper,
-                              GlobalSecurityContextFilter globalSecurityContextFilter
-//                          LogoutService logoutService
+                              GlobalSecurityContextFilter globalSecurityContextFilter,
+                              LogoutService logoutService
     ) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
@@ -43,7 +46,7 @@ public class UserSecurityConfig {
         this.userRepository = userRepository;
         this.objectMapper = objectMapper;
         this.globalSecurityContextFilter = globalSecurityContextFilter;
-//        this.logoutService = logoutService;
+        this.logoutService = logoutService;
 
     }
 
@@ -57,7 +60,7 @@ public class UserSecurityConfig {
         http
 //                .securityMatcher("/user-service/api/login")
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user-service/api/signup", "/user-service/api/login").permitAll()
+                        .requestMatchers("/user-service/api/signup", "/user-service/api/login", "/user-service/api/getRole/**").permitAll()
                         .requestMatchers("/user-service/api/users").hasRole("MASTER")
                         .requestMatchers("/user-service/api/users/**").authenticated()
                         .requestMatchers("/error").permitAll()
@@ -76,6 +79,11 @@ public class UserSecurityConfig {
                 .addFilterBefore(globalSecurityContextFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        //로그아웃 필터 추가
+        http
+                .addFilterBefore(new CustomLogoutFilter(objectMapper, refreshTokenService,logoutService ), LogoutFilter.class);
+
 
         return http.build();
     }

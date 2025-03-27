@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaebal_easy.client.slack.application.service.GeminiService;
+import com.gaebal_easy.client.slack.application.service.SlackMessageService;
+import com.gaebal_easy.client.slack.presentation.dto.SendSlackMessageDTO;
 import com.gaebal_easy.client.slack.presentation.dto.SlackMessageInfoDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class SlackMessageListener {
 
 	private final GeminiService geminiService;
 	private final ObjectMapper objectMapper;
+	private final SlackMessageService slackMessageService;
 
 	@KafkaListener(topics = "delivery-assigned-topic", groupId = "slack-message-group")
 	public void listen(String event) {
@@ -31,6 +34,17 @@ public class SlackMessageListener {
 			log.info("Received message from Kafka: {}", slackMessageInfoDTO);
 		} catch (JsonProcessingException e) {
 			log.error("Error deserializing Kafka message", e);
+		}
+	}
+
+	@KafkaListener(topics = "slack-message-topic", groupId = "slack_group")
+	public void consume(String event) {
+		try {
+			// Slack 메시지 전송
+			SendSlackMessageDTO sendSlackMessageDTO = objectMapper.readValue(event, SendSlackMessageDTO.class);
+			slackMessageService.sendMessage(sendSlackMessageDTO.getMessage(), sendSlackMessageDTO.getSlackUserId());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

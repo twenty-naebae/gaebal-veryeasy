@@ -1,6 +1,5 @@
 package com.gaebal_easy.client.hub.domain.entity;
 
-import brave.internal.Nullable;
 import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

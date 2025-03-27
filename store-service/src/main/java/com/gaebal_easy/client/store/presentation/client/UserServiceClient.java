@@ -1,9 +1,8 @@
-package com.gaebal_easy.client.store.presentation;
+package com.gaebal_easy.client.store.presentation.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import gaebal_easy.common.global.enums.Role;
 
@@ -11,5 +10,5 @@ import gaebal_easy.common.global.enums.Role;
 public interface UserServiceClient {
 
 	@GetMapping("user-service/api/getRole/{managerId}")
-	Role getUserRole(@RequestHeader("access") String access,@PathVariable("managerId") Long managerId);
+	Role getUserRole(@PathVariable("managerId") Long managerId);
 }
