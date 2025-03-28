@@ -25,7 +25,6 @@ public class DeliveryUserEventService {
     public void rollbackDeliveryUserInfo(DeliveryUserInfoMessage deliveryUserInfoMessage) {
         User user  = userRepository.findById(deliveryUserInfoMessage.getUserId()).orElseThrow(() -> new CanNotFindUserException());
         userRepository.delete(user,deliveryUserInfoMessage.getErrorLocation());
-        log.info("회원가입 유저 생성 롤백 완료. 유저 삭제");
     }
 
     @Transactional

@@ -43,7 +43,6 @@ public class UserController {
         return ResponseEntity.ok(ApiResponseData.success(null, "유저 정보가 삭제되었습니다."));
     }
 
-    // 전체 유저조회. 마스터만 가능
     @GetMapping("/users")
     public ResponseEntity<ApiResponseData<List<UserInfoResponse>>> getAllUserInfo(
             @RequestParam(required = false) Role role,
@@ -52,7 +51,6 @@ public class UserController {
         return ResponseEntity.ok(ApiResponseData.success(userService.getAllUserInfo(role, sort), "유저 정보 조회에 성공하였습니다."));
     }
 
-    // 특정 유저조회. 마스터 및 해당 유저만 가능
     @GetMapping("/users/{userId}")
     public ResponseEntity<ApiResponseData<UserInfoResponse>> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long userId){
         return ResponseEntity.ok(ApiResponseData.success(userService.getUserInfo(customUserDetails, userId), "유저 정보 조회에 성공하였습니다."));

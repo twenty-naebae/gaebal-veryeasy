@@ -1,7 +1,11 @@
 package com.gaebal_easy.client.user.application.dto;
 
 import gaebal_easy.common.global.dto.BaseMessage;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PUBLIC) // 직렬화할때 기본생성자 필요함.

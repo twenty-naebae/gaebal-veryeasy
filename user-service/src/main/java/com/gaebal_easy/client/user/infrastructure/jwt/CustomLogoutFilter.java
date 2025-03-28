@@ -39,10 +39,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         try {
             String refresh = refreshTokenService.getRefreshTokenFromCookie(request);
-            // 🔥 Service에서 모든 검증 & 삭제 처리
             logoutService.logout(refresh);
-
-            // 로그아웃 성공 시 쿠키 삭제
             refreshTokenService.removeRefreshTokenCookie(response);
             sendSuccessResponse(response, HttpServletResponse.SC_OK, "성공적으로 로그아웃 되었습니다.");
         } catch (RequiredArgumentException e) {
@@ -56,7 +53,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
     }
 
-    // 성공 응답을 생성하는 메서드
     private void sendSuccessResponse(HttpServletResponse response, int status, String message) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -64,7 +60,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         response.getWriter().write(objectMapper.writeValueAsString(ApiResponseData.success(null,message)));
     }
 
-    // 에러 응답을 생성하는 메서드
     private void sendErrorResponse(HttpServletResponse response, int status, String message, Code code) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

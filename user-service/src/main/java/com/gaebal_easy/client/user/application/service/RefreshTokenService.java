@@ -21,13 +21,11 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JWTUtil jwtUtil;
 
-    // refresh 토큰 저장 메서드
     @Transactional
     public void saveRefreshToken(RefreshToken refreshToken) {
         refreshTokenRepository.save(refreshToken);
     }
 
-    // 쿠키에서 refresh 토큰 삭제
     public void removeRefreshTokenCookie(HttpServletResponse response) {
         Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0);
@@ -35,7 +33,6 @@ public class RefreshTokenService {
         response.addCookie(cookie);
     }
 
-    // 쿠키에서 refresh 토큰 가져오기
     public String getRefreshTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -48,21 +45,18 @@ public class RefreshTokenService {
         throw new RequiredArgumentException(Code.USER_REQUIRED_ARGUMENT_EXCEPTION,"쿠키에 refresh토큰이 존재하지 않습니다.");
     }
 
-    // refreshToken을 검증한뒤 return한다.
     public RefreshToken getRefreshTokenAfterCheck(String refreshToken){
         checkExpired(refreshToken);
         checkRefreshTokenCategory(refreshToken);
         return getRefreshTokenInDB(refreshToken);
     }
 
-    // RefreshToken만료 여부 확인
     private void checkExpired(String refreshToken){
         if (jwtUtil.isExpired(refreshToken)) {
             throw new ExpiredTokenException(Code.USER_EXPIRED_TOKEN);
         }
     }
 
-    // RefreshToken이 맞는지 확인
     private void checkRefreshTokenCategory(String refreshToken){
         String category = jwtUtil.getCategory(refreshToken);
         if (!"refresh".equals(category)) {
@@ -70,7 +64,6 @@ public class RefreshTokenService {
         }
     }
 
-    // RefreshToken이 DB에 존재하는지 확인
     public RefreshToken getRefreshTokenInDB(String refreshToken){
         return refreshTokenRepository.getRefreshTokenByValue(refreshToken)
                 .orElseThrow(()->new CanNotFindTokenException(Code.USER_CAN_NOT_FIND_TOKEN));

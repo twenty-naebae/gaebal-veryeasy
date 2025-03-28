@@ -27,7 +27,6 @@ public class HubManagerEventService {
         log.info("유저 롤백 완료");
     }
 
-    // hub-manager-delete 롤백
     @Transactional
     public void rollbackHubMangerDelete(HubManagerDeleteMessage hubManagerDeleteMessage) {
         User user = userRepository.findById(hubManagerDeleteMessage.getUserId()).orElseThrow(() -> new CanNotFindUserException());

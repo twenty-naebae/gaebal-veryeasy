@@ -26,7 +26,6 @@ public class JoinService {
 
     @Transactional
     public void join(JoinRequest joinRequest) {
-        // username 중복 체크
         checkExistsUsername(joinRequest.getUsername());
         joinRequest.setPassword(bCryptPasswordEncoder.encode(joinRequest.getPassword()));
         User user = new User(joinRequest);
