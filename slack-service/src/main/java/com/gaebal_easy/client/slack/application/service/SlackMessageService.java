@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gaebal_easy.client.slack.domain.entity.SlackMessage;
 import com.gaebal_easy.client.slack.domain.repository.SlackMessageRepository;
 import com.gaebal_easy.client.slack.exception.SlackMessageException;
-import com.gaebal_easy.client.slack.presentation.dto.SlackMessageDTO;
-import com.gaebal_easy.client.slack.presentation.dto.SlackResponse;
+import com.gaebal_easy.client.slack.application.dto.SlackMessageDTO;
+import com.gaebal_easy.client.slack.application.dto.SlackResponse;
 import com.slack.api.Slack;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
@@ -43,7 +43,7 @@ public class SlackMessageService {
 
 			ConversationsOpenResponse openResponse = slack.methods(slackBotToken)
 				.conversationsOpen(ConversationsOpenRequest.builder()
-					.users(Collections.singletonList(slackUserId)) //리스트 형태
+					.users(Collections.singletonList(slackUserId))
 					.build());
 
 			if (!openResponse.isOk()) {
@@ -55,7 +55,7 @@ public class SlackMessageService {
 			// 해당 DM 채널로 메시지 보내기
 			ChatPostMessageResponse messageResponse = slack.methods(slackBotToken)
 				.chatPostMessage(ChatPostMessageRequest.builder()
-					.channel(dmChannelId) // DM 채널 ID
+					.channel(dmChannelId)
 					.text(message)
 					.build());
 

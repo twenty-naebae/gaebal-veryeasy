@@ -2,9 +2,7 @@ package com.gaebal_easy.client.store.domain.entity;
 
 import java.util.UUID;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import com.gaebal_easy.client.store.presentation.dto.StoreRequest;
+import com.gaebal_easy.client.store.application.dto.StoreRequest;
 
 import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.Column;

@@ -13,7 +13,6 @@ import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.exception.HubManagerNotFoundException;
 import gaebal_easy.common.global.exception.HubNotFoundException;
 import gaebal_easy.common.global.message.HubManagerDeleteMessage;
-import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import gaebal_easy.common.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,7 @@ public class HubManagerService {
 
     private final HubManagerRepository hubManagerRepository;
     private final HubRepository hubRepository;
-    //todo - 허브 이름 대신 hubId를 받는 방식으로 변경
+
     @Transactional
     public void createHubManager(HubManagerInfoMessage hubManagerInfoMessage) {
         Hub hub = getHub(getHubLocation(hubManagerInfoMessage.getGroup()));
@@ -70,7 +69,6 @@ public class HubManagerService {
         HubManager hubManager = hubManagerRepository.findByUserId(userId)
                 .orElseThrow(() -> new HubManagerNotFoundException(Code.HUB_CAN_NOT_FIND_HUBMANAGER));
 
-        // 마스터가 아닌 경우 해당 유저의 정보만 조회 가능
         if(!customUserDetails.getRole().equals("MASTER") && !customUserDetails.getUserId().equals(hubManager.getUserId().toString())) {
             throw new CanNotAccessInfoException(Code.HUB_CAN_NOT_ACCESS_INFO);
         }

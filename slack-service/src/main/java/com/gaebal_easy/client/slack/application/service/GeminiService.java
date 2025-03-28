@@ -13,9 +13,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gaebal_easy.client.slack.presentation.dto.SendSlackMessageDTO;
-import com.gaebal_easy.client.slack.presentation.dto.SlackMessageInfoDTO;
+import com.gaebal_easy.client.slack.application.dto.SendSlackMessageDTO;
+import com.gaebal_easy.client.slack.application.dto.SlackMessageInfoDTO;
 import com.gaebal_easy.client.slack.exception.GeminiException;
+import com.gaebal_easy.client.slack.infrastructure.adapter.out.KafkaSlackMessageProducer;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +26,7 @@ public class GeminiService {
 
 	private final WebClient aiWebClient;
 	private final SlackMessageService slackMessageService;
-	private final KafkaProducerService kafkaProducerService;
+	private final KafkaSlackMessageProducer kafkaSlackMessageProducer;
 
 	@Value("${ai.api.key}")
 	private String apiKey;
@@ -35,11 +36,10 @@ public class GeminiService {
 		String slackUserId = slackMessageInfoDTO.getSlackId();
 		String orderMessage = buildGeminiOrder(slackMessageInfoDTO);
 
-		// AI API에 보낼 payload 구성 (요청 JSON 구조)
 		Map<String, Object> payload = new HashMap<>();
 		Map<String, Object> contentMap = new HashMap<>();
 		Map<String, String> part = new HashMap<>();
-		part.put("text", orderMessage);  // 주문 정보와 요청 사항 모두 포함
+		part.put("text", orderMessage);
 		contentMap.put("parts", new Map[] {part});
 		payload.put("contents", new Map[] {contentMap});
 
@@ -54,19 +54,15 @@ public class GeminiService {
 			.retrieve()
 			.bodyToMono(String.class)
 			.doOnTerminate(() -> {
-				// 이곳에 종료 후 처리 로직을 넣을 수 있습니다. 예: 로그 남기기
 			})
 			.subscribe(responseBody -> {
-				// 응답에서 도출된 발송 시한 추출
 				String deadline = extractDeadline(responseBody);
 
-				// Slack 메시지 형식으로 변환
 				String message = buildSlackMessage(slackMessageInfoDTO, deadline);
 
-				// Slack으로 메시지 전송
 				slackMessageService.saveMesage(receiveId, message);
 				SendSlackMessageDTO sendSlackMessageDTO = SendSlackMessageDTO.builder().message(message).slackUserId(slackUserId).build();
-				kafkaProducerService.sendSlackMessage(sendSlackMessageDTO);
+				kafkaSlackMessageProducer.sendSlackMessage(sendSlackMessageDTO);
 			}, error -> {
 				// 에러 처리
 				error.printStackTrace();
@@ -118,7 +114,6 @@ public class GeminiService {
 	}
 
 	private String extractDeadline(String responseBody) {
-		// 응답 JSON 구조에서 발송 시한 추출
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode root = objectMapper.readTree(responseBody);

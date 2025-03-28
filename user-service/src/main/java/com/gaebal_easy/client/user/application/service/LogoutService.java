@@ -14,7 +14,6 @@ public class LogoutService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JWTUtil jwtUtil;
 
-    // 로그아웃 처리 한다.(리프레시 토큰 검증 및 삭제)
     @Transactional
     public void logout(String refreshToken) {
         refreshTokenRepository.deleteRefreshToken(refreshTokenService.getRefreshTokenAfterCheck(refreshToken));

@@ -1,14 +1,10 @@
 package com.gaebal_easy.client.hub.application.service.config;
 
-import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.KafkaOrderStoreInfoDto;
 import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.KafkaStoreCreateDto;
 import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.StoreInfoKafkaDTO;
-import com.gaebal_easy.client.hub.application.dto.kafkaProducerDto.KafkaRequireAddressToHubDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -17,7 +13,6 @@ import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
@@ -27,7 +22,6 @@ import java.util.Map;
 @Slf4j
 @EnableKafka
 public class ConsumerKafkaConfig {
-
 
     private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> targetType) {
         Map<String, Object> configProps = new HashMap<>();

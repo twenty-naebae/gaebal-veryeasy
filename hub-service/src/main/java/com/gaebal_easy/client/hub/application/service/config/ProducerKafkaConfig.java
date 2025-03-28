@@ -24,7 +24,6 @@ import java.util.Map;
 @EnableKafka
 public class ProducerKafkaConfig {
 
-    // 환경변수에서 Kafka 서버 주소 가져오기
     @Value("${spring.kafka.url}")
     private String kafkaServerUrl;
 
