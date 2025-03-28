@@ -3,6 +3,7 @@ package com.gaebal_easy.client.user.application.service;
 import com.gaebal_easy.client.user.application.dto.HubManagerInfoMessage;
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
+import com.gaebal_easy.client.user.presentation.adapter.out.DeliveryUserEventConsumer;
 import com.gaebal_easy.client.user.presentation.dto.JoinRequest;
 import gaebal_easy.common.global.enums.Role;
 import gaebal_easy.common.global.exception.Code;
@@ -21,6 +22,7 @@ public class JoinService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final HubManagerEventService hubManagerEventService;
     private final DeliveryUserEventService deliveryUserEventService;
+    private final DeliveryUserEventConsumer deliveryUserEventConsumer;
 
     @Transactional
     public void join(JoinRequest joinRequest) {
@@ -33,7 +35,7 @@ public class JoinService {
             hubManagerEventService.sendHubManagerInfo(HubManagerInfoMessage.of(user.getId(), joinRequest.getName(), joinRequest.getGroup()));
         }
         else if(user.getRole().equals(Role.HUB_DELIVERY_USER)|| user.getRole().equals(Role.STORE_DELIVERY_USER)){
-            deliveryUserEventService.sendDeliveryUserInfo(DeliveryUserInfoMessage.of(user.getId(), joinRequest.getName(), joinRequest.getGroup(), joinRequest.getSlackId()));
+            deliveryUserEventConsumer.sendDeliveryUserInfo(DeliveryUserInfoMessage.of(user.getId(), joinRequest.getName(), joinRequest.getGroup(), joinRequest.getSlackId()));
         }
     }
 

@@ -2,6 +2,7 @@ package com.gaebal_easy.client.user.application.service;
 
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
+import com.gaebal_easy.client.user.presentation.adapter.out.DeliveryUserEventConsumer;
 import com.gaebal_easy.client.user.presentation.dto.UserInfoResponse;
 import com.gaebal_easy.client.user.presentation.dto.UserUpdateRequest;
 import gaebal_easy.common.global.enums.Role;
@@ -29,7 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final HubManagerEventService hubManagerEventService;
-    private final DeliveryUserEventService deliveryUserEventService;
+    private final DeliveryUserEventConsumer deliveryUserEventConsumer;
 
     @Transactional
     public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
@@ -50,15 +51,13 @@ public class UserService {
 
     @Transactional
     public void deleteUser(CustomUserDetails customUserDetails, Long userId) {
-
-        // 유저 정보 삭제
         User user = userRepository.findById(userId).orElseThrow(() -> new CanNotFindUserException());
         userRepository.delete(user, customUserDetails.getUserId());
         if(user.getRole().equals(Role.HUB_MANAGER)) {
             hubManagerEventService.sendHubManagerDelete(HubManagerDeleteMessage.of(userId, customUserDetails.getUserId()));
         }
         else if(user.getRole().equals(Role.HUB_DELIVERY_USER)|| user.getRole().equals(Role.STORE_DELIVERY_USER)){
-            deliveryUserEventService.sendDeliveryUserDelete(DeliveryUserDeleteMessage.of(userId, customUserDetails.getUserId()));
+            deliveryUserEventConsumer.sendDeliveryUserDelete(DeliveryUserDeleteMessage.of(userId, customUserDetails.getUserId()));
         }
     }
 
