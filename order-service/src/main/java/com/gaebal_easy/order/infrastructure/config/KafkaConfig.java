@@ -1,4 +1,4 @@
-package com.gaebal_easy.order.infrastructure.kafka;
+package com.gaebal_easy.order.infrastructure.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

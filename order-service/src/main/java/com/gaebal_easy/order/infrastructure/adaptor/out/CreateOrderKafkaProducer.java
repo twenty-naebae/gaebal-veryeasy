@@ -1,4 +1,4 @@
-package com.gaebal_easy.order.infrastructure.kafka.producer;
+package com.gaebal_easy.order.infrastructure.adaptor.out;
 
 import com.gaebal_easy.order.application.dto.CreateOrderKafkaDto;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,6 @@ public class CreateOrderKafkaProducer {
      * @param orderCreateKafkaDto
      */
     public void createDelivery(CreateOrderKafkaDto orderCreateKafkaDto){
-        log.info("Order -> Store 배송생성 요청");
-        // 업체에 orderId, receiver, supplier 전송
         kafkaTemplate.send("order_create","order", orderCreateKafkaDto);
     }
 
