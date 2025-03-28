@@ -6,12 +6,12 @@ spring:
   application:
     name: slack-service
   datasource:
-    url: ${KAFKA_BOOTSTRAP_SERVERS}
+    url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
 
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer

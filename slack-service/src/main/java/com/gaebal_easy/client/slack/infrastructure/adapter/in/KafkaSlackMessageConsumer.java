@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.slack.presentation.kafka;
+package com.gaebal_easy.client.slack.infrastructure.adapter.in;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -7,8 +7,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaebal_easy.client.slack.application.service.GeminiService;
 import com.gaebal_easy.client.slack.application.service.SlackMessageService;
-import com.gaebal_easy.client.slack.presentation.dto.SendSlackMessageDTO;
-import com.gaebal_easy.client.slack.presentation.dto.SlackMessageInfoDTO;
+import com.gaebal_easy.client.slack.application.dto.SendSlackMessageDTO;
+import com.gaebal_easy.client.slack.application.dto.SlackMessageInfoDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SlackMessageListener {
+public class KafkaSlackMessageConsumer {
 
 	private final GeminiService geminiService;
 	private final ObjectMapper objectMapper;
@@ -26,10 +26,8 @@ public class SlackMessageListener {
 	public void listen(String event) {
 
 		try {
-			// Kafka에서 받은 event (JSON 문자열)을 SlackMessageInfoDTO 객체로 역직렬화
 			SlackMessageInfoDTO slackMessageInfoDTO = objectMapper.readValue(event, SlackMessageInfoDTO.class);
 
-			// 필요한 로직 처리 (예: geminiService 사용)
 			geminiService.generateAndSendDeadline(slackMessageInfoDTO);
 			log.info("Received message from Kafka: {}", slackMessageInfoDTO);
 		} catch (JsonProcessingException e) {
@@ -40,8 +38,8 @@ public class SlackMessageListener {
 	@KafkaListener(topics = "slack-message-topic", groupId = "slack_group")
 	public void consume(String event) {
 		try {
-			// Slack 메시지 전송
 			SendSlackMessageDTO sendSlackMessageDTO = objectMapper.readValue(event, SendSlackMessageDTO.class);
+
 			slackMessageService.sendMessage(sendSlackMessageDTO.getMessage(), sendSlackMessageDTO.getSlackUserId());
 		} catch (Exception e) {
 			e.printStackTrace();
