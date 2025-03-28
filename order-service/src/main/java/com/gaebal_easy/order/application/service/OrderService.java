@@ -44,8 +44,8 @@ public class OrderService {
     public OrderResponse createOrder(CreateOrderDto dto)  {
         // 주문 생성
         Long totalPrice = calculateTotalPrice(dto);
-        Order order = Order.create(dto.getSupplierId(), dto.getReceiverId(), dto.getOrderRequest(), dto.getAddress(), totalPrice);
 
+        Order order = Order.create(dto.getSupplierId(), dto.getReceiverId(), dto.getOrderRequest(), dto.getAddress(), totalPrice);
         for(ProductRequestDto product: dto.getProducts()){
             OrderProduct orderProduct = OrderProduct.create(product.getProductId(), product.getQuantity());
             order.addOrderProduct(orderProduct);
@@ -63,7 +63,6 @@ public class OrderService {
 
             ObjectMapper objectMapper = new ObjectMapper();
             CheckStockResponse response = objectMapper.convertValue(obj, CheckStockResponse.class);
-            log.info("재고 확인 결과: {}", response.toString());
 
             if(!response.getState().equals(ReservationState.OUT_OF_STOCK)) {
                 // 허브에 선점했던 재고 확정 처리 요청. Kafka: Order -> Hub
@@ -81,9 +80,7 @@ public class OrderService {
                 }
             }
 
-
         }catch(Exception e){
-
             throw new OrderFailExceiption(Code.ORDER_FAIL_EXCEIPTION);
         }
         return OrderResponse.from(order);
