@@ -1,6 +1,5 @@
 package com.gaebal_easy.client.hub.application.dto.kafkaProducerDto;
 
-import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.KafkaOrderStoreInfoDto;
 import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.ProductRequestDto;
 import com.gaebal_easy.client.hub.application.dto.kafkaConsumerDto.StoreInfoKafkaDTO;
 import com.gaebal_easy.client.hub.domain.entity.Hub;

@@ -1,10 +1,9 @@
-package com.gaebal_easy.client.hub.presentation;
+package com.gaebal_easy.client.hub.presentation.adapter.in;
 
 import com.gaebal_easy.client.hub.application.service.HubManagerService;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoResposne;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerUpdateRequest;
 import gaebal_easy.common.global.dto.ApiResponseData;
-import gaebal_easy.common.global.enums.Role;
 import gaebal_easy.common.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
