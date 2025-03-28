@@ -1,4 +1,4 @@
-package com.gaebal_easy.order.infrastructure.adaptor.in;
+package com.gaebal_easy.order.infrastructure.adapter.in;
 
 import com.gaebal_easy.order.application.service.consumer.RollbackOrderService;
 import lombok.RequiredArgsConstructor;

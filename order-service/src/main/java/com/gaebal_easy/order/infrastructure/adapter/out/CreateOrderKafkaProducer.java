@@ -1,4 +1,4 @@
-package com.gaebal_easy.order.infrastructure.adaptor.out;
+package com.gaebal_easy.order.infrastructure.adapter.out;
 
 import com.gaebal_easy.order.application.dto.CreateOrderKafkaDto;
 import lombok.RequiredArgsConstructor;
