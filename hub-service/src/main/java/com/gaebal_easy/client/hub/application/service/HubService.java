@@ -2,10 +2,10 @@ package com.gaebal_easy.client.hub.application.service;
 
 import com.gaebal_easy.client.hub.application.dto.HubLocationDto;
 import com.gaebal_easy.client.hub.application.dto.HubResponseDto;
-import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockResponse;
-import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
 import com.gaebal_easy.client.hub.application.dto.ProductResponseDto;
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockDto;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStockResponse;
+import com.gaebal_easy.client.hub.application.dto.checkStockDto.CheckStokProductDto;
 import com.gaebal_easy.client.hub.application.dto.checkStockDto.ReservationDto;
 import com.gaebal_easy.client.hub.domain.entity.Hub;
 import com.gaebal_easy.client.hub.domain.entity.HubProductList;
@@ -86,27 +86,28 @@ public class HubService {
     @Transactional
     public CheckStockResponse checkStock(CheckStockDto stockCheckDto){
 
-        ValueOperations<String, String> ops = redisTemplate.opsForValue();
-
         ArrayList<ReservationDto> reservations = new ArrayList<>();
         ReservationState stockState = ReservationState.RESERVE;
-        UUID reservationId = UUID.randomUUID();
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
         for(int i=0; i<stockCheckDto.getProducts().size(); i++) {
             CheckStokProductDto product = stockCheckDto.getProducts().get(i);
             UUID productId = product.getProductId();
-            String cacheStock = ops.get("stock:" + productId);
 
+            String cacheStock = ops.get("stock:" + productId);
             if (cacheStock == null) {
                 // 캐싱 Miss
-                log.info("캐싱 Miss!!!");
                 ProductResponseDto findProduct = getProduct(productId, stockCheckDto.getHubId());
                 Long stock = findProduct.getAmount();
 
                 ops.set("stock:" +productId, stock.toString());
             }
 
+            // 재고 감소
+            Long tempStock = ops.decrement("stock:" + productId.toString(), product.getQuantity());
+
             // 예약 생성
+            UUID reservationId = UUID.randomUUID();
             Reservation reservation = Reservation.builder()
                     .reservationId(reservationId)
                     .orderId(stockCheckDto.getOrderId())
@@ -115,42 +116,23 @@ public class HubService {
                     .state(ReservationState.RESERVE)
                     .build();
 
-
-            // 재고 감소
-            Long tempStock = ops.decrement("stock:" + productId.toString(), product.getQuantity());
-
-            log.info("product {}, 재고 {}",productId, tempStock);
             if(tempStock == 0) {
-                log.info("재고 리필");
                 stockState = ReservationState.RE_FILL;
                 reservations.add(ReservationDto.from(reservation));
                 reservation.changeState(ReservationState.RE_FILL);
             }
-            // 재고 부족
             else if (tempStock < 0) {
-                log.info("재고 부족");
                 // stock 캐시 롤백
-                for(int j=0; j<i+1;j++){
-                    CheckStokProductDto rollbackProduct = stockCheckDto.getProducts().get(j);
-                    UUID rollBakcProductId = rollbackProduct.getProductId();
-
-                    ops.increment("stock:" + rollBakcProductId.toString(), rollbackProduct.getQuantity());
-                    log.info("stock 캐시 롤백 {} ++{}", rollBakcProductId, rollbackProduct.getQuantity());
-                }
+                rollbackStockCache(stockCheckDto, i, ops);
 
                 // order create 보상 트랜잭션
-                log.info("Order 보상 트랜잭션 요청 {}", stockCheckDto.getOrderId().toString());
                 kafkaTemplate.send("out_of_stock","order-service", stockCheckDto.getOrderId().toString());
 
                 // reservation 테이블 롤백
                 throw new OutOfStockException(Code.OUT_OF_STOCK);
-
             }
 
-
             reservationRepository.save(reservation);
-
-
         }
 
         return CheckStockResponse.builder()
@@ -159,6 +141,14 @@ public class HubService {
                 .build();
     }
 
+    private static void rollbackStockCache(CheckStockDto stockCheckDto, int i, ValueOperations<String, String> ops) {
+        for(int j = 0; j< i +1; j++){
+            CheckStokProductDto rollbackProduct = stockCheckDto.getProducts().get(j);
+            UUID rollBakcProductId = rollbackProduct.getProductId();
+
+            ops.increment("stock:" + rollBakcProductId.toString(), rollbackProduct.getQuantity());
+        }
+    }
 
 
 }
