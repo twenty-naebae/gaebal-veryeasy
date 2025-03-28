@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gaebal_easy.client.store.application.service.StoreService;
-import com.gaebal_easy.client.store.presentation.dto.StoreRequest;
-import com.gaebal_easy.client.store.presentation.dto.StoreResponse;
+import com.gaebal_easy.client.store.application.dto.StoreRequest;
+import com.gaebal_easy.client.store.application.dto.StoreResponse;
 
 import gaebal_easy.common.global.dto.ApiResponseData;
 import lombok.RequiredArgsConstructor;

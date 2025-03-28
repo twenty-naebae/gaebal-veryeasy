@@ -1,14 +1,14 @@
-package com.gaebal_easy.client.store.presentation.kafka;
+package com.gaebal_easy.client.store.infrastructure.adapter.in;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gaebal_easy.client.store.application.service.KafkaProducerService;
+import com.gaebal_easy.client.store.infrastructure.adapter.out.KafkaStoreProducer;
 import com.gaebal_easy.client.store.application.service.StoreService;
-import com.gaebal_easy.client.store.presentation.dto.KafkaStoreCreateAssignDto;
-import com.gaebal_easy.client.store.presentation.dto.OrderCreateKafkaDto;
+import com.gaebal_easy.client.store.application.dto.KafkaStoreCreateAssignDto;
+import com.gaebal_easy.client.store.application.dto.OrderCreateKafkaDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StoreListener {
+public class KafkaStoreConsumer {
 
 	private final ObjectMapper objectMapper;
 	private final StoreService storeService;
-	private final KafkaProducerService kafkaProducerService;
+	private final KafkaStoreProducer kafkaStoreProducer;
 
 	@KafkaListener(topics = "order_create", groupId = "store-group")
 	public void listen(String event) {

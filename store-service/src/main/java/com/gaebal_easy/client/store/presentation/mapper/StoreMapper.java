@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gaebal_easy.client.store.domain.entity.Store;
-import com.gaebal_easy.client.store.presentation.dto.SearchedStoreDTO;
-import com.gaebal_easy.client.store.presentation.dto.StoreDTO;
+import com.gaebal_easy.client.store.application.dto.SearchedStoreDTO;
+import com.gaebal_easy.client.store.application.dto.StoreDTO;
 
 public class StoreMapper {
 

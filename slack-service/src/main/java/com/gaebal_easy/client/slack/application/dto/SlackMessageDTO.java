@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.slack.presentation.dto;
+package com.gaebal_easy.client.slack.application.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -3,7 +3,6 @@ package com.gaebal_easy.client.store.application.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.checkerframework.checker.units.qual.K;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,19 +10,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gaebal_easy.client.store.presentation.dto.KafkaStoreCreateAssignDto;
-import com.gaebal_easy.client.store.presentation.dto.KafkaStoreCreateDto;
+import com.gaebal_easy.client.store.infrastructure.adapter.out.KafkaStoreProducer;
+import com.gaebal_easy.client.store.application.dto.KafkaStoreCreateAssignDto;
+import com.gaebal_easy.client.store.application.dto.KafkaStoreCreateDto;
 import com.gaebal_easy.client.store.presentation.mapper.StoreMapper;
 import com.gaebal_easy.client.store.domain.entity.Store;
 import com.gaebal_easy.client.store.domain.repository.StoreRepository;
 import com.gaebal_easy.client.store.exception.StoreException;
-import com.gaebal_easy.client.store.presentation.client.UserServiceClient;
-import com.gaebal_easy.client.store.presentation.dto.OrderCreateKafkaDto;
-import com.gaebal_easy.client.store.presentation.dto.SearchedStoreDTO;
-import com.gaebal_easy.client.store.presentation.dto.StoreDTO;
-import com.gaebal_easy.client.store.presentation.dto.StoreInfoKafkaDTO;
-import com.gaebal_easy.client.store.presentation.dto.StoreRequest;
-import com.gaebal_easy.client.store.presentation.dto.StoreResponse;
+import com.gaebal_easy.client.store.infrastructure.adapter.out.UserServiceWebClient;
+import com.gaebal_easy.client.store.application.dto.OrderCreateKafkaDto;
+import com.gaebal_easy.client.store.application.dto.SearchedStoreDTO;
+import com.gaebal_easy.client.store.application.dto.StoreDTO;
+import com.gaebal_easy.client.store.application.dto.StoreInfoKafkaDTO;
+import com.gaebal_easy.client.store.application.dto.StoreRequest;
+import com.gaebal_easy.client.store.application.dto.StoreResponse;
 
 import gaebal_easy.common.global.enums.Role;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +33,8 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class StoreService {
 	private final StoreRepository storeRepository;
-	private final KafkaProducerService kafkaProducerService;
-	private final UserServiceClient userServiceClient;
+	private final KafkaStoreProducer kafkaStoreProducer;
+	private final UserServiceWebClient userServiceWebClient;
 
 	@Transactional(readOnly = true)
 	public StoreResponse.getStoreListResponse getStoreList(UUID hubId, int page, int size) {
@@ -55,11 +55,11 @@ public class StoreService {
 	}
 
 	public StoreResponse.postStoreResponse postStore(Long managerId, StoreRequest.postStoreRequest request) {
-		Role managerRole = userServiceClient.getUserRole(managerId);
+		Role managerRole = userServiceWebClient.getUserRole(managerId);
 		if(managerRole != Role.STORE_MANAGER) throw new StoreException.StoreManagerNotFoundException();
 		Store store = Store.create(managerId, request);
 		Store createdStore = storeRepository.save(store);
-		kafkaProducerService.sendStoreCreate(new KafkaStoreCreateDto(createdStore.getId(), createdStore.getAddress()));
+		kafkaStoreProducer.sendStoreCreate(new KafkaStoreCreateDto(createdStore.getId(), createdStore.getAddress()));
 		return StoreResponse.postStoreResponse.builder().id(createdStore.getId()).build();
 	}
 
@@ -109,7 +109,7 @@ public class StoreService {
 			.receiverAddress(receiverStore.getAddress())
 			.supplierName(supplierStore.getName())
 			.build();
-		kafkaProducerService.sendStoreInfo(storeInfoKafkaDTO);
+		kafkaStoreProducer.sendStoreInfo(storeInfoKafkaDTO);
 	}
 	public void addStoreHubInfo(KafkaStoreCreateAssignDto kafkaStoreCreateAssignDto){
 		Store store = getStore(kafkaStoreCreateAssignDto.getStoreId());

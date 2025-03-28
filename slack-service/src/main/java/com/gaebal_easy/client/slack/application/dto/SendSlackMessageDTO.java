@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.slack.presentation.dto;
+package com.gaebal_easy.client.slack.application.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

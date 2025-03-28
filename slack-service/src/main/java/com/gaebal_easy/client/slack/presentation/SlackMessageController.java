@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gaebal_easy.client.slack.application.service.GeminiService;
 import com.gaebal_easy.client.slack.application.service.SlackMessageService;
-import com.gaebal_easy.client.slack.presentation.dto.SlackMessageInfoDTO;
-import com.gaebal_easy.client.slack.presentation.dto.SlackResponse;
+import com.gaebal_easy.client.slack.application.dto.SlackMessageInfoDTO;
+import com.gaebal_easy.client.slack.application.dto.SlackResponse;
 
 import gaebal_easy.common.global.dto.ApiResponseData;
 import lombok.RequiredArgsConstructor;

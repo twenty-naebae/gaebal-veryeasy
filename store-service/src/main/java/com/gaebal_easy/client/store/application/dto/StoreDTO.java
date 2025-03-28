@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.store.presentation.dto;
+package com.gaebal_easy.client.store.application.dto;
 
 import java.util.UUID;
 
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SearchedStoreDTO {
+public class StoreDTO {
 	private UUID id;
 	private String name;
 	private UUID hubId;
