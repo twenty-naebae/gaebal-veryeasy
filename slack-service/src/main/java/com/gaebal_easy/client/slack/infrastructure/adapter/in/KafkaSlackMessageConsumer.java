@@ -36,7 +36,7 @@ public class KafkaSlackMessageConsumer {
 		}
 	}
 
-	@KafkaListener(topics = "slack-message-topic", groupId = "slack_group")
+	@KafkaListener(topics = "slack-message-topic", groupId = "slack_group", concurrency = "3")
 	public void consume(String event) {
 		try {
 			SendSlackMessageDTO sendSlackMessageDTO = objectMapper.readValue(event, SendSlackMessageDTO.class);
