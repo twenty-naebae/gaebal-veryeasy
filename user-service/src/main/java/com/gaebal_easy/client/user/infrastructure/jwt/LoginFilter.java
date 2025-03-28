@@ -39,7 +39,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final RefreshTokenService refreshTokenService;
     private final Long EXPIRED_MS = 86400000L*100L; //todo - 토큰 만료시간 변경 필요
 
-    // 생성자에서 경로 설정
     public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshTokenService refreshTokenService, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
@@ -48,7 +47,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.userRepository = userRepository;
     }
 
-    //로그인 시도를 받아서 AuthenticationManager에게 전달한다.
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
@@ -62,7 +60,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             loginRequest = objectMapper.readValue(messageBody, LoginRequest.class);//json을 객체로 변환
         }
 
-        //json에 없는 필드가 들어왔을 때 400 에러를 반환
         catch (UnrecognizedPropertyException e) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             throw new RequiredArgumentException(Code.USER_REQUIRED_ARGUMENT_EXCEPTION,"아이디, 비밀번호를 모두 입력해주세요");
@@ -72,19 +69,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
-
-        //authenticationManager에게 username과 password를 검증하라고 요청
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
 
         return authenticationManager.authenticate(authToken);
     }
 
-    // 로그인 성공 시 실행되는 메소드
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authentication) {
 
-        //유저 정보
         User user = userRepository.findByUsername(authentication.getName());
 
         //반복자를 이용하여 role을 획득
@@ -93,21 +86,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
             String role = auth.getAuthority();
 
-        //토큰 생성
         String accessToken = jwtUtil.createJwt("access", user.getId(), role, EXPIRED_MS);
         String refreshToken = jwtUtil.createJwt("refresh", user.getId(), role, EXPIRED_MS);
 
-        //Refresh 토큰 저장
         addRefreshToken(user.getId(), refreshToken, EXPIRED_MS);
 
-        //응답 설정
         response.setHeader("access", accessToken);
         response.addCookie(createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
     }
 
-
-    // 로그인 실패 시 실행되는 메소드
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException {
@@ -115,26 +103,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // 실패 응답 객체 생성
         ResponseEntity<ApiResponseData<String>> responseBody = ResponseEntity.badRequest().body(ApiResponseData.failure(Code.ACCESS_DENIED_EXCEPTION.getCode(), "아이디 혹은 비밀번호를 다시 입력해주세요"));
-
-        // JSON 변환 후 출력
         ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(responseBody.getBody()));
     }
 
-    // 쿠키 생성 메소드
     private Cookie createCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge((EXPIRED_MS).intValue());
-        //cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
 
         return cookie;
     }
 
-    // RefreshToken 저장 메소드
     private void addRefreshToken(Long userId, String refresh, Long expiredMs) {
 
         RefreshToken refreshToken = new RefreshToken(userId,refresh,expiredMs);

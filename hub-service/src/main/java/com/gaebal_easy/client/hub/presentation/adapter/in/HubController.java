@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.hub.presentation;
+package com.gaebal_easy.client.hub.presentation.adapter.in;
 
 import com.gaebal_easy.client.hub.application.dto.HubDirectDto;
 import com.gaebal_easy.client.hub.application.dto.HubLocationDto;

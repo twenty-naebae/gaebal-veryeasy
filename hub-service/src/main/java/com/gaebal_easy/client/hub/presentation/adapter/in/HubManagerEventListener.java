@@ -1,10 +1,9 @@
-package com.gaebal_easy.client.hub.presentation;
+package com.gaebal_easy.client.hub.presentation.adapter.in;
 
 import com.gaebal_easy.client.hub.application.service.EventErrorHandler;
 import com.gaebal_easy.client.hub.application.service.HubManagerService;
 import com.gaebal_easy.client.hub.presentation.dto.HubManagerInfoMessage;
 import gaebal_easy.common.global.message.HubManagerDeleteMessage;
-import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
