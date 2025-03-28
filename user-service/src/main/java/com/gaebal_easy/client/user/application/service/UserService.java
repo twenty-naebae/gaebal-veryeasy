@@ -3,6 +3,7 @@ package com.gaebal_easy.client.user.application.service;
 import com.gaebal_easy.client.user.domain.entity.User;
 import com.gaebal_easy.client.user.domain.repository.UserRepository;
 import com.gaebal_easy.client.user.presentation.adapter.out.DeliveryUserEventConsumer;
+import com.gaebal_easy.client.user.presentation.adapter.out.HubManagerEventConsumer;
 import com.gaebal_easy.client.user.presentation.dto.UserInfoResponse;
 import com.gaebal_easy.client.user.presentation.dto.UserUpdateRequest;
 import gaebal_easy.common.global.enums.Role;
@@ -10,9 +11,7 @@ import gaebal_easy.common.global.exception.CanNotAccessInfoException;
 import gaebal_easy.common.global.exception.CanNotFindUserException;
 import gaebal_easy.common.global.exception.Code;
 import gaebal_easy.common.global.message.DeliveryUserDeleteMessage;
-import gaebal_easy.common.global.message.DeliveryUserInfoMessage;
 import gaebal_easy.common.global.message.HubManagerDeleteMessage;
-import gaebal_easy.common.global.message.HubManagerUpdateMessage;
 import gaebal_easy.common.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -29,7 +28,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final HubManagerEventService hubManagerEventService;
+    private final HubManagerEventConsumer hubManagerEventConsumer;
     private final DeliveryUserEventConsumer deliveryUserEventConsumer;
 
     @Transactional
@@ -54,7 +53,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new CanNotFindUserException());
         userRepository.delete(user, customUserDetails.getUserId());
         if(user.getRole().equals(Role.HUB_MANAGER)) {
-            hubManagerEventService.sendHubManagerDelete(HubManagerDeleteMessage.of(userId, customUserDetails.getUserId()));
+            hubManagerEventConsumer.sendHubManagerDelete(HubManagerDeleteMessage.of(userId, customUserDetails.getUserId()));
         }
         else if(user.getRole().equals(Role.HUB_DELIVERY_USER)|| user.getRole().equals(Role.STORE_DELIVERY_USER)){
             deliveryUserEventConsumer.sendDeliveryUserDelete(DeliveryUserDeleteMessage.of(userId, customUserDetails.getUserId()));
