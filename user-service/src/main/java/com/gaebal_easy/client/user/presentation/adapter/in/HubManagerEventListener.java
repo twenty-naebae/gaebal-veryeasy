@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.user.presentation;
+package com.gaebal_easy.client.user.presentation.adapter.in;
 import com.gaebal_easy.client.user.application.dto.HubManagerInfoMessage;
 import com.gaebal_easy.client.user.application.service.HubManagerEventService;
 import gaebal_easy.common.global.message.HubManagerDeleteMessage;

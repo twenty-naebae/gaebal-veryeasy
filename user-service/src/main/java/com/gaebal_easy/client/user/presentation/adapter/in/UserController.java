@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.user.presentation;
+package com.gaebal_easy.client.user.presentation.adapter.in;
 
 import com.gaebal_easy.client.user.application.service.JoinService;
 import com.gaebal_easy.client.user.application.service.UserService;
@@ -8,7 +8,6 @@ import com.gaebal_easy.client.user.presentation.dto.UserUpdateRequest;
 import gaebal_easy.common.global.dto.ApiResponseData;
 import gaebal_easy.common.global.enums.Role;
 import gaebal_easy.common.global.security.CustomUserDetails;
-import jakarta.ws.rs.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +24,6 @@ public class UserController {
     private final JoinService joinService;
     private final UserService userService;
 
-    // todo- 회원가입 예외처리. 이미 존재하는 userId일 경우등 unique 제약조건 위반시
     @PostMapping("/signup")
     public ResponseEntity<ApiResponseData<String>> signup(@RequestBody JoinRequest joinRequest){
         joinService.join(joinRequest);

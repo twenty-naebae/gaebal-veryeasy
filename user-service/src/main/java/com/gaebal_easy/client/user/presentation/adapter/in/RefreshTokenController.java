@@ -1,4 +1,4 @@
-package com.gaebal_easy.client.user.presentation;
+package com.gaebal_easy.client.user.presentation.adapter.in;
 
 import com.gaebal_easy.client.user.application.service.ReissueTokenService;
 import gaebal_easy.common.global.dto.ApiResponseData;
