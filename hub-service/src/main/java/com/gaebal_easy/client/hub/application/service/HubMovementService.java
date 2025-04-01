@@ -80,6 +80,7 @@ public class HubMovementService {
     public HubRouteDto getHubRoute(String depart, String arrive) {
         HubRouteDto hubRouteDto = new HubRouteDto();
         if(depart.equals(arrive)) return hubRouteDto;
+        // TODO : getDirectRedis => getRouteRedis 변경 필요
         if(hubDirectRedisService.getDirectRedis(depart,arrive)==null) getDirectHub(depart, arrive);
         List<HubDirectMovementInfo> hubDirectMovementInfos = hubDirectRepository.findAll();
         List<Hub> hubList = hubRepository.findAll();
