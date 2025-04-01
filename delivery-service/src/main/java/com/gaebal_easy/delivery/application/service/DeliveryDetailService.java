@@ -4,21 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaebal_easy.delivery.application.dto.DeliveryDetailDto;
 import com.gaebal_easy.delivery.application.dto.NaverRouteResponse;
-import com.gaebal_easy.delivery.application.feign.HubClient;
-import com.gaebal_easy.delivery.application.feign.HubDirectDto;
-import com.gaebal_easy.delivery.application.feign.HubLocationDto;
-import com.gaebal_easy.delivery.application.feign.HubRouteDto;
+import com.gaebal_easy.delivery.presentation.feign.HubClient;
+import com.gaebal_easy.delivery.presentation.feign.HubDirectDto;
+import com.gaebal_easy.delivery.presentation.feign.HubLocationDto;
 import com.gaebal_easy.delivery.domain.entity.DeliveryDetail;
 import com.gaebal_easy.delivery.domain.enums.DeliveryStatus;
 import com.gaebal_easy.delivery.domain.repository.DeliveryDetailRepository;
-import gaebal_easy.common.global.exception.CanNotFindHubNameException;
-import gaebal_easy.common.global.exception.Code;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -50,7 +46,6 @@ public class DeliveryDetailService {
     }
 
     public HubDirectDto getDirectHub(String depart, String arrive) {
-        // 앞뒤 공백 제거
         depart = depart.replaceAll("\\s+", "");
         arrive = arrive.replaceAll("\\s+", "");
 
@@ -60,7 +55,6 @@ public class DeliveryDetailService {
         HubLocationDto arriveLocation = hubClient.getCoordinate(arrive);
         String json = naverDirectionApiService.getDirection(departLocation.getLongitude(), departLocation.getLatitude(),
                 arriveLocation.getLongitude(), arriveLocation.getLatitude());
-        log.info("Naver JSON response = {}", json);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             NaverRouteResponse response = objectMapper.readValue(json, NaverRouteResponse.class);

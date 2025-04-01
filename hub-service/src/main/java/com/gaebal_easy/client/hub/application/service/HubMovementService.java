@@ -30,8 +30,6 @@ public class HubMovementService {
         depart = depart.replaceAll("\\s+", "");
         arrive = arrive.replaceAll("\\s+", "");
         HubDirectDto hubDirectDto = new HubDirectDto();
-        System.out.println("@@@@@@@@@depart : " + depart + " arrive : " + arrive);
-
         if(depart.equals(arrive)) return hubDirectDto;
 
         List<HubDirectMovementInfo> hubDirectMovementInfos = hubDirectRepository.findAll();
@@ -61,8 +59,6 @@ public class HubMovementService {
                 double distance = response.getRoute().getTrafast().get(0).getSummary().getDistance();
                 int duration = response.getRoute().getTrafast().get(0).getSummary().getDuration();
                 hubDirectRepository.save(new HubDirectMovementInfo(hubDirectMovementInfo.getId(),hubDirectMovementInfo.getDepart(),hubDirectMovementInfo.getArrive(),duration,distance));
-                System.out.println("거리: " + distance + "m");
-                System.out.println("소요 시간: " + duration + "초");
                 if((hubDirectMovementInfo.getDepart().equals(depart)&&hubDirectMovementInfo.getArrive().equals(arrive)) ||
                         (hubDirectMovementInfo.getDepart().equals(arrive)&&hubDirectMovementInfo.getArrive().equals(depart))
                 ){
@@ -148,7 +144,7 @@ public class HubMovementService {
                 visitHub.add(0, cur);
                 cur = preEdge.get(cur);
             }
-            visitHub.add(0, start); // 시작 지점 추가
+            visitHub.add(0, start);
 
             result.put(end, new HubRouteDto(start, end,totalTime.get(end), totalDistance.get(end), visitHub));
         }
@@ -168,13 +164,10 @@ public class HubMovementService {
         boolean checkValidArrive = false;
         for(Hub hub : hubList){
             String hubName = hub.getHubLocation().getName().substring(0,4);
-            System.out.println("hubName : " + hubName);
             if(hubName.equals(depart)) {
-                System.out.println("depart 걸림!!!");
                 checkValidDepart=true;
             }
             if(hubName.equals(arrive)) {
-                System.out.println("arrive 걸림!!!");
                 checkValidArrive=true;
             }
         }

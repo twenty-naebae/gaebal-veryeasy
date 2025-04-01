@@ -1,7 +1,7 @@
 package com.gaebal_easy.delivery.domain.entity;
 
-import com.gaebal_easy.delivery.application.dto.kafkaConsumerDto.KafkaRequireAddressToHubDto;
-import com.gaebal_easy.delivery.application.feign.HubRouteDto;
+import com.gaebal_easy.delivery.presentation.dto.kafkaConsumerDto.KafkaRequireAddressToHubDto;
+import com.gaebal_easy.delivery.presentation.feign.HubRouteDto;
 import com.gaebal_easy.delivery.domain.enums.DeliveryStatus;
 import gaebal_easy.common.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;

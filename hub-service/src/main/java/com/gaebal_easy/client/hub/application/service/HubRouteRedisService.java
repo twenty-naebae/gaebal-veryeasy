@@ -26,7 +26,6 @@ public class HubRouteRedisService {
             + URLEncoder.encode(depart, StandardCharsets.UTF_8)
             + ":"
             + URLEncoder.encode(arrive, StandardCharsets.UTF_8);
-        log.info("Encoded!!!!!!!!!!!!!"+encodedKey);
         return redisTemplate.opsForValue().get(encodedKey);
     }
 }

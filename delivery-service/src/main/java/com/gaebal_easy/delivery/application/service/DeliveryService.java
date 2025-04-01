@@ -15,7 +15,6 @@ import java.util.UUID;
 @Slf4j
 public class DeliveryService {
 	private final DeliveryRepository deliveryRepository;
-//	private final KafkaProducerService kafkaProducerService;
 	//배송담당자 지정 로직
 
 
