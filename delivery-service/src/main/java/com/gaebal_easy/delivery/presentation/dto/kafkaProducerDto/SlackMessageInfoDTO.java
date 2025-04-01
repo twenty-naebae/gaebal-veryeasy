@@ -24,7 +24,7 @@ public class SlackMessageInfoDTO {
 	private String destination;        // 도착배송지주소
 	private String deliveryManagerName;    // 배송 담당자 이름
 
-	public SlackMessageInfoDTO of(HubRouteDto hubRouteDto, StoreDeliveryUser storeDeliveryUser, KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto, String productName){
+	public static SlackMessageInfoDTO of(HubRouteDto hubRouteDto, StoreDeliveryUser storeDeliveryUser, KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto, String productName){
 		return SlackMessageInfoDTO.builder()
 				.slackId(storeDeliveryUser.getSlackId())
 				.receiveId(storeDeliveryUser.getId())

@@ -18,6 +18,5 @@ public class HubRequireAddressProducer {
     public void sendRequireAddressEvent(KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto) {
 
         kafkaRequireAddressToHubDtoKafkaTemplate.send(TOPIC, kafkaRequireAddressToHubDto);
-        log.info("send require address event to kafka");
     }
 }

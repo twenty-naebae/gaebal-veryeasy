@@ -46,7 +46,6 @@ public class DeliveryDetailService {
     }
 
     public HubDirectDto getDirectHub(String depart, String arrive) {
-        // 앞뒤 공백 제거
         depart = depart.replaceAll("\\s+", "");
         arrive = arrive.replaceAll("\\s+", "");
 
@@ -56,7 +55,6 @@ public class DeliveryDetailService {
         HubLocationDto arriveLocation = hubClient.getCoordinate(arrive);
         String json = naverDirectionApiService.getDirection(departLocation.getLongitude(), departLocation.getLatitude(),
                 arriveLocation.getLongitude(), arriveLocation.getLatitude());
-        log.info("Naver JSON response = {}", json);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             NaverRouteResponse response = objectMapper.readValue(json, NaverRouteResponse.class);

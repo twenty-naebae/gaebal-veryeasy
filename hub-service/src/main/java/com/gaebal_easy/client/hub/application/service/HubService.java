@@ -35,9 +35,6 @@ public class HubService {
 
     private final HubRepository hubRepository;
     private final HubProductListRepository hubProductListRepository;
-    private final RedissonClient redissonClient;
-    private final CacheManager cacheManager;
-
     private final RedisTemplate<String, String> redisTemplate;
     private final ReservationRepository reservationRepository;
     private final KafkaTemplate<String,String> kafkaTemplate;
@@ -52,7 +49,6 @@ public class HubService {
 
     public void deleteHub(UUID id) {
         Hub hub = getHub(id);
-        // TODO : 유저네임 넘겨주기, 이미 삭제된 허브가 아닌지 판별 deletedAtIsNotNull
         hub.delete("deleted by");
         hubRepository.save(hub);
     }
@@ -62,13 +58,10 @@ public class HubService {
         HubLocationDto hubLocationDto = new HubLocationDto();
         for(Hub hub : hubList){
             String fourHubName = hub.getHubLocation().getName().substring(0,4);
-            log.info("!!!!!!!!!fourHubName:!!!!!!!!! " + fourHubName);
-            log.info("!!!!!!!!!hubName:!!!!!!!!! " + hubName);
             if(fourHubName.equals(hubName)) {
                 hubLocationDto = new HubLocationDto(hub.getHubLocation().getLatitude(), hub.getHubLocation().getLongitude());
             }
         }
-        log.info("hubLocationDto:!!!!!!!!! " + hubLocationDto.getLatitude() + " " + hubLocationDto.getLongitude());
         return hubLocationDto;
     }
 

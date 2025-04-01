@@ -22,6 +22,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -38,14 +39,16 @@ public class HubRequireAddressConsumer {
 
     @KafkaListener(topics="hub_require_address", groupId = "delivery_group",containerFactory = "requireAddressToHubKafkaListenerContainerFactory")
     public void hubRequireAddress(KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto) {
-        SlackMessageInfoDTO slackMessageInfoDTO = new SlackMessageInfoDTO();
-        HubRouteDto hubRouteDto = hubClient.getHubRoute(kafkaRequireAddressToHubDto.getSupplyStoreHubName().substring(0,4),
-                kafkaRequireAddressToHubDto.getReceiptStoreHubName().substring(0,4));
+        HubRouteDto hubRouteDto = getHubRouteDto(kafkaRequireAddressToHubDto);
         StoreDeliveryUser storeDeliveryUser = deliveryUserAssignmentService.assignStoreDeliveryUser(kafkaRequireAddressToHubDto.getArriveHubId());
-        // delivery에 위에서 받아온 내용 저장!
-        Delivery delivery = Delivery.of(hubRouteDto,kafkaRequireAddressToHubDto,storeDeliveryUser);
-        deliveryRepository.save(delivery);
+        deliveryRepository.save(Delivery.of(hubRouteDto,kafkaRequireAddressToHubDto,storeDeliveryUser));
+        String productName = getProductName(kafkaRequireAddressToHubDto);
+        saveDeliveryDetail(hubRouteDto,kafkaRequireAddressToHubDto.getOrderId());
 
+        slackMessageProducer.slackMessageEvent(SlackMessageInfoDTO.of(hubRouteDto, storeDeliveryUser, kafkaRequireAddressToHubDto,productName));
+    }
+
+    private String getProductName(KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto){
         StringBuilder productName=new StringBuilder();
         List<ProductRequestDto> productRequestDto = kafkaRequireAddressToHubDto.getProducts();
         for(int i=0; i<productRequestDto.size(); i++){
@@ -55,20 +58,23 @@ public class HubRequireAddressConsumer {
                 productName.append(", ");
             }
         }
-        // depart와 arrive가 같은 경우는 처리하지 않음
-        // 서울 - 경기 - 대전 - 부산
+        return productName.toString();
+    }
 
+    private HubRouteDto getHubRouteDto(KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto){
+        return hubClient.getHubRoute(kafkaRequireAddressToHubDto.getSupplyStoreHubName().substring(0,4),
+                kafkaRequireAddressToHubDto.getReceiptStoreHubName().substring(0,4));
+    }
+
+    private void saveDeliveryDetail(HubRouteDto hubRouteDto, UUID orderId){
         for(int i=0; i<hubRouteDto.getVisitHubName().size()-1; i++){
-            // 여기에 시퀀스 넣어줘야함
-            // 요청할 때, 0번째, 1번째 같이 보내줘야함
             String depart = hubRouteDto.getVisitHubName().get(i);
             String arrive = hubRouteDto.getVisitHubName().get(i+1);
             HubDeliveryUser hubDeliveryUser = deliveryUserAssignmentService.assignHubDeliveryUser();
             HubDirectDto realHubDirectDto = deliveryDetailService.getDirectHub(depart,arrive);
             HubDirectDto expectedHubDirectDto = hubClient.getDirectHub(depart,arrive);
-            DeliveryDetail deliveryDetail = DeliveryDetail.of(hubDeliveryUser, realHubDirectDto,expectedHubDirectDto,i+1, kafkaRequireAddressToHubDto.getOrderId());
+            DeliveryDetail deliveryDetail = DeliveryDetail.of(hubDeliveryUser, realHubDirectDto,expectedHubDirectDto,i+1, orderId);
             deliveryDetailRepository.save(deliveryDetail);
         }
-        slackMessageProducer.slackMessageEvent(slackMessageInfoDTO.of(hubRouteDto, storeDeliveryUser, kafkaRequireAddressToHubDto,productName.toString()));
     }
 }

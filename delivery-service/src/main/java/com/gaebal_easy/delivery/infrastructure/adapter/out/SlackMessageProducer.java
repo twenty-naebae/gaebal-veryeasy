@@ -17,7 +17,6 @@ public class SlackMessageProducer {
     private final KafkaTemplate<String, SlackMessageInfoDTO> slackMessageKafkaTemplate;
 
     public void slackMessageEvent(SlackMessageInfoDTO slackMessageInfoDTO) {
-        log.info("slack Message Event 발행 "+"\uD83C\uDFAF 목표 도달!");
         slackMessageKafkaTemplate.send(TOPIC, slackMessageInfoDTO);
     }
 }
