@@ -1,7 +1,7 @@
 package com.gaebal_easy.delivery.infrastructure.adapter.out;
 
 
-import com.gaebal_easy.delivery.presentation.dto.kafkaProducerDto.SlackMessageInfoDTO;
+import com.gaebal_easy.delivery.infrastructure.dto.kafkaProducerDto.SlackMessageInfoDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

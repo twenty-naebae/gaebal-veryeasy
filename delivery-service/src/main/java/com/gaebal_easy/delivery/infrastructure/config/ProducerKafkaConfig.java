@@ -1,6 +1,6 @@
 package com.gaebal_easy.delivery.infrastructure.config;
 
-import com.gaebal_easy.delivery.presentation.dto.kafkaProducerDto.SlackMessageInfoDTO;
+import com.gaebal_easy.delivery.infrastructure.dto.kafkaProducerDto.SlackMessageInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

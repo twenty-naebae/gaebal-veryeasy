@@ -18,5 +18,5 @@ public class HubRouteDto {
     private String arrive;
     private int totalRequiredTime;
     private double totalDistance;
-    private List<String> visitHubName;
+    private List<String> visitHubNames;
 }
