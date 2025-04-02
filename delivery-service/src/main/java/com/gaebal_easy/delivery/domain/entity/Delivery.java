@@ -1,6 +1,7 @@
 package com.gaebal_easy.delivery.domain.entity;
 
-import com.gaebal_easy.delivery.presentation.dto.kafkaConsumerDto.KafkaRequireAddressToHubDto;
+import com.gaebal_easy.delivery.application.dto.RequireAddressToHubServiceDto;
+import com.gaebal_easy.delivery.infrastructure.dto.kafkaConsumerDto.KafkaRequireAddressToHubDto;
 import com.gaebal_easy.delivery.presentation.feign.HubRouteDto;
 import com.gaebal_easy.delivery.domain.enums.DeliveryStatus;
 import gaebal_easy.common.global.entity.BaseTimeEntity;
@@ -50,14 +51,14 @@ public class Delivery extends BaseTimeEntity {
         this.deliveryStatus = status;
     }
 
-    public static Delivery of(HubRouteDto hubRouteDto, KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto, StoreDeliveryUser storeDeliveryUser) {
+    public static Delivery of(HubRouteDto hubRouteDto, RequireAddressToHubServiceDto requireAddressToHubServiceDto, StoreDeliveryUser storeDeliveryUser) {
         return Delivery.builder()
-                .orderId(kafkaRequireAddressToHubDto.getOrderId())
+                .orderId(requireAddressToHubServiceDto.getOrderId())
                 .deliveryStatus(DeliveryStatus.MOVE_TO_HUB)
-                .departHubName(kafkaRequireAddressToHubDto.getSupplyStoreHubName())
-                .arriveStoreName(kafkaRequireAddressToHubDto.getReceiptStoreName())
-                .arriveHubName(kafkaRequireAddressToHubDto.getReceiptStoreHubName())
-                .arriveAddress(kafkaRequireAddressToHubDto.getReceiptStoreAddress())
+                .departHubName(requireAddressToHubServiceDto.getSupplyStoreHubName())
+                .arriveStoreName(requireAddressToHubServiceDto.getReceiptStoreName())
+                .arriveHubName(requireAddressToHubServiceDto.getReceiptStoreHubName())
+                .arriveAddress(requireAddressToHubServiceDto.getReceiptStoreAddress())
                 .deliveryPersonId(storeDeliveryUser.getSlackId())
                 .totalTime(hubRouteDto.getTotalRequiredTime())
                 .totalDist(hubRouteDto.getTotalDistance())

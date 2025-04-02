@@ -1,6 +1,7 @@
-package com.gaebal_easy.delivery.presentation.dto.kafkaProducerDto;
+package com.gaebal_easy.delivery.infrastructure.dto.kafkaProducerDto;
 
-import com.gaebal_easy.delivery.presentation.dto.kafkaConsumerDto.KafkaRequireAddressToHubDto;
+import com.gaebal_easy.delivery.application.dto.RequireAddressToHubServiceDto;
+import com.gaebal_easy.delivery.infrastructure.dto.kafkaConsumerDto.KafkaRequireAddressToHubDto;
 import com.gaebal_easy.delivery.presentation.feign.HubRouteDto;
 import com.gaebal_easy.delivery.domain.entity.StoreDeliveryUser;
 import lombok.*;
@@ -24,17 +25,17 @@ public class SlackMessageInfoDTO {
 	private String destination;        // 도착배송지주소
 	private String deliveryManagerName;    // 배송 담당자 이름
 
-	public static SlackMessageInfoDTO of(HubRouteDto hubRouteDto, StoreDeliveryUser storeDeliveryUser, KafkaRequireAddressToHubDto kafkaRequireAddressToHubDto, String productName){
+	public static SlackMessageInfoDTO of(HubRouteDto hubRouteDto, StoreDeliveryUser storeDeliveryUser, RequireAddressToHubServiceDto requireAddressToHubServiceDto, String productName){
 		return SlackMessageInfoDTO.builder()
 				.slackId(storeDeliveryUser.getSlackId())
 				.receiveId(storeDeliveryUser.getId())
-				.orderId(kafkaRequireAddressToHubDto.getOrderId())
+				.orderId(requireAddressToHubServiceDto.getOrderId())
 				.departHub(hubRouteDto.getDepart())
 				.productName(productName)
 				.customerName(null)
 				.orderRequest(null)
-				.visitHub(hubRouteDto.getVisitHubName())
-				.destination(kafkaRequireAddressToHubDto.getReceiptStoreAddress())
+				.visitHub(hubRouteDto.getVisitHubNames())
+				.destination(requireAddressToHubServiceDto.getReceiptStoreAddress())
 				.deliveryManagerName(storeDeliveryUser.getName())
 				.build();
 	}
