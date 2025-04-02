@@ -1,6 +1,6 @@
 package com.gaebal_easy.delivery.infrastructure.adapter.in;
 
-import com.gaebal_easy.delivery.application.dto.DeliveryMapper;
+import com.gaebal_easy.delivery.infrastructure.mapper.DeliveryMapper;
 import com.gaebal_easy.delivery.application.service.DeliveryService;
 import com.gaebal_easy.delivery.infrastructure.dto.kafkaConsumerDto.KafkaRequireAddressToHubDto;
 import lombok.RequiredArgsConstructor;

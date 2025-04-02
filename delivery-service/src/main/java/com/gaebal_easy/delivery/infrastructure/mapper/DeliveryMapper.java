@@ -1,5 +1,6 @@
-package com.gaebal_easy.delivery.application.dto;
+package com.gaebal_easy.delivery.infrastructure.mapper;
 
+import com.gaebal_easy.delivery.application.dto.RequireAddressToHubServiceDto;
 import com.gaebal_easy.delivery.infrastructure.dto.kafkaConsumerDto.KafkaRequireAddressToHubDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

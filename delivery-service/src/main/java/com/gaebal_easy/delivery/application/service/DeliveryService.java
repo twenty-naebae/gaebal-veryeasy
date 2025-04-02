@@ -62,7 +62,7 @@ public class DeliveryService {
 
         List<String> visitHubNames = hubRouteDto.getVisitHubNames();
         saveDeliveryDetail(visitHubNames, requireAddressToHubServiceDto.getOrderId());
-
+        // TODO : outbox table에 보내야 할 메세지(SlackMessageInfoDTO)를 저장한다.
         slackMessageProducer.slackMessageEvent(
                 SlackMessageInfoDTO.of(hubRouteDto,
                         storeDeliveryUser,
