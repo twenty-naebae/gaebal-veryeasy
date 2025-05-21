@@ -26,6 +26,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final HubClient hubClient;
     private final KafkaTemplate kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     public OrderResponse getOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() ->new OrderNotFoundException(Code.ORDER_NOT_FOUND_EXCEIPTION));
@@ -40,7 +41,7 @@ public class OrderService {
         return OrderResponse.from(order);
     }
 
-
+    @Transactional
     public OrderResponse createOrder(CreateOrderDto dto)  {
         // 주문 생성
         Long totalPrice = calculateTotalPrice(dto);
@@ -52,19 +53,10 @@ public class OrderService {
         }
         orderRepository.save(order);
 
-
-        // 재고확인 FeignClient order -> hub
         try {
-            Object obj = hubClient.checkStock(CheckStockDto.builder()
-                    .hubId(dto.getHubId())
-                    .orderId(order.getId())
-                    .products(dto.getProducts())
-                    .build()).getBody();
+            CheckStockResponse response = checkStock(dto, order);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            CheckStockResponse response = objectMapper.convertValue(obj, CheckStockResponse.class);
-
-            if(!response.getState().equals(ReservationState.OUT_OF_STOCK)) {
+            if(purchaseIsPossible(response)) {
                 // 허브에 선점했던 재고 확정 처리 요청. Kafka: Order -> Hub
                 kafkaTemplate.send("confirm_stock", "product_list", dto.getProducts());
 
@@ -75,7 +67,7 @@ public class OrderService {
                         .receiverId(dto.getReceiverId())
                         .products(dto.getProducts())
                         .build());
-                if(response.getState().equals(ReservationState.RE_FILL)){
+                if(needStockRefill(response)){
                     kafkaTemplate.send("refill_stock","refill",  objectMapper.writeValueAsString(response));
                 }
             }
@@ -84,6 +76,31 @@ public class OrderService {
             throw new OrderFailExceiption(Code.ORDER_FAIL_EXCEIPTION);
         }
         return OrderResponse.from(order);
+    }
+
+    private static boolean needStockRefill(CheckStockResponse response) {
+        return response.getState().equals(ReservationState.RE_FILL);
+    }
+
+    private static boolean purchaseIsPossible(CheckStockResponse response) {
+        return !response.getState().equals(ReservationState.OUT_OF_STOCK);
+    }
+
+    /**
+     * 재고확인 FeignClient order -> hub
+     * @param dto
+     * @param order
+     * @return
+     */
+    private CheckStockResponse checkStock(CreateOrderDto dto, Order order) {
+        Object obj = hubClient.checkStock(CheckStockDto.builder()
+                .hubId(dto.getHubId())
+                .orderId(order.getId())
+                .products(dto.getProducts())
+                .build()).getBody();
+
+        CheckStockResponse response = objectMapper.convertValue(obj, CheckStockResponse.class);
+        return response;
     }
 
     private static Long calculateTotalPrice(CreateOrderDto dto) {
